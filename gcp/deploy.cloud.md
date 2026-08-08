@@ -23,6 +23,7 @@ export IMAGE=$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$SERVICE
 export IMAGE_TAG=$IMAGE:$TAG
 export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")
 export SA=${PROJECT_NUMBER}-compute@developer.gserviceaccount.com
+export CLOUDSQL_INSTANCE=$PROJECT_ID:$REGION:[INSTANCE]
 echo "IMAGE_TAG=[$IMAGE_TAG]"
 ```
 
@@ -51,6 +52,36 @@ gcloud services enable run.googleapis.com artifactregistry.googleapis.com cloudb
 gcloud services enable secretmanager.googleapis.com    # if the project uses secrets
 
 gcloud artifacts repositories create $REPOSITORY --repository-format=docker --location=$REGION
+```
+
+### Cloud SQL
+
+Only for a project with a database. Create it with **no public IP**, and grant the runtime account `cloudsql.client`.
+
+```bash
+gcloud services enable sqladmin.googleapis.com
+
+gcloud sql instances create [INSTANCE] \
+  --database-version=POSTGRES_17 \
+  --tier=db-f1-micro \
+  --region=$REGION \
+  --no-assign-ip \
+  --storage-auto-increase
+
+gcloud sql databases create [DB] --instance=[INSTANCE]
+gcloud sql users create [USER] --instance=[INSTANCE] --password=[PASSWORD]
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="serviceAccount:$SA" --role="roles/cloudsql.client"
+```
+
+Put that password straight into Secret Manager in section 3 and do not keep it anywhere else.
+
+**Cloud SQL does not scale to zero.** It is the largest cost on an idle project. Stop it when the project goes quiet:
+
+```bash
+gcloud sql instances patch [INSTANCE] --activation-policy=NEVER    # stop
+gcloud sql instances patch [INSTANCE] --activation-policy=ALWAYS   # start
 ```
 
 ### Budget Alert
@@ -105,7 +136,9 @@ echo $TAG > .last-tag
 
 `.last-tag` is gitignored, and it is what a later config-only deploy reads. Recomputing the tag from git HEAD after committing again points at an image that was never built.
 
-The first deploy attaches the configuration, because `cloudbuild.yaml` deliberately carries none:
+The first deploy attaches the configuration, because `cloudbuild.yaml` deliberately carries none.
+
+**Backend**, 1 vCPU and 1Gi, concurrency 30, with Cloud SQL attached:
 
 ```bash
 gcloud run deploy $SERVICE \
@@ -113,15 +146,36 @@ gcloud run deploy $SERVICE \
   --region $REGION \
   --platform managed \
   --cpu 1 --memory 1Gi \
-  --min-instances 0 --max-instances 3 \
-  --concurrency 40 \
+  --min-instances 0 --max-instances 5 \
+  --concurrency 30 \
+  --port 8080 \
   --timeout 60 \
-  --set-env-vars "LOG_LEVEL=INFO,MODEL_NAME=[NAME]" \
-  --set-secrets "OPENAI_API_KEY=[SECRET_NAME]:latest" \
+  --add-cloudsql-instances $CLOUDSQL_INSTANCE \
+  --set-env-vars "LOG_LEVEL=INFO,DB_NAME=[DB],DB_USER=[USER],CLOUDSQL_INSTANCE=$CLOUDSQL_INSTANCE" \
+  --set-secrets "DB_PASSWORD=[SECRET_NAME]:latest" \
   --allow-unauthenticated
 ```
 
+**Frontend**, 512Mi, concurrency 80, no database:
+
+```bash
+gcloud run deploy $SERVICE-frontend \
+  --image "$IMAGE-frontend:$TAG" \
+  --region $REGION \
+  --platform managed \
+  --cpu 1 --memory 512Mi \
+  --min-instances 0 --max-instances 5 \
+  --concurrency 80 \
+  --port 8080 \
+  --timeout 60 \
+  --allow-unauthenticated
+```
+
+`--port 8080` is the Cloud Run default and is stated here so it is visible rather than assumed. The container still has to read the injected `PORT` variable; the flag tells Cloud Run which port to send traffic to, it does not tell the app which port to open.
+
 Drop `--allow-unauthenticated` for anything that is not meant to be public. A public endpoint on a personal project is a public endpoint on your bill.
+
+A static frontend bakes its configuration in at build time through a `--build-arg`, so `--set-env-vars` on a frontend does nothing. Changing the API URL means rebuilding, not redeploying.
 
 ## 5. Verify
 
@@ -142,10 +196,11 @@ gcloud run jobs create $SERVICE-[JOB] \
   --image "$IMAGE_TAG" \
   --region $REGION \
   --service-account $SA \
-  --set-env-vars "LOG_LEVEL=INFO" \
-  --set-secrets "OPENAI_API_KEY=[SECRET_NAME]:latest" \
+  --set-cloudsql-instances $CLOUDSQL_INSTANCE \
+  --set-env-vars "LOG_LEVEL=INFO,DB_NAME=[DB],DB_USER=[USER],CLOUDSQL_INSTANCE=$CLOUDSQL_INSTANCE" \
+  --set-secrets "DB_PASSWORD=[SECRET_NAME]:latest" \
   --command python --args "-m,app.jobs.[JOB]" \
-  --cpu 1 --memory 2Gi \
+  --cpu 1 --memory 1Gi \
   --task-timeout 900s --max-retries 3 --tasks 1 --parallelism 1
 
 gcloud run jobs execute $SERVICE-[JOB] --region $REGION --wait
@@ -196,22 +251,7 @@ gcloud artifacts docker images list $IMAGE --include-tags --limit=10
 gcloud run deploy $SERVICE --image "$IMAGE:[OLDER_TAG]" --region $REGION
 ```
 
-## 8. GPU Inference
-
-Only where the region supports it, and only for inference.
-
-```bash
-gcloud run deploy $SERVICE \
-  --image "$IMAGE_TAG" --region $REGION \
-  --gpu 1 --gpu-type nvidia-l4 --no-cpu-throttling \
-  --cpu 4 --memory 16Gi \
-  --min-instances 0 --max-instances 1 \
-  --timeout 300
-```
-
-Keep `--max-instances 1` until you have watched the bill for a week. Cold start includes loading the model, so measure it before promising a latency figure.
-
-## 9. Troubleshooting
+## 8. Troubleshooting
 
 **`The user-provided container failed to start and listen on the port`.** Almost always the app hardcoding a port instead of reading `PORT`. Read the real cause:
 
