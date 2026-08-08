@@ -127,15 +127,9 @@ dependencies:
 
 ### Machine Learning
 
-These are the places ML code goes wrong that ordinary code does not.
+An AI project follows [[ai/README.md]] in addition to this file. That folder owns the environment, reproducibility, data handling, experiments, and evaluation, because those rules are specific enough to be worth their own place and long enough to bury the general ones if kept here.
 
-- **Set every random seed**, and record it. An experiment nobody can rerun is an anecdote.
-- **Never train on your test set.** Split before any preprocessing that learns from data; fitting a scaler on the full set leaks the test distribution into training.
-- **Keep the notebook for exploring and the module for keeping.** Anything that runs twice moves out of the notebook into a function in a module the notebook imports.
-- **Data is not code.** Raw data, weights, and checkpoints live outside git. Track them with paths and checksums, not with commits.
-- **Record what produced a result**: the data version, the parameters, the seed, the commit. A metric without those is not reproducible.
-- **A pipeline step reads its input and writes its output**; it does not reach around into global state. That is what makes it rerunnable.
-- Fix the data before reaching for a bigger model. Most bad results are a labelling problem wearing a modelling costume.
+The one line worth repeating in both: **a model is quietly wrong rather than broken.** Ordinary code errors; a model returns a plausible number and says nothing. Everything in [[ai.rules.md]] exists to make that silence impossible.
 
 ## Testing
 

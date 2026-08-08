@@ -4,7 +4,8 @@
 ![Conda](https://img.shields.io/badge/Conda-Miniconda-44A833?logo=anaconda&logoColor=white)
 ![Cloud Run](https://img.shields.io/badge/Cloud_Run-Deploy-4285F4?logo=googlecloud&logoColor=white)
 ![Obsidian](https://img.shields.io/badge/Obsidian-Vault-7C3AED?logo=obsidian&logoColor=white)
-![Rules](https://img.shields.io/badge/Rules-12-4C1D95)
+![Rules](https://img.shields.io/badge/Rules-15-4C1D95)
+![Components](https://img.shields.io/badge/Components-4-4C1D95)
 ![Templates](https://img.shields.io/badge/Templates-5-4C1D95)
 ![Status](https://img.shields.io/badge/Status-Active-2EA043)
 
@@ -25,6 +26,8 @@ The whole repository is an Obsidian vault. Open the folder and the graph is alre
 | Contents | Description |
 | :- | :- |
 | [rules/](rules/) | How code, commits, documents, and secrets are handled. Every project follows these |
+| [ai/](ai/) | Machine learning and deep learning standards, kept separate because AI projects fail differently |
+| [component/](component/) | Framework-agnostic UI component standards: tokens, dropdowns, calendars, refresh |
 | [gcp/](gcp/) | The Cloud Run deploy standard, the runbook, and the Cloud Build templates |
 | [template/](template/) | Documentation templates: project README, API, and model card |
 | [memory/](memory/) | The portable AI memory: markdown notes, indexed by Cognee and Graphiti |
@@ -52,6 +55,23 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | [[env.rules.md]] | Why a real environment file is never read, in any format, including a notebook cell |
 | [[secret.rules.md]] | Which values are secrets, and where each one actually lives |
 | [[security.rules.md]] | The OWASP secure coding checklist, and the plan-first review procedure |
+
+**What you build for the web:**
+
+| Document | Owns |
+| :- | :- |
+| [[uix.component.md]] | The token contract every component reads from, and the shared component rules |
+| [[dropdown.component.md]] | Selects, themed listboxes, and collapsible navigation groups |
+| [[calendar.component.md]] | Date fields: native or custom, the panel, and the year clamp |
+| [[refresh.component.md]] | What survives a reload, and the three things that break it |
+
+**What you build with AI:**
+
+| Document | Owns |
+| :- | :- |
+| [[ai.rules.md]] | Every AI project: conda-forge environments, reproducibility, data, experiments |
+| [[ml.rules.md]] | Tabular and classical: pipelines, splitting, leakage, imbalance |
+| [[dl.rules.md]] | Deep learning: PyTorch from conda-forge, determinism, the training loop |
 
 **How it ships:**
 
@@ -129,6 +149,20 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[deploy.cloud.md]]
 - [[cloudbuild.service.template.yaml]]
 - [[cloudbuild.job.template.yaml]]
+
+### Components
+
+- [[uix.component.md]]
+- [[dropdown.component.md]]
+- [[calendar.component.md]]
+- [[refresh.component.md]]
+
+### AI
+
+- [[ai/README.md]]
+- [[ai.rules.md]]
+- [[ml.rules.md]]
+- [[dl.rules.md]]
 
 ### Templates
 
