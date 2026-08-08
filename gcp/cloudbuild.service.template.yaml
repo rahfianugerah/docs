@@ -1,0 +1,71 @@
+# Cloud Build pipeline for a Cloud Run service.
+# Copy to the project root as cloudbuild.yaml and replace every [BRACKET].
+#
+# Build, push, deploy. That is all it does.
+#
+# It carries NO --set-env-vars and NO --set-secrets on purpose: `gcloud run deploy`
+# preserves whatever the service already has, so the build owns the image and the
+# terminal owns the config. Putting config here means a rebuild is needed to change
+# a variable, and a substitution is visible in the build log, which a secret must
+# never be. See deploy.rules.md.
+
+substitutions:
+  _REGION: asia-southeast1
+  _REPOSITORY: '[REPOSITORY]'
+  _SERVICE: '[SERVICE]'
+  # _TAG has no default. It is passed by the trigger as $SHORT_SHA, or by hand.
+  # Cloud Build only populates $SHORT_SHA for trigger-started builds, so relying on
+  # it in a manual build yields an image reference ending in a bare colon.
+
+options:
+  logging: CLOUD_LOGGING_ONLY   # required when the build runs under a service account
+  machineType: E2_HIGHCPU_8     # drop this line to use the cheaper default builder
+
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG}'
+
+steps:
+  # Fail early and loudly rather than building an image nobody can deploy.
+  - id: guard
+    name: gcr.io/cloud-builders/gcloud
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        if [ -z "${_TAG}" ]; then
+          echo "_TAG is empty. Pass --substitutions=_TAG=\$(git rev-parse --short HEAD)"
+          exit 1
+        fi
+
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG}'
+      - '.'
+
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG}'
+
+  - id: deploy
+    name: gcr.io/cloud-builders/gcloud
+    args:
+      - run
+      - deploy
+      - '${_SERVICE}'
+      - '--image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG}'
+      - '--region=${_REGION}'
+      - '--platform=managed'
+      - '--cpu=1'
+      - '--memory=1Gi'
+      - '--min-instances=0'      # scale to zero: the whole point of Cloud Run here
+      - '--max-instances=3'      # cap it, or a loop scales until the bill notices
+      - '--concurrency=40'
+      - '--timeout=60'
+      - '--allow-unauthenticated'   # remove for anything not meant to be public
+
+timeout: 1200s

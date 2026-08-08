@@ -1,0 +1,73 @@
+# Cloud Build pipeline for a Cloud Run job: a batch task, a scan, an ETL, a migration.
+# Copy to the project root as cloudbuild.yaml and replace every [BRACKET].
+#
+# A job runs the SAME image as the service with a different entrypoint. Where a project
+# has both, keep one cloudbuild.yaml that builds once and then updates both, rather than
+# two files building the same Dockerfile twice.
+#
+# `jobs update` is used rather than `jobs create` because a job is created once by hand
+# with its config, and every later build only moves it to the new image. A job pins the
+# image it was created with, so without this step it keeps running old code forever.
+
+substitutions:
+  _REGION: asia-southeast1
+  _REPOSITORY: '[REPOSITORY]'
+  _SERVICE: '[SERVICE]'
+  _JOB: '[JOB]'          # the job is named ${_SERVICE}-${_JOB}
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG}'
+
+steps:
+  - id: guard
+    name: gcr.io/cloud-builders/gcloud
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        if [ -z "${_TAG}" ]; then
+          echo "_TAG is empty. Pass --substitutions=_TAG=\$(git rev-parse --short HEAD)"
+          exit 1
+        fi
+
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG}'
+      - '.'
+
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG}'
+
+  - id: update-job
+    name: gcr.io/cloud-builders/gcloud
+    args:
+      - run
+      - jobs
+      - update
+      - '${_SERVICE}-${_JOB}'
+      - '--image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG}'
+      - '--region=${_REGION}'
+
+  # Uncomment to run the job on every build. Correct for a migration that must land
+  # before the new code serves traffic; wrong for anything on a schedule, which would
+  # then run once per push as well as at its scheduled time.
+  # - id: execute-job
+  #   name: gcr.io/cloud-builders/gcloud
+  #   args:
+  #     - run
+  #     - jobs
+  #     - execute
+  #     - '${_SERVICE}-${_JOB}'
+  #     - '--region=${_REGION}'
+  #     - '--wait'
+
+timeout: 1200s
