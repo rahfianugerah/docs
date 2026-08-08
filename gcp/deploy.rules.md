@@ -21,19 +21,45 @@ Cloud Run is not the answer to everything, and picking wrong is expensive.
 | An API serving a model | **Cloud Run service** | Scales to zero, pays per request |
 | A batch job, a nightly scan, an ETL | **Cloud Run job** | Runs to completion and exits, no request needed |
 | A migration | **Cloud Run job** | Never from the container `CMD`, see below |
-| **Training a model** | **Not Cloud Run.** Vertex AI custom job, or a VM | A Cloud Run task caps at 24 hours, has no persistent disk, and its GPU support is for inference |
+| **Training a model** | **Not Cloud Run.** Vertex AI custom job, or a VM | A Cloud Run task caps at 24 hours and has no persistent disk |
 | A notebook | **Not deployed at all** | Run it locally, or in Vertex AI Workbench |
 
 **Never run migrations from the container `CMD`.** With more than one instance, a cold-start burst runs them concurrently and they contend for the version table; a failure crash-loops the service instead of failing one visible job.
+
+## Resource Allocation
+
+Fixed for every project. Do not change a value without writing down why in the project README.
+
+| Service | CPU | Memory | min | max | Concurrency | Port |
+| :- | :- | :- | :- | :- | :- | :- |
+| Backend (API) | 1 | 1Gi | 0 | 5 | 30 | 8080 |
+| Frontend (static) | 1 | 512Mi | 0 | 5 | 80 | 8080 |
+
+- **Port 8080 is the Cloud Run default**, and the container must read it from the injected `PORT` variable rather than hardcoding it. This is the most common cause of "the container failed to start and listen on the port".
+- A backend does real work per request, so each instance takes fewer at a time. A static frontend only serves pre-built files, so one instance absorbs many.
+- **Do not raise concurrency to save instances.** An instance gets a fixed CPU share regardless of how many requests it holds, so a higher number adds no capacity; it only makes every request wait longer, and the slowdown surfaces as timeouts rather than as a clear signal.
+- `--max-instances 5` is a cost ceiling, not a capacity target. It is what stops a loop or a scraper from scaling until the bill notices.
+
+### The Second Ceiling
+
+A backend on Cloud SQL has a limit that is easy to miss:
+
+```text
+max-instances x (pool size + max overflow) = total database connections
+```
+
+At 5 instances with a pool of 5 and an overflow of 5, that is 50 connections against a `db-f1-micro` whose default `max_connections` is around 25. The app then fails on connection exhaustion under load, which looks like a database problem and is a configuration problem.
+
+Check the instance's `max_connections` before raising either number, and keep the pool small: a pool of 2 with an overflow of 3 is plenty at this scale.
 
 ## Cost
 
 A personal project has no finance team absorbing a mistake. This section is the one that matters.
 
 - **`--min-instances 0`, always.** Scale to zero is the entire reason to use Cloud Run for a side project. A single always-warm instance is roughly the cost of a small VM running all month, for nothing.
-- **Cap `--max-instances`.** The default is high. A loop, a scraper, or a public endpoint someone finds will scale until it hits the ceiling, and the bill follows. Set 2 to 4 unless there is a reason.
+- **Cap `--max-instances` at 5.** The default is high. A loop, a scraper, or a public endpoint someone finds will scale until it hits the ceiling, and the bill follows.
 - **Set a budget alert before the first deploy**, not after the first surprise. It costs nothing and it is the only thing that tells you.
-- **Delete what is not in use.** An idle Cloud Run service is free; an idle Cloud SQL instance, a static IP, a load balancer, and a persistent disk are not. Cloud SQL is the usual culprit on a dormant project.
+- **Delete what is not in use.** An idle Cloud Run service is free; an idle Cloud SQL instance, a static IP, and a load balancer are not. Cloud SQL is the usual culprit on a dormant project, because it bills whether or not anything connects to it.
 - **Artifact Registry charges for storage.** Old image tags accumulate. Set a cleanup policy keeping the last handful.
 - Accept the cold start. A few seconds on the first request after idle is the trade for paying nothing while idle.
 
@@ -73,6 +99,22 @@ An image carrying a 2GB checkpoint is slow to build, slow to cold start, and reb
 - Pin the weights by version or checksum, so a redeploy cannot silently pick up different weights.
 - A small model, under about 100MB, is fine in the image. Measure before assuming.
 
+## Cloud SQL
+
+PostgreSQL runs on Cloud SQL, attached through the Cloud SQL Auth Proxy rather than over a public IP.
+
+- Attach with `--add-cloudsql-instances $CLOUDSQL_INSTANCE` on a service, and `--set-cloudsql-instances` on a job. The two flags are spelled differently and the wrong one is rejected as an unrecognized argument.
+- The connection name is `PROJECT_ID:REGION:INSTANCE`, and its region must match the service's region.
+- The runtime service account needs **`roles/cloudsql.client`**. Without it the proxy cannot authenticate, the app blocks on a database it cannot reach, and the container never listens on `PORT`. Cloud Run reports that as a plain startup timeout with no permission error, which is why it is usually mistaken for a port problem.
+- Connect over the unix socket the proxy mounts at `/cloudsql/<connection-name>`, not over an IP.
+- **Give the instance no public IP.** A public Cloud SQL instance with a weak password is found by scanners within hours.
+- The database password is a secret, per [[secret.rules.md]]. Keep the host, port, and database name in environment variables and the password in Secret Manager, or use IAM database authentication and have no password at all.
+- Cloud SQL **does not scale to zero**. It bills while it exists, which makes it the single largest cost on an idle project. Stop the instance when a project goes dormant, and delete it when the project is done.
+
+```bash
+DATABASE_URL=postgresql+psycopg://[USER]:[PASSWORD]@/[DB]?host=/cloudsql/[CONNECTION_NAME]
+```
+
 ## Configuration and Secrets
 
 Follows [[secret.rules.md]]. The GCP mechanics:
@@ -101,25 +143,33 @@ Pick one region and keep everything in it: the service, the registry, the bucket
 
 - `asia-southeast1` (Singapore) is the default here: closest to Indonesia with full Cloud Run support including custom domain mapping.
 - `asia-southeast2` (Jakarta) is closer but **does not support Cloud Run domain mapping**. Use it only for a service that will never need a custom domain.
-- Move to a US or EU region only for something that region has and yours does not, usually GPU availability or a specific Vertex AI feature.
+- Move to a US or EU region only for something that region has and yours does not, such as a specific Vertex AI feature.
 
-## GPU Inference
+## No GPU
 
-Cloud Run supports GPUs in a limited set of regions, for **inference**, not training.
+**Cloud Run GPU is not used on these projects.** There is no budget for it.
 
-- `--gpu 1 --gpu-type nvidia-l4`, and `--no-cpu-throttling` so the instance keeps its CPU between requests.
-- `--min-instances 0` still applies, and the cold start is much longer while the model loads. Measure it before promising a latency number.
-- A GPU instance is expensive per hour. Cap `--max-instances` low, and set the budget alert.
-- If the workload is a batch of predictions rather than live requests, a Cloud Run job or Vertex AI batch prediction is cheaper than a warm GPU service.
+A GPU instance bills by the hour it is alive, and a cold start that loads a model onto a GPU is long enough that the temptation is to set `--min-instances 1`, which is exactly the thing that turns a side project into a monthly bill.
+
+Run inference on CPU. If a model is too slow on CPU:
+
+1. Make the model smaller: quantize it, distill it, or use a smaller checkpoint.
+2. Move the work off the request path into a Cloud Run job, where slow is acceptable.
+3. Batch the predictions instead of serving them one at a time.
+
+Only if all three fail does a GPU become the question, and then it is a budget decision made deliberately, not a flag added to a deploy command.
 
 ## Definition of Done
 
 - The image builds from a pinned base, runs as non-root, and listens on `PORT`.
 - `.dockerignore` excludes data, weights, notebooks, and `.venv`.
 - No secret or configuration value is baked into the image.
-- `--min-instances 0` and a capped `--max-instances`.
+- `--min-instances 0` and `--max-instances 5`, with the CPU, memory, and concurrency from the allocation table.
+- No GPU flag anywhere.
+- Cloud SQL is attached through the proxy, the runtime account holds `roles/cloudsql.client`, and the instance has no public IP.
 - A budget alert exists on the project.
-- The service, registry, bucket, and database are in one region.
+- The service, registry, bucket, and Cloud SQL instance are in one region.
+- `max-instances x pool size` fits inside the database `max_connections`.
 - Migrations run as a job, never from `CMD`.
 - Model weights load from storage, not from the image, unless they are small.
 

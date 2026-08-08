@@ -8,11 +8,25 @@
 # terminal owns the config. Putting config here means a rebuild is needed to change
 # a variable, and a substitution is visible in the build log, which a secret must
 # never be. See deploy.rules.md.
+#
+# It also carries no --add-cloudsql-instances. `gcloud run deploy` preserves the Cloud SQL
+# attachment the service already has, so it is set once by hand at bootstrap and never again.
+#
+# One file serves both services. Defaults are the backend; override for a frontend:
+#
+#   backend   gcloud builds submit --config cloudbuild.yaml --substitutions=_TAG=$TAG
+#   frontend  gcloud builds submit --config cloudbuild.yaml \
+#               --substitutions=_TAG=$TAG,_SERVICE=[SERVICE]-frontend,_MEMORY=512Mi,_CONCURRENCY=80
 
 substitutions:
   _REGION: asia-southeast1
   _REPOSITORY: '[REPOSITORY]'
   _SERVICE: '[SERVICE]'
+  # Allocation per deploy.rules.md. Backend: 1Gi / 30. Frontend: 512Mi / 80.
+  _CPU: "1"
+  _MEMORY: 1Gi
+  _CONCURRENCY: "30"
+  _MAX_INSTANCES: "5"
   # _TAG has no default. It is passed by the trigger as $SHORT_SHA, or by hand.
   # Cloud Build only populates $SHORT_SHA for trigger-started builds, so relying on
   # it in a manual build yields an image reference ending in a bare colon.
@@ -60,11 +74,12 @@ steps:
       - '--image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG}'
       - '--region=${_REGION}'
       - '--platform=managed'
-      - '--cpu=1'
-      - '--memory=1Gi'
-      - '--min-instances=0'      # scale to zero: the whole point of Cloud Run here
-      - '--max-instances=3'      # cap it, or a loop scales until the bill notices
-      - '--concurrency=40'
+      - '--cpu=${_CPU}'
+      - '--memory=${_MEMORY}'
+      - '--min-instances=0'                 # scale to zero: the whole point of Cloud Run here
+      - '--max-instances=${_MAX_INSTANCES}'  # cap it, or a loop scales until the bill notices
+      - '--concurrency=${_CONCURRENCY}'
+      - '--port=8080'                       # Cloud Run default; the app still reads $PORT
       - '--timeout=60'
       - '--allow-unauthenticated'   # remove for anything not meant to be public
 
