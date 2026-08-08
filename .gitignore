@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+.ipynb_checkpoints/
+.obsidian/workspace.json
+.DS_Store
