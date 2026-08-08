@@ -5,5 +5,5 @@ __pycache__/
 .env.*
 !.env.example
 .ipynb_checkpoints/
-.obsidian/workspace.json
+.obsidian/
 .DS_Store
