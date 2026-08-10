@@ -3,7 +3,7 @@
 # Memory
 
 ![Obsidian](https://img.shields.io/badge/Obsidian-Vault-7C3AED?logo=obsidian&logoColor=white)
-![Graphiti](https://img.shields.io/badge/Graphiti-Temporal-1E293B)
+![Graphify](https://img.shields.io/badge/Graphify-Structural-B45309)
 ![Cognee](https://img.shields.io/badge/Cognee-Semantic-0F766E)
 ![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
 
@@ -22,10 +22,10 @@ Three layers, one substrate:
 | Layer | Tool | Holds | Rebuildable |
 | :- | :- | :- | :- |
 | **Substrate** | Obsidian vault, markdown files | Everything. The source of truth | **No.** This is the memory |
+| **Structural** | Graphify | An AST map of a codebase: classes, functions, imports, call graph | Yes |
 | **Semantic** | Cognee | A knowledge graph and vector index built from the markdown | Yes |
-| **Temporal** | Graphiti | Episodes with valid-time: what was true, and when | Yes |
 
-**The markdown is the only durable store.** Cognee and Graphiti are indexes over it. Delete either one and rebuild it from the files; delete the files and the memory is gone.
+**The markdown is the only durable store.** Graphify and Cognee are indexes over it. Delete either one and rebuild it from the files; delete the files and the memory is gone.
 
 That inversion is the whole design. It means:
 
@@ -34,7 +34,9 @@ That inversion is the whole design. It means:
 - The memory is diffable, reviewable, and versioned, because it is text in git.
 - A human can read and correct it in Obsidian without touching a database.
 
-Obsidian is the write and read surface for a human. Cognee answers "what do I know about X". Graphiti answers "what did I know about X in March, and what changed".
+Obsidian is the write and read surface for a human. Cognee answers "what do I know about X". Graphify answers "where in the code is X", without a model reading a single file.
+
+Nothing here answers "what did I know in March". Git history does, and a `session/` note records what happened. A temporal layer was considered and dropped rather than left as an unbuilt claim.
 
 ## Layout
 
@@ -62,31 +64,18 @@ Four note types, and no fifth without a reason. A type that holds three notes af
 
 **1. Obsidian.** Open `docs/` as a vault. The memory is a folder inside it, so the rules and the memory share one graph and can link to each other.
 
-**2. Cognee.** Point it at the folder and let it build.
+**2. Cognee.** `plugmybrain` wraps the ingest, so this is one command.
 
-```python
-import cognee, asyncio
-
-async def index():
-    await cognee.add("memory/")          # ingest the markdown
-    await cognee.cognify()               # build graph + embeddings
-    return await cognee.search("what did I decide about the data loader")
-
-asyncio.run(index())
+```bash
+pmb sync                                        # ingest rules/ and memory/ into the graph
+pmb search "what did I decide about the loader" --project curated
 ```
 
-**3. Graphiti.** Feed each session note as an episode, so the graph carries time.
+**3. Graphify.** Point it at a repository to get the code map. No model is involved and no
+file leaves the machine.
 
-```python
-from graphiti_core import Graphiti
-
-graphiti = Graphiti(uri, user, password)
-await graphiti.add_episode(
-    name="2026-02-11-scaler-leak",
-    episode_body=note_text,
-    source_description="memory/session",
-    reference_time=note_created_at,      # valid-time, not ingest-time
-)
+```bash
+pmb map C:\path\to\any-project
 ```
 
 Reindex both after a batch of writes, not after every note. They are derived; they can lag.
@@ -101,5 +90,6 @@ The protocol for writing and recalling is [[memory.rules.md]]. Read it before wr
 
 - [[memory.rules.md]]
 - [[note.template.md]]
+- [[graph/README.md]]
 - [[docs.rules.md]]
 - [[secret.rules.md]]

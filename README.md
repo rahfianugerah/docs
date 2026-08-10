@@ -30,7 +30,7 @@ The whole repository is an Obsidian vault. Open the folder and the graph is alre
 | [component/](component/) | Framework-agnostic UI component standards: tokens, dropdowns, calendars, refresh |
 | [gcp/](gcp/) | The Cloud Run deploy standard, the runbook, and the Cloud Build templates |
 | [template/](template/) | Documentation templates: project README, API, and model card |
-| [memory/](memory/) | The portable AI memory: markdown notes, indexed by Cognee and Graphiti |
+| [memory/](memory/) | The portable AI memory: markdown notes, indexed by Cognee |
 | [graph/](graph/) | The machine-generated half: code maps and the knowledge graph export. Rebuilt, never hand-edited |
 
 ## Rules
@@ -100,10 +100,12 @@ A memory every model can read, because it is files rather than a vendor's store.
 | Layer | Tool | Holds |
 | :- | :- | :- |
 | Substrate | Obsidian vault, markdown | Everything. The source of truth |
+| Structural | Graphify | An AST map of a codebase, so an agent stops grepping the tree |
 | Semantic | Cognee | A knowledge graph and vector index built from the markdown |
-| Temporal | Graphiti | Episodes with valid-time: what was true, and when |
 
 **The markdown is the only durable store.** The other two are indexes over it: delete either and rebuild it from the files. That is what makes the memory portable, diffable, and reviewable, and what makes switching embedding model or graph database a reindex rather than a migration.
+
+Both are built by `plugmybrain`, whose command is `pmb`.
 
 | Document | Owns |
 | :- | :- |
@@ -121,7 +123,7 @@ A memory every model can read, because it is files rather than a vendor's store.
 | Lint and format | Ruff |
 | Tests | pytest |
 | Deploy | Cloud Run, built by Cloud Build, images in Artifact Registry |
-| Vault | Obsidian, with Cognee and Graphiti over the same files |
+| Vault | Obsidian, with Graphify and Cognee over the same files, built by `plugmybrain` |
 
 ## Using It With a Model
 
@@ -177,6 +179,13 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[memory.rules.md]]
 - [[note.template.md]]
 - [[graph/README.md]]
+
+### Decisions
+
+- [[plugmybrain-runs-on-a-flat-cost-vm.md]]
+- [[embeddings-are-voyage-3-5-at-1024-dimensions.md]]
+- [[postgres-holds-the-graph-as-a-demo-feature.md]]
+- [[retrieval-returns-chunks-not-a-written-answer.md]]
 
 ### Configuration
 

@@ -51,7 +51,7 @@ Rules:
 1. **The title states the thing**, not the topic. "Loader uses Polars, not pandas" beats "Data loading notes".
 2. **The filename is a kebab-case slug of the title**, so a wikilink reads as a sentence.
 3. **`created` and `updated` are real dates**, written absolutely. Never "last week"; a relative date in a durable note is meaningless the moment it is read.
-4. **Frontmatter is required.** Cognee and Graphiti read it, and Obsidian shows it as properties.
+4. **Frontmatter is required.** Cognee reads it, and Obsidian shows it as properties.
 5. **Link liberally.** A wikilink whose target does not exist yet is fine; it marks a note worth writing.
 6. **Keep it short.** If a note runs past a screen, it holds more than one thing.
 
@@ -61,10 +61,12 @@ Before answering from general knowledge, check the memory in this order. Stop at
 
 1. **The note itself**, if you know its name. Cheapest, exact.
 2. **Cognee semantic search**, for "what do I know about X". Handles the case where you do not know the note's name.
-3. **Graphiti temporal query**, for "what was true when" and "what changed". This is the only layer that answers a question about time.
+3. **Graphify's `graph.json`**, for "where is X handled". Never grep the tree for this; the map is already extracted and costs no tokens to read.
 4. **The code**, for anything about how something works today. The code is always more current than a note about the code.
 
 Layer 4 outranks layers 1 to 3 on anything the code can answer. A note describing an implementation is a note that will be wrong eventually.
+
+No layer answers "what was true in March". Git history does.
 
 ## Trust and Staleness
 
@@ -72,7 +74,7 @@ Layer 4 outranks layers 1 to 3 on anything the code can answer. A note describin
 
 - Verify anything a note claims about a file, a function, a path, or a flag before acting on it. Files move.
 - A note that turns out to be wrong is corrected or marked `status: superseded`, not left alone. A wrong memory is worse than no memory, because it is trusted.
-- When a note is superseded, link the new note from the old one, and set `status: superseded`. Do not delete it; the fact that something changed is itself worth knowing, and Graphiti's temporal layer depends on the old value still existing.
+- When a note is superseded, link the new note from the old one, and set `status: superseded`. Do not delete it; the fact that something changed is itself worth knowing, and a reader who finds the old note needs the pointer to the new one.
 - Delete a note only when it was never true.
 
 ## Never Store
@@ -85,7 +87,7 @@ Layer 4 outranks layers 1 to 3 on anything the code can answer. A note describin
 
 ## Writing from an Agent
 
-- Write the note as a file. Do not write to Cognee or Graphiti directly; they are indexes and a direct write is lost on the next rebuild.
+- Write the note as a file, then run `pmb sync`. Do not write to Cognee directly; it is an index and a direct write is lost on the next rebuild.
 - Reindex after a batch of writes, not after each one.
 - One note per commit is unnecessary; a session's notes commit together, per [[commit.rules.md]].
 - Never rewrite a note you did not write without saying so in `updated`.
