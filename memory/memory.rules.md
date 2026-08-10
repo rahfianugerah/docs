@@ -88,6 +88,7 @@ No layer answers "what was true in March". Git history does.
 ## Writing from an Agent
 
 - Write the note as a file, then run `pmb sync`. Do not write to Cognee directly; it is an index and a direct write is lost on the next rebuild.
+- A note the graph proposed is not a memory until a human keeps it. `pmb promote` moves it here and leaves a `**Why:**` line blank on purpose: a promoted note with no reason written down is a machine's guess with a date on it.
 - Reindex after a batch of writes, not after each one.
 - One note per commit is unnecessary; a session's notes commit together, per [[commit.rules.md]].
 - Never rewrite a note you did not write without saying so in `updated`.
