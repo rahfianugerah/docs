@@ -28,6 +28,19 @@ the output. Delete it entirely and one command puts it back.
 Both are gitignored. The full Graphify output, including `graph.json` and the interactive
 `graph.html`, lives in the `plugmybrain` repository under `graph/`, not in the vault.
 
+## Keeping Something You Find Here
+
+A note here is disposable, so editing it is wasted work. When one turns out to be worth
+keeping, promote it instead:
+
+```bash
+pmb promote graph/kg/<dataset>/<note>.md --type fact
+```
+
+It moves into [[memory/README.md]] with the frontmatter from [[note.template.md]], and from
+then on it is human-authored: committed, yours to edit, and it wins on conflict with anything
+the machine inferred. Fill in the `**Why:**` line, then run `pmb sync`.
+
 ## Why the Split
 
 An agent that greps a repository to work out how it is wired pays for that in tokens
