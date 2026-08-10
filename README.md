@@ -31,6 +31,7 @@ The whole repository is an Obsidian vault. Open the folder and the graph is alre
 | [gcp/](gcp/) | The Cloud Run deploy standard, the runbook, and the Cloud Build templates |
 | [template/](template/) | Documentation templates: project README, API, and model card |
 | [memory/](memory/) | The portable AI memory: markdown notes, indexed by Cognee and Graphiti |
+| [graph/](graph/) | The machine-generated half: code maps and the knowledge graph export. Rebuilt, never hand-edited |
 
 ## Rules
 
@@ -175,6 +176,7 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[memory/README.md]]
 - [[memory.rules.md]]
 - [[note.template.md]]
+- [[graph/README.md]]
 
 ### Configuration
 
