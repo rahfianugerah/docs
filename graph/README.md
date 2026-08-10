@@ -23,6 +23,7 @@ the output. Delete it entirely and one command puts it back.
 | :- | :- | :- |
 | `code/` | `pmb map <path>` | `GRAPH_REPORT.md` per project: the hubs, the surprising connections, the questions worth asking |
 | `kg/` | `pmb export --project <name>` | The Cognee knowledge graph as `[[wikilink]]` notes, so the vault graph view renders it |
+| `kg/` | `pmb visualize --project <name>` | `graph.html`: the same graph as one self-contained file, for when you just want to look |
 
 Both are gitignored. The full Graphify output, including `graph.json` and the interactive
 `graph.html`, lives in the `plugmybrain` repository under `graph/`, not in the vault.

@@ -6,7 +6,7 @@
 ![Obsidian](https://img.shields.io/badge/Obsidian-Vault-7C3AED?logo=obsidian&logoColor=white)
 ![Rules](https://img.shields.io/badge/Rules-15-4C1D95)
 ![Components](https://img.shields.io/badge/Components-4-4C1D95)
-![Templates](https://img.shields.io/badge/Templates-5-4C1D95)
+![Templates](https://img.shields.io/badge/Templates-6-4C1D95)
 ![Status](https://img.shields.io/badge/Status-Active-2EA043)
 
 The source of truth for how I build things: one set of standards across every project, and a shared memory every AI model can read.
@@ -90,6 +90,7 @@ Every documentation file starts from one of these, per [[docs.rules.md]]. Keep t
 | [[project.template.md]] | A project `README.md` |
 | [[model.template.md]] | A `MODEL.md` model card: data, seed, metrics, failure modes |
 | [[api.template.md]] | An `API.md` documenting endpoints |
+| [[agent.template.md]] | A project's `CLAUDE.md` and `AGENTS.md`, pointing agents at the map and the rules |
 | [[cloudbuild.service.template.yaml]] | The Cloud Build pipeline for a Cloud Run service |
 | [[cloudbuild.job.template.yaml]] | The Cloud Build pipeline for a Cloud Run job |
 
@@ -172,6 +173,7 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[project.template.md]]
 - [[api.template.md]]
 - [[model.template.md]]
+- [[agent.template.md]]
 
 ### Memory
 
