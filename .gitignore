@@ -7,3 +7,7 @@ __pycache__/
 .ipynb_checkpoints/
 .obsidian/
 .DS_Store
+
+# Machine-generated. Rebuilt by `brain map` and `brain export`; graph/README.md is not.
+graph/code/
+graph/kg/
