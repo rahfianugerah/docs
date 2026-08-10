@@ -8,7 +8,7 @@ Documentation is written for the person who arrives with no context, which is us
 
 Everything is written in **English**: every document, every heading, every comment, every commit, every identifier.
 
-Every document starts from a template in [[template/]] and keeps the template's section order, so any two projects are comparable.
+Every document starts from a template in `template/` and keeps the template's section order, so any two projects are comparable. They are [[project.template.md]], [[api.template.md]] and [[model.template.md]].
 
 ## What Every Project Documents
 

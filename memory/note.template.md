@@ -80,7 +80,7 @@ dataset before the split, so the test distribution reached training.
 Related: [[decision/loader-uses-polars.md]]
 ```
 
-A session note is what Graphiti ingests as an episode, so its `created` date is the valid time of what it describes, not the day it was typed up.
+A session note's `created` date is the valid time of what it describes, not the day it was typed up. The filename carries that date too, so the folder sorts chronologically.
 
 ## Reference
 

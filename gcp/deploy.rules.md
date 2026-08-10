@@ -26,6 +26,16 @@ Cloud Run is not the answer to everything, and picking wrong is expensive.
 
 **Never run migrations from the container `CMD`.** With more than one instance, a cold-start burst runs them concurrently and they contend for the version table; a failure crash-loops the service instead of failing one visible job.
 
+## The PlugMyBrain Exception
+
+**One project does not ship to Cloud Run: `plugmybrain`.** It runs as a single `docker compose` stack on one always-on `e2-small` Compute Engine VM, with its own Postgres in a container.
+
+The reason is the Cost section below, not an argument against it. The memory has no idle state to scale into: the database must always be up, so the managed shape pays the Cloud SQL monthly floor **and** needs a service in front of it. One small VM covers both for one fixed line. The rejected alternatives and the cost accepted are in [[plugmybrain-runs-on-a-flat-cost-vm.md]].
+
+**This does not generalise.** The exception is for a stateful, always-on, single-user service whose managed equivalent costs more than the machine. A project that scales to zero has no claim on it. If a second project ever qualifies, that is when this becomes a rule rather than an exception, per [[README.md]] on a rule broken three times.
+
+What still applies to it unchanged: a pinned base image, a non-root container, no secret in the image, one region, a budget alert, and migrations as a job rather than from `CMD`.
+
 ## Resource Allocation
 
 Fixed for every project. Do not change a value without writing down why in the project README.
@@ -179,3 +189,4 @@ Only if all three fail does a GPU become the question, and then it is a budget d
 - [[secret.rules.md]]
 - [[env.rules.md]]
 - [[codes.rules.md]]
+- [[plugmybrain-runs-on-a-flat-cost-vm.md]]

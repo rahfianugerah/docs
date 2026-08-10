@@ -11,7 +11,7 @@ Rules for filling it in are in [[docs.rules.md]]; the badge row follows [[badge.
 
 ![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
 ![Conda](https://img.shields.io/badge/Conda-Miniconda-44A833?logo=anaconda&logoColor=white)
-![[Library]](https://img.shields.io/badge/[Library]-[Version]-[HEX]?logo=[slug]&logoColor=white)
+![Library](https://img.shields.io/badge/[Library]-[Version]-[HEX]?logo=[slug]&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-Active-2EA043)
 ![License](https://img.shields.io/badge/License-MIT-750014)
 
