@@ -8,6 +8,6 @@ __pycache__/
 .obsidian/
 .DS_Store
 
-# Machine-generated. Rebuilt by `brain map` and `brain export`; graph/README.md is not.
+# Machine-generated. Rebuilt by `pmb map` and `pmb export`; graph/README.md is not.
 graph/code/
 graph/kg/
