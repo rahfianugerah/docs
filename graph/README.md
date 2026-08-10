@@ -21,11 +21,11 @@ the output. Delete it entirely and one command puts it back.
 
 | Folder | Written by | Holds |
 | :- | :- | :- |
-| `code/` | `brain map <path>` | `GRAPH_REPORT.md` per project: the hubs, the surprising connections, the questions worth asking |
-| `kg/` | `brain export --project <name>` | The Cognee knowledge graph as `[[wikilink]]` notes, so the vault graph view renders it |
+| `code/` | `pmb map <path>` | `GRAPH_REPORT.md` per project: the hubs, the surprising connections, the questions worth asking |
+| `kg/` | `pmb export --project <name>` | The Cognee knowledge graph as `[[wikilink]]` notes, so the vault graph view renders it |
 
 Both are gitignored. The full Graphify output, including `graph.json` and the interactive
-`graph.html`, lives in the `brain` repository under `graph/`, not in the vault.
+`graph.html`, lives in the `plugmybrain` repository under `graph/`, not in the vault.
 
 ## Why the Split
 
@@ -41,7 +41,7 @@ after a rebuild is the test.
 
 ```bash
 conda activate env
-brain map C:\path\to\any-project
+pmb map C:\path\to\any-project
 ```
 
 ## Related
