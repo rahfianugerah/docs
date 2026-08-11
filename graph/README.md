@@ -19,27 +19,25 @@ nothing to recover.
 Those files are human-authored, committed, and are what feeds the index. This folder is
 the output. Delete it entirely and one command puts it back.
 
-| Folder | Written by | Holds |
-| :- | :- | :- |
-| `code/` | `pmb map <path>` | `GRAPH_REPORT.md` per project: the hubs, the surprising connections, the questions worth asking |
-| `kg/` | `pmb export --project <name>` | The Cognee knowledge graph as `[[wikilink]]` notes, so the vault graph view renders it |
-| `kg/` | `pmb visualize --project <name>` | `graph.html`: the same graph as one self-contained file, for when you just want to look |
+Both are written by `pmb digest` and deleted by `pmb reset`.
 
-Both are gitignored. The full Graphify output, including `graph.json` and the interactive
-`graph.html`, lives in the `plugmybrain` repository under `graph/`, not in the vault.
+| Folder | Holds |
+| :- | :- |
+| `code/` | `GRAPH_REPORT.md`: the hubs, the surprising connections, the questions worth asking |
+| `kg/` | The Cognee knowledge graph as `[[wikilink]]` notes, so the vault graph view renders it |
+
+Both are gitignored. Graphify's raw output, including `graph.json`, stays in the `plugmybrain`
+repository rather than here, because nobody reads json in Obsidian.
 
 ## Keeping Something You Find Here
 
 A note here is disposable, so editing it is wasted work. When one turns out to be worth
-keeping, promote it instead:
+keeping, move it into [[memory/README.md]] yourself, give it the frontmatter from
+[[note.template.md]], and fill in the `**Why:**` line. From then on it is human-authored:
+committed, yours to edit, and it survives every `pmb reset`.
 
-```bash
-pmb promote graph/kg/<dataset>/<note>.md --type fact
-```
-
-It moves into [[memory/README.md]] with the frontmatter from [[note.template.md]], and from
-then on it is human-authored: committed, yours to edit, and it wins on conflict with anything
-the machine inferred. Fill in the `**Why:**` line, then run `pmb sync`.
+The blank `**Why:**` line is the whole point. A kept note with no reason written down is a
+machine's guess with a date on it.
 
 ## Why the Split
 
@@ -53,9 +51,10 @@ after a rebuild is the test.
 
 ## Rebuilding
 
+One command, run from this vault. It rebuilds both folders from the markdown above them.
+
 ```bash
-conda activate env
-pmb map C:\path\to\any-project
+pmb digest
 ```
 
 ## Related

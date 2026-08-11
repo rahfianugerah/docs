@@ -64,23 +64,17 @@ Four note types, and no fifth without a reason. A type that holds three notes af
 
 **1. Obsidian.** Open `docs/` as a vault. The memory is a folder inside it, so the rules and the memory share one graph and can link to each other.
 
-**2. Cognee.** `plugmybrain` wraps the ingest, so this is one command.
+**2. Cognee and Graphify.** `plugmybrain` runs both from one command, so this whole folder becomes a memory in a single step. Point it at any folder of markdown; the folder's own name is the memory it lands in.
 
 ```bash
-pmb sync                                        # ingest rules/ and memory/ into the graph
-pmb search "what did I decide about the loader" --project curated
+pmb digest                                      # this folder: markdown to memory, plus the code map
+pmb list                                        # what the memory holds, and what it was built from
+pmb reset                                       # throw the index away; every markdown file survives
 ```
 
-**3. Graphify.** Point it at a repository to get the code map. No model is involved and no
-file leaves the machine.
+Digest after a batch of writes, not after every note. The index is derived; it can lag.
 
-```bash
-pmb map C:\path\to\any-project
-```
-
-Reindex both after a batch of writes, not after every note. They are derived; they can lag.
-
-**4. Any model.** Give it [[memory.rules.md]] and file access. That is the whole integration.
+**3. Any model.** Give it [[memory.rules.md]] and file access. That is the whole integration. In Claude Code and Codex the memory is already connected as an MCP server, so a question needs no command at all: ask, and the model reads.
 
 ## Rules
 
