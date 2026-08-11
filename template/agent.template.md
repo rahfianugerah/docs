@@ -42,9 +42,15 @@ Never read the whole vault to answer a question about this code. That is what th
 
 ## The Cognee MCP Server
 
-The `plugmybrain` MCP server answers document questions over the knowledge graph. **Always pass the
-dataset**; it is required on every read so one project's memory cannot leak into another's
-answer. This project's dataset is `[dataset]`.
+Read with `recall`, always passing `datasets`, so one project's memory cannot leak into
+another's answer. This project's dataset is `[dataset]`.
+
+```json
+{"query": "[a question]", "datasets": ["[dataset]"], "search_type": "CHUNKS", "top_k": 15}
+```
+
+**Never call `remember` or `forget`.** The MCP server exposes them and they write straight into
+the index, which the next `pmb sync` overwrites. Write a note into the vault instead.
 
 ## Two Things Not to Do
 
