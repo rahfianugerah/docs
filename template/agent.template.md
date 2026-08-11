@@ -42,7 +42,7 @@ Never read the whole vault to answer a question about this code. That is what th
 
 ## The Cognee MCP Server
 
-The `cognee` MCP server answers document questions over the knowledge graph. **Always pass the
+The `plugmybrain` MCP server answers document questions over the knowledge graph. **Always pass the
 dataset**; it is required on every read so one project's memory cannot leak into another's
 answer. This project's dataset is `[dataset]`.
 
