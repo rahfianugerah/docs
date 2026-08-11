@@ -19,16 +19,19 @@ nothing to recover.
 Those files are human-authored, committed, and are what feeds the index. This folder is
 the output. Delete it entirely and one command puts it back.
 
-Both are written by `pmb digest` and deleted by `pmb reset`. This README is not, and survives
-a reset.
+**Every brain on this machine generates into here**, one folder per brain, not into the project
+it came from. A digested folder is only ever read; eighteen service repositories do not each
+need a `graph/` nobody asked for, and the point of a vault is that it is one place you open and
+see everything in.
 
 | Folder | Holds |
 | :- | :- |
-| `code/` | `GRAPH_REPORT.md`: the hubs, the surprising connections, the questions worth asking |
-| `kg/` | The Cognee knowledge graph as `[[wikilink]]` notes, so the vault graph view renders it |
+| `code/<brain>/` | `GRAPH_REPORT.md`: the hubs, the surprising connections, the questions worth asking |
+| `kg/<brain>/` | The Cognee knowledge graph as `[[wikilink]]` notes, so the vault graph view renders it |
 
-Both are gitignored. Graphify's raw output, including `graph.json`, stays in the `plugmybrain`
-repository rather than here, because nobody reads json in Obsidian.
+Both are written by `pmb digest`, deleted by `pmb reset`, and gitignored. This README is none of
+those and survives a reset. Graphify's raw `graph.json` stays in the `plugmybrain` repository,
+because nobody reads json in Obsidian.
 
 ## Keeping Something You Find Here
 

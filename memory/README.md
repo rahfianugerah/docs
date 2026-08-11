@@ -62,7 +62,7 @@ Four note types, and no fifth without a reason. A type that holds three notes af
 
 ## Plugging It In
 
-**1. Obsidian.** Open `docs/` as a vault. The memory is a folder inside it, so the rules and the memory share one graph and can link to each other.
+**1. Obsidian.** Open `docs/` as a vault. The memory is a folder inside it, and so is `graph/`, where every brain on this machine writes what it generated. So the rules, the memory, and the graph a model built all share one view and can link to each other.
 
 **2. Cognee and Graphify.** `plugmybrain` runs both from one command, so this whole folder becomes a memory in a single step. Point it at any folder of markdown; the folder's own name is the memory it lands in.
 
@@ -73,11 +73,11 @@ pmb list                                        # what the memory holds, and wha
 pmb reset                                       # throw the index away; every markdown file survives
 ```
 
-`init brain` is what marks this folder as the rules and memory rather than an ordinary project. In a parent folder holding many projects, `pmb init root .` marks that instead, and one digest walks every child with the brain going first.
+`init brain` is what marks this folder as the rules and memory rather than an ordinary project. In a parent folder holding many projects, `pmb init root .` marks that instead, and one digest walks every child with the brain going first. Whatever is digested, the generated notes land here in `graph/`, never in the project.
 
 Digest after a batch of writes, not after every note. The index is derived; it can lag.
 
-**3. Any model.** Give it [[memory.rules.md]] and file access. That is the whole integration. In Claude Code and Codex the memory is already connected as an MCP server, so a question needs no command at all: ask, and the model reads.
+**3. Any coding agent.** Claude Code, Codex, opencode, anything speaking MCP. The memory is connected as a server with two read-only tools, `recall` and `brains`, so a question needs no command at all: ask, and the agent reads. `/pmb-map <brain>` switches which memory the session reads from when the work moves elsewhere.
 
 ## Rules
 
