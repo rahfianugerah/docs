@@ -67,10 +67,13 @@ Four note types, and no fifth without a reason. A type that holds three notes af
 **2. Cognee and Graphify.** `plugmybrain` runs both from one command, so this whole folder becomes a memory in a single step. Point it at any folder of markdown; the folder's own name is the memory it lands in.
 
 ```bash
+pmb init brain .                                # once: scaffold this folder and wire the agents
 pmb digest                                      # this folder: markdown to memory, plus the code map
 pmb list                                        # what the memory holds, and what it was built from
 pmb reset                                       # throw the index away; every markdown file survives
 ```
+
+`init brain` is what marks this folder as the rules and memory rather than an ordinary project. In a parent folder holding many projects, `pmb init root .` marks that instead, and one digest walks every child with the brain going first.
 
 Digest after a batch of writes, not after every note. The index is derived; it can lag.
 

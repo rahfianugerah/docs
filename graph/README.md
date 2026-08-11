@@ -19,7 +19,8 @@ nothing to recover.
 Those files are human-authored, committed, and are what feeds the index. This folder is
 the output. Delete it entirely and one command puts it back.
 
-Both are written by `pmb digest` and deleted by `pmb reset`.
+Both are written by `pmb digest` and deleted by `pmb reset`. This README is not, and survives
+a reset.
 
 | Folder | Holds |
 | :- | :- |
