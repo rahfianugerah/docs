@@ -30,7 +30,7 @@ graphify query "[a question about this codebase]" --graph [path-to-map]/graph.js
 graphify god-nodes --graph [path-to-map]/graph.json
 ```
 
-If the map is stale, rebuild it with `pmb map .` rather than reading files to compensate.
+If the map is stale, rebuild it with `pmb digest` rather than reading files to compensate.
 
 ## Rules Come From the Vault, Not From Here
 
@@ -50,12 +50,12 @@ another's answer. This project's dataset is `[dataset]`.
 ```
 
 **Never call `remember` or `forget`.** The MCP server exposes them and they write straight into
-the index, which the next `pmb sync` overwrites. Write a note into the vault instead.
+the index, which the next `pmb digest` overwrites. Write a note into the vault instead.
 
 ## Two Things Not to Do
 
 - Do not write to Cognee directly. Write markdown into `[path-to-vault]/memory/`, then run
-  `pmb sync`. A direct write is an index write and is lost on the next rebuild.
+  `pmb digest`. A direct write is an index write and is lost on the next rebuild.
 - Do not hand-edit anything under `[path-to-vault]/graph/`. It is regenerated and gitignored.
 ```
 
