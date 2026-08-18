@@ -54,6 +54,7 @@ Rules:
 4. **Frontmatter is required.** Cognee reads it, and Obsidian shows it as properties.
 5. **Link liberally.** A wikilink whose target does not exist yet is fine; it marks a note worth writing.
 6. **Keep it short.** If a note runs past a screen, it holds more than one thing.
+7. **At most one callout**, per [[callout.rules.md]], and only for the line that changes what the reader does. A note holds one thing, so only one line in it can be the thing that must not be missed.
 
 ## Recall Order
 
@@ -78,6 +79,9 @@ No layer answers "what was true in March". Git history does.
 - Delete a note only when it was never true.
 
 ## Never Store
+
+> [!danger]
+> A note carrying a secret is a secret published to a git repository and to every model that reads the memory. Rotate anything that reaches one, per [[secret.rules.md]].
 
 - **A secret, a key, a token, a password, or a connection string.** The memory is a git repository and it is read by every model. See [[secret.rules.md]].
 - Personal data about a third party.
@@ -109,3 +113,4 @@ No layer answers "what was true in March". Git history does.
 - [[secret.rules.md]]
 - [[env.rules.md]]
 - [[docs.rules.md]]
+- [[callout.rules.md]]
