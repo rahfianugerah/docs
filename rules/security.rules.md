@@ -10,6 +10,9 @@ This file is both the standard and the review prompt. Hand it to a reviewer, hum
 
 ## Operating Rules
 
+> [!warning]
+> Review for what the code can be made to do, not only what it is intended to do. Assume any action not specifically denied is allowed.
+
 - **Plan first.** Before touching or changing anything, produce a review plan: the files and modules to inspect, the control categories in scope, and the order of work. Wait for explicit approval. Do not write or modify code before approval.
 - **Report, do not silently fix.** For each finding, output the control ID, file and line, severity (Critical / High / Medium / Low), the concrete problem, and a remediation recommendation. Apply fixes only after the plan is approved.
 - **Evidence over assumption.** Cite the exact code that triggered each finding. If a control cannot be verified from the code alone, such as server or infrastructure configuration, flag it as "needs verification" rather than passing or failing it.

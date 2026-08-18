@@ -84,6 +84,9 @@ State the metric, the baseline it beat or failed to beat, the parameters that ch
 
 **Record a negative result too.** An experiment that failed is worth a merged-or-closed PR saying so, because the alternative is running it again next year having forgotten.
 
+> [!tip]
+> Open a PR when the reasoning matters more than the diff. A PR is searchable prose attached to a change, which is the one thing git history is bad at.
+
 ### Test Plan
 
 How the change was verified. A checklist or a list.

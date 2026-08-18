@@ -4,26 +4,46 @@
 
 ## Core Requirement
 
-**`main` is the only permanent branch.** It always works. Everything else is a short-lived branch that merges into it and is deleted.
+**A project uses one of two shapes, and it says which one in its README.**
 
-This is trunk-based development, and it is the right shape for a personal project. A staging branch and a release train exist to coordinate a team and a deployment window; with one developer they are ceremony that slows you down and drifts out of sync.
+| Shape | Permanent branches | For |
+| :- | :- | :- |
+| **Trunk** | `main` | A project with no deployment, or one deployed straight from `main` |
+| **Promotion** | `dev`, `staging`, `main` | A project with a real deployment that needs a soak period |
 
-If a project later grows a real deployment that needs a soak period, add the branch then. Not before.
+Trunk is the default. A staging branch exists to coordinate a deployment window; with no deployment it is ceremony that drifts out of sync.
+
+**A project that deploys uses promotion.** Once something real runs from a branch, a change needs somewhere to be wrong before it is wrong in production.
 
 ## The Branches
 
 | Branch | Lives | Rule |
 | :- | :- | :- |
-| `main` | Forever | Always in a working state. Never force pushed |
-| `<type>/<description>` | Days, not weeks | Branch off `main`, merge back, delete |
+| `main` | Forever | What is deployed. Always in a working state. Never force pushed |
+| `staging` | Forever, on a promotion project | What is being verified before release. Never force pushed |
+| `dev` | Forever, on a promotion project | Where work lands first. Never force pushed |
+| `<type>/<description>` | Days, not weeks | Branch off `dev`, or off `main` on a trunk project, merge back, delete |
+
+## Promotion
+
+A change moves in one direction only: **`dev` to `staging` to `main`**, through a pull request at every stage, per [[pr.rules.md]].
+
+- **Never commit straight to `staging` or `main`.** A commit that skips a stage skips the verification that stage exists for.
+- **Never merge backwards.** A fix made on `main` is cherry-picked back to `dev` and `staging` in the same session, or the branches diverge and the next promotion carries a revert nobody intended.
+- A hotfix branches from `main`, merges to `main`, and is carried back immediately. It is the one path that starts anywhere but `dev`.
+- Protect all three against force push and deletion.
+- Promote small and often. A promotion that has been waiting a month is not a release, it is a migration.
 
 Rules:
 
 1. **`main` always works.** Someone cloning it can install the environment and run the thing. A commit that leaves `main` broken gets fixed or reverted immediately.
-2. **Branch for anything that will take more than one commit**, or anything you might abandon. A one-line typo fix goes straight on `main`; there is nobody to coordinate with.
+2. **Branch for anything that will take more than one commit**, or anything you might abandon. On a trunk project a one-line typo fix goes straight on `main`; on a promotion project it goes to `dev` like everything else.
 3. **Merge back within a few days.** A branch alive for three weeks is a merge conflict growing in the dark.
 4. **Delete the branch after merging.** `git branch -d` locally and on the remote. The commits are in `main`; the branch name adds nothing.
-5. **Never force push `main`.** Force pushing a side branch nobody else has is fine.
+5. **Never force push a permanent branch.** Force pushing a side branch nobody else has is fine.
+
+> [!warning]
+> A branch alive for three weeks is a merge conflict growing in the dark. Merge back within a few days, or the branch becomes the work.
 
 ## Naming
 
@@ -72,7 +92,8 @@ Machine learning produces branches that are questions, not features. Treat them 
 
 ## Definition of Done
 
-- `main` installs and runs.
+- `main` installs and runs, and the README says which branch shape the project uses.
+- On a promotion project, every change reached `main` through `dev` and `staging`, and no permanent branch was force pushed.
 - The branch is named `<type>/<description>` in English.
 - The branch is merged and deleted, locally and on the remote.
 - An abandoned experiment has its finding written down somewhere durable.
