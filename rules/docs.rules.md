@@ -72,6 +72,11 @@ This documentation set is an Obsidian vault, and so is the memory brain in [[mem
 
 **Wikilinks with the extension:** `[[commit.rules.md]]`, not the bare `commit` form without the extension. The extension form survives being read outside Obsidian, where a bare link means nothing.
 
+**Callouts** mark the one thing on a page a reader must not miss, and every type comes from [[callout.rules.md]]. A destructive instruction carries a `danger` callout, and every rules document carries at least one `warning` on the way people actually get it wrong.
+
+> [!warning]
+> A callout is Obsidian syntax, so it renders as a plain blockquote everywhere else and is digested into the memory index verbatim. Three per document is the ceiling, because a page of callouts has no emphasis left.
+
 **Fixed placement, so re-runs are deterministic:**
 
 | Block | Where | Contains |

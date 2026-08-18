@@ -28,6 +28,9 @@ Build what the task needs today. Not what it might need.
 
 The cost of a wrong abstraction is higher than the cost of writing the thing twice. Two duplicated blocks are easy to merge once you can see what they share; one wrong abstraction has to be unpicked from every caller.
 
+> [!warning]
+> Two blocks that look alike but change for different reasons are not duplication. Merging them is how a shared helper grows four boolean flags to serve four callers.
+
 ## KISS: Keep It Simple
 
 The simplest solution that works is the correct one.

@@ -91,7 +91,8 @@ These carry no logo, because they represent a state rather than a technology. Th
 
 ## Keeping a Badge Honest
 
-**A badge is a claim, and a stale badge is a lie.** It is the first thing a reader sees and the last thing anybody remembers to update.
+> [!warning]
+> **A badge is a claim, and a stale badge is a lie.** It is the first thing a reader sees and the last thing anybody remembers to update.
 
 - Update the version badge in the same commit that changes the version. If Python moves to 3.14, the badge moves with it.
 - Do not add a badge for something the project does not actually use.

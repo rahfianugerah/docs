@@ -8,6 +8,9 @@
 
 This applies to you and to any AI assistant working in the project. A model that reads a real `.env` will eventually echo one of its values into a response, a log, or a commit.
 
+> [!danger]
+> A command naming a real environment file is prohibited even when the intent is only to check that it exists. Test for the path instead.
+
 The format does not change the rule. A secret in YAML is the same secret as one in `.env`.
 
 ## Never Read

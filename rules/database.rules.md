@@ -134,6 +134,9 @@ That f-string is safe **only** because `column` came from the allowlist and can 
 - No public IP on a deployed database. See [[deploy.rules.md]].
 - Never format user input into SQL. [[security.rules.md]] owns this in full, and it is the single most common way an application is compromised.
 
+> [!warning]
+> An identifier cannot be bound, so a table or column name from user input passes through an allowlist in Python. That is the one place formatting into SQL is permitted, and it needs the allowlist directly above it.
+
 ## Machine Learning
 
 - **A training extraction query is versioned code**, in the repository, not typed into a notebook. A dataset nobody can regenerate is not reproducible.

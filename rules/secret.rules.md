@@ -8,6 +8,9 @@ Every value a project needs at runtime is either a **secret** or **configuration
 
 Nothing real is ever hardcoded, committed, or baked into an image.
 
+> [!danger]
+> A secret that was committed, pasted, or shown on a screen share is compromised. Rotating it takes minutes; finding out later does not.
+
 [[env.rules.md]] owns how these files are read. This one owns what goes in them.
 
 ## The Test

@@ -106,7 +106,8 @@ Beyond the message, the commit itself:
 - No dataset, model weight, checkpoint, or `.ipynb_checkpoints/`.
 - No notebook output. Clear outputs before committing, or the diff is unreadable and the repository grows without limit.
 
-Read `git status` before staging. `git add -A` is how an untracked key or a 2GB checkpoint gets committed.
+> [!danger]
+> Read `git status` before staging. `git add -A` is how an untracked key or a 2GB checkpoint gets committed, and a pushed secret is leaked whatever a later commit removes.
 
 Once pushed, treat a committed secret as leaked and rotate it. Deleting it in a later commit does not remove it from history.
 
