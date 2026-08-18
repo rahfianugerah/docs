@@ -4,8 +4,8 @@
 ![Conda](https://img.shields.io/badge/Conda-Miniconda-44A833?logo=anaconda&logoColor=white)
 ![Cloud Run](https://img.shields.io/badge/Cloud_Run-Deploy-4285F4?logo=googlecloud&logoColor=white)
 ![Obsidian](https://img.shields.io/badge/Obsidian-Vault-7C3AED?logo=obsidian&logoColor=white)
-![Rules](https://img.shields.io/badge/Rules-15-4C1D95)
-![Components](https://img.shields.io/badge/Components-4-4C1D95)
+![Rules](https://img.shields.io/badge/Rules-20-4C1D95)
+![Components](https://img.shields.io/badge/Components-11-4C1D95)
 ![Templates](https://img.shields.io/badge/Templates-6-4C1D95)
 ![Status](https://img.shields.io/badge/Status-Active-2EA043)
 
@@ -46,6 +46,7 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | [[pr.rules.md]] | When a pull request is worth opening, and what an experiment must record to be reproducible |
 | [[docs.rules.md]] | What every project documents, how it is written, and the Obsidian conventions |
 | [[badge.rules.md]] | shields.io flat badges: logo, name, version, on the brand color |
+| [[callout.rules.md]] | The callout types, where one is required, and where it is forbidden |
 
 **What you build:**
 
@@ -56,6 +57,10 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | [[env.rules.md]] | Why a real environment file is never read, in any format, including a notebook cell |
 | [[secret.rules.md]] | Which values are secrets, and where each one actually lives |
 | [[security.rules.md]] | The OWASP secure coding checklist, and the plan-first review procedure |
+| [[repository.rules.md]] | One deployable per repository, git hygiene, and what every project documents |
+| [[stacks.rules.md]] | The stack every project starts from, and what needs a written exception |
+| [[api.rules.md]] | The REST contract: versioning, the error shape, pagination, and tool endpoints |
+| [[agent.rules.md]] | When an agent writes a memory note, and how many |
 
 **What you build for the web:**
 
@@ -65,6 +70,13 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | [[dropdown.component.md]] | Selects, themed listboxes, and collapsible navigation groups |
 | [[calendar.component.md]] | Date fields: native or custom, the panel, and the year clamp |
 | [[refresh.component.md]] | What survives a reload, and the three things that break it |
+| [[sidebar.component.md]] | The navigation rail: anatomy, grouping, markers, and the mobile drawer |
+| [[login.component.md]] | The sign-in screen, and why every failure reads the same |
+| [[loading.component.md]] | The four loading surfaces, and which wait each one serves |
+| [[dashboard.component.md]] | Charts: the form before the color, and when it is not a chart at all |
+| [[search.component.md]] | Filter against search, the matching ladder, and normalization |
+| [[scrollbar.component.md]] | A scrollbar is an affordance, and where it must never be hidden |
+| [[title.header.component.md]] | The product name: one form, everywhere, never from configuration |
 
 **What you build with AI:**
 
@@ -112,6 +124,7 @@ Both are built by `plugmybrain`, whose command is `pmb`.
 | :- | :- |
 | [[memory/README.md]] | The architecture, the note types, and how to plug each tool in |
 | [[memory.rules.md]] | The write and recall protocol every model follows |
+| [[memory/codes.rules.md]] | Reference code kept beside a note that explains it |
 | [[note.template.md]] | The shape of a note, for each of the four types |
 
 ## Stack
@@ -143,9 +156,14 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[pr.rules.md]]
 - [[docs.rules.md]]
 - [[badge.rules.md]]
+- [[callout.rules.md]]
 - [[env.rules.md]]
 - [[secret.rules.md]]
 - [[security.rules.md]]
+- [[repository.rules.md]]
+- [[stacks.rules.md]]
+- [[api.rules.md]]
+- [[agent.rules.md]]
 
 ### Deploy
 
@@ -160,6 +178,13 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[dropdown.component.md]]
 - [[calendar.component.md]]
 - [[refresh.component.md]]
+- [[sidebar.component.md]]
+- [[login.component.md]]
+- [[loading.component.md]]
+- [[dashboard.component.md]]
+- [[search.component.md]]
+- [[scrollbar.component.md]]
+- [[title.header.component.md]]
 
 ### AI
 
@@ -179,6 +204,7 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 
 - [[memory/README.md]]
 - [[memory.rules.md]]
+- [[memory/codes.rules.md]]
 - [[note.template.md]]
 - [[graph/README.md]]
 
