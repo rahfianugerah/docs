@@ -2,6 +2,9 @@
 
 # Agentic Session Standard
 
+> [!important]
+> A generation is one continuous stretch of work on one concern, summarized as it ends into its own memory note.
+
 ## Core Requirement
 
 When an agentic coding tool such as Claude Code or Codex works in a repository, the work it does across a session must end up in the memory, not only in the transcript.

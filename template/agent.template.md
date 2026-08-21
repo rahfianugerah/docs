@@ -2,6 +2,9 @@
 
 # Agent Entry Point Template
 
+> [!example]
+> Every bracketed passage below is guidance to be replaced, not structure to be kept.
+
 Copy the block below into a project's `CLAUDE.md`, then copy that file to `AGENTS.md` so the two
 are byte-identical. Claude Code reads the first, Codex reads the second, and a rule that lives
 in only one of them is a rule half the tools ignore.

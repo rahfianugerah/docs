@@ -2,6 +2,9 @@
 
 # UI Component Standard
 
+> [!note]
+> The palette, tokens, typography, spacing, shape, and elevation every other component reads from. Read this one first.
+
 ## Core Requirement
 
 This is the root of the component standard. It owns the **token contract** every component reads from, and it hands each component area to a companion file.

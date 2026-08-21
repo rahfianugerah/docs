@@ -2,6 +2,9 @@
 
 # Environment File Standard
 
+> [!warning]
+> A real environment file is never read, printed, or committed. Only the example file is ever opened.
+
 ## Core Requirement
 
 **Never read, print, parse, or copy the contents of a real environment or configuration file.** Only the placeholder counterpart may be read.

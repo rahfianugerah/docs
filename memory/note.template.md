@@ -2,6 +2,9 @@
 
 # Note Template
 
+> [!example]
+> Copy the block matching the note type you need, then fill it. The frontmatter is not decoration: it is what makes the note readable by Obsidian and the memory tooling.
+
 Every memory note uses this shape. Copy the block for the type you need into the matching folder, and name the file after a kebab-case slug of its title.
 
 The protocol is [[memory.rules.md]].
@@ -52,7 +55,7 @@ status: current
 
 **Cost accepted:** a second dataframe library in the project, and Polars syntax in the loader only.
 
-Related: [[fact/project-x-env.md]]
+Related: [[fact/project-x-env.fact.memory.md]]
 ```
 
 ## Session
@@ -77,7 +80,7 @@ dataset before the split, so the test distribution reached training.
 
 **Lesson:** a validation score far above the test score is a leak until proven otherwise.
 
-Related: [[decision/loader-uses-polars.md]]
+Related: [[decision/loader-uses-polars.decision.memory.md]]
 ```
 
 A session note's `created` date is the valid time of what it describes, not the day it was typed up. The filename carries that date too, so the folder sorts chronologically.

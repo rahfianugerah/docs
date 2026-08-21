@@ -2,6 +2,9 @@
 
 # Loading Standard
 
+> [!note]
+> Every loading state: the route gate, the button spinner, the inline section loader, and the skeleton.
+
 ## Core Requirement
 
 Every wait a user can see uses one of the four surfaces below, chosen by what is waiting and where.

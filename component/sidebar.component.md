@@ -2,6 +2,9 @@
 
 # Sidebar Standard
 
+> [!note]
+> The whole sidebar rail: brand, grouped navigation, notification markers, footer, and drawer.
+
 ## Core Requirement
 
 Every project whose navigation uses a sidebar follows this file. It covers the whole rail: the brand block, the navigation list, the grouping of features into collapsible dropdowns, the notification markers, the account footer, and the mobile drawer.

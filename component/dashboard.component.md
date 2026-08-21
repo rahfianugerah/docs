@@ -2,6 +2,9 @@
 
 # Dashboard and Chart Standard
 
+> [!note]
+> Dashboards and reporting: the chart library, the validated palette, layout, and export.
+
 ## Core Requirement
 
 **One charting library for the whole product.** It is not a per-page choice, for the same reason there is one icon set: a chart on one screen must be readable by someone who learned to read a chart on another.

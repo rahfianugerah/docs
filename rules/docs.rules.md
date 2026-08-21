@@ -2,6 +2,9 @@
 
 # Documentation Standard
 
+> [!important]
+> Every documentation file starts from a template, and follows the formatting restrictions below.
+
 ## Core Requirement
 
 Documentation is written for the person who arrives with no context, which is usually you in six months.

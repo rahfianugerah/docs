@@ -2,6 +2,9 @@
 
 # Scrollbar Standard
 
+> [!note]
+> The one shared scrollbar: a pill thumb, no arrows, following the component it scrolls.
+
 ## Core Requirement
 
 **A region that scrolls must show that it scrolls.**

@@ -2,6 +2,9 @@
 
 # Pull Request Standard
 
+> [!important]
+> A pull request carries a Summary, a Changes list, and a Test Plan. Merging into `staging` or `main` requires permission, every time.
+
 ## Core Requirement
 
 A pull request is a written record of why a change happened. On a personal project it has no reviewer, which changes who it is for but not whether it is worth writing: **the reader is you, later, asking why the code looks like this.**

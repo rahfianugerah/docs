@@ -2,6 +2,9 @@
 
 # Search Standard
 
+> [!note]
+> Every search box and filter, and the optimized query underneath them.
+
 ## Core Requirement
 
 A search that returns nothing for a correctly remembered name is worse than no search, because the user concludes the record does not exist.

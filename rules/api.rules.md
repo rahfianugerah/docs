@@ -2,6 +2,9 @@
 
 # API Standard
 
+> [!important]
+> Every route is `api/<version>/<route>`. This policy owns that shape, the shared error format, and pagination.
+
 ## Core Requirement
 
 When designing, building, or modifying a REST API, follow the rules in this policy.

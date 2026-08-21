@@ -2,6 +2,9 @@
 
 # Deep Learning Standard
 
+> [!note]
+> Deep learning: the environment, the CUDA build, the checkpoint, and the run that has to be reproducible.
+
 ## Core Requirement
 
 For neural networks: PyTorch, on unstructured data such as images, audio, or text.

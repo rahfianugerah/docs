@@ -2,6 +2,9 @@
 
 # Project README Template
 
+> [!example]
+> Every bracketed passage below is guidance to be replaced, not structure to be kept.
+
 Copy the block below into a new project's `README.md` and fill in every bracket. Keep the section order; delete a section only when it genuinely does not apply.
 
 Rules for filling it in are in [[docs.rules.md]]; the badge row follows [[badge.rules.md]].

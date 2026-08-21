@@ -2,6 +2,9 @@
 
 # Model Card Template
 
+> [!example]
+> Every bracketed passage below is guidance to be replaced, not structure to be kept.
+
 Copy the block below into `MODEL.md` for any project that trains a model. Every section exists because leaving it out has cost somebody a rerun.
 
 Rules for filling it in are in [[docs.rules.md]].

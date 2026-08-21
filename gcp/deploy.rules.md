@@ -6,6 +6,9 @@
 ![Cloud Build](https://img.shields.io/badge/Cloud_Build-CI-4285F4?logo=googlecloud&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Container-2496ED?logo=docker&logoColor=white)
 
+> [!important]
+> How an app is containerized and what its deployment must satisfy before it is considered shipped.
+
 ## Core Requirement
 
 Every deployed project ships as a container image to **Cloud Run**, built by **Cloud Build**, stored in **Artifact Registry**.
@@ -30,7 +33,7 @@ Cloud Run is not the answer to everything, and picking wrong is expensive.
 
 **One project does not ship to Cloud Run: `plugmybrain`.** It runs as a single `docker compose` stack on one always-on `e2-small` Compute Engine VM, with its own Postgres in a container.
 
-The reason is the Cost section below, not an argument against it. The memory has no idle state to scale into: the database must always be up, so the managed shape pays the Cloud SQL monthly floor **and** needs a service in front of it. One small VM covers both for one fixed line. The rejected alternatives and the cost accepted are in [[plugmybrain-runs-on-a-flat-cost-vm.md]].
+The reason is the Cost section below, not an argument against it. The memory has no idle state to scale into: the database must always be up, so the managed shape pays the Cloud SQL monthly floor **and** needs a service in front of it. One small VM covers both for one fixed line. The rejected alternatives and the cost accepted are in [[plugmybrain-runs-on-a-flat-cost-vm.decision.memory.md]].
 
 **This does not generalise.** The exception is for a stateful, always-on, single-user service whose managed equivalent costs more than the machine. A project that scales to zero has no claim on it. If a second project ever qualifies, that is when this becomes a rule rather than an exception, per [[README.md]] on a rule broken three times.
 
@@ -189,4 +192,4 @@ Only if all three fail does a GPU become the question, and then it is a budget d
 - [[secret.rules.md]]
 - [[env.rules.md]]
 - [[codes.rules.md]]
-- [[plugmybrain-runs-on-a-flat-cost-vm.md]]
+- [[plugmybrain-runs-on-a-flat-cost-vm.decision.memory.md]]
