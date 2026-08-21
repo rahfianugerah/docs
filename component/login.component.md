@@ -2,6 +2,9 @@
 
 # Login Standard
 
+> [!note]
+> The shared login form: structure, copy, error messages, and the single sign-on block.
+
 ## Core Requirement
 
 The sign-in screen is the first thing a user sees and the one screen where a mistake is most expensive. It follows this file everywhere.

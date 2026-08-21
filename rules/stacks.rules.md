@@ -2,6 +2,9 @@
 
 # Tech Stack Standard
 
+> [!important]
+> The approved stack for every layer, the pinning rules, and the choices prohibited without a written decision.
+
 ## Core Requirement
 
 When scaffolding, building, or modifying a project, follow the stack defined here.

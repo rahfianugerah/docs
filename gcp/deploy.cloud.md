@@ -5,6 +5,9 @@
 ![Cloud Run](https://img.shields.io/badge/Cloud_Run-Serverless-4285F4?logo=googlecloud&logoColor=white)
 ![Region](https://img.shields.io/badge/Region-asia--southeast1-4285F4?logo=googlecloud&logoColor=white)
 
+> [!important]
+> The Cloud Run runbook itself, copied into each repository and kept comparable line for line.
+
 Copy and paste, top to bottom. Implements [[deploy.rules.md]]; when the two disagree, that file is the rule and this one is the mistake.
 
 Replace every `[BRACKET]` before running anything.

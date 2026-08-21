@@ -42,6 +42,7 @@ The fact, the decision, or the event. Short.
 
 **Why:** the reason it is true or was chosen.
 **Applies to:** where this is relevant.
+**Source:** the file that backs this, from the workspace root.
 
 Related: [[other-note.md]]
 ```
@@ -49,12 +50,57 @@ Related: [[other-note.md]]
 Rules:
 
 1. **The title states the thing**, not the topic. "Loader uses Polars, not pandas" beats "Data loading notes".
-2. **The filename is a kebab-case slug of the title**, so a wikilink reads as a sentence.
+2. **The filename is `<slug>.<type>.memory.md`**, where the slug is a kebab-case version of the title and the type is the same word as the `type:` field. So a fact is `<slug>.fact.memory.md`, a decision `<slug>.decision.memory.md`, a session `<slug>.session.memory.md`, and a reference `<slug>.reference.memory.md`. The slug keeps a wikilink reading as a sentence; the suffix carries the type into every place a filename appears on its own, such as a search result, a tab, a graph node label, or a grep across the repository, where the folder that would otherwise supply it is not visible.
 3. **`created` and `updated` are real dates**, written absolutely. Never "last week"; a relative date in a durable note is meaningless the moment it is read.
 4. **Frontmatter is required.** Cognee reads it, and Obsidian shows it as properties.
 5. **Link liberally.** A wikilink whose target does not exist yet is fine; it marks a note worth writing.
 6. **Keep it short.** If a note runs past a screen, it holds more than one thing.
 7. **At most one callout**, per [[callout.rules.md]], and only for the line that changes what the reader does. A note holds one thing, so only one line in it can be the thing that must not be missed.
+
+## Formatting
+
+A note is read under pressure, by someone scanning for one thing. It follows the same formatting the rules documents follow, so the whole vault reads as one voice.
+
+**One paragraph is one line.** Never hard-wrap a paragraph across several source lines. Markdown reflows a paragraph to the reader's width, so a wrap adds nothing to the rendered note and breaks the raw file into fragments that read as though the writing itself is disconnected. It also ruins a diff: reflowing one sentence rewrites every line after it, so a one-word change shows up as a rewritten paragraph.
+
+The same applies inside a list. A `-` item is one line however long it runs.
+
+This is what every rules and component document in this vault already does, and it is the difference the memory notes were missing.
+
+**Prose or a list, chosen by the content:**
+
+- **A paragraph** when the explanation is one idea that has to be read as a whole: a reason, a consequence, a mechanism. Do not chop a single argument into bullets; it loses the connective tissue that made it an argument.
+- **A `-` list** the moment there are two or more parallel items: four apps, three flags, two symptoms, a set of steps. Never a semicolon run inside a paragraph, and never a comma-separated inventory. If you can count the items, it is a list.
+- One item per line. Never nest a sub-list; a note that needs two levels holds two things.
+
+**Structure:**
+
+- Open with a callout carrying the note's type, directly under the title, per [[callout.rules.md]]. A `fact` is `[!info]`, or `[!failure]` when it records something that went wrong; a `decision` is `[!important]`; a `session` is `[!note]`; a `reference` is `[!quote]`.
+- Open the body with the statement, in one or two sentences. That is what a reader sees first in a search result, and it never repeats the callout word for word.
+- Use a `-` list for the detail underneath it.
+- Use a fenced code block for a command, a path, or a config value, with a language tag.
+- Use a table only when every row genuinely has the same columns. Two columns of prose is a list wearing a table.
+- No `##` headings inside a note. The title is the heading; a note needing sections is two notes.
+- No horizontal rule in the body. The frontmatter delimiters are the only `---` in the file.
+
+**The fixed labels**, in this order, each starting its own paragraph. `Source` names the file that backs the note, so a reader can open the code instead of taking the note's word for it:
+
+```markdown
+**Why:** the reason it is true or was chosen.
+**Applies to:** where this is relevant.
+**Source:** the file that backs this, from the workspace root.
+```
+
+A `decision` note adds `**Decision:**` first, then `**Rejected:**` and `**Cost accepted:**` after the why. A note that supersedes another adds `**Why it changed:**`.
+
+**`Related` is a list, not a sentence.** One link per line, at the end of the file, under a `## Related` heading, exactly as every rules document does it. Never `Related: [[a]], [[b]]` on one wrapped line: it is unreadable at three links and it is the first thing that rots.
+
+```markdown
+## Related
+
+- [[first-note.md]]
+- [[second-note.md]]
+```
 
 ## Recall Order
 
@@ -103,6 +149,9 @@ No layer answers "what was true in March". Git history does.
 - Frontmatter is present, with absolute dates and a real type.
 - The reason is written down, not just the conclusion.
 - It links to at least one related note where one exists.
+- The filename ends in `.<type>.memory.md`, and that type is the same word as the `type:` field and the folder it sits in.
+- `Source` names a real path from the workspace root, such as `plugmybrain/src/pmb/ingest.py`, and that path exists today. A bare `src/pmb/ingest.py` is fine inside a sentence that already said which repository, but never on the `Source` line, where there is no sentence to carry the context.
+- Where no file backs the note, `Source` says so and says how to confirm the claim instead. An environment fact, a DNS record, or a role membership on a managed instance has no file, and inventing one is worse than admitting there is none.
 - It contains no secret, no personal data, and no real configuration value.
 - It says something the code and git history do not already say.
 

@@ -2,6 +2,9 @@
 
 # AI Project Standard
 
+> [!important]
+> Every AI project gets its own conda environment, and the environment file is what defines it.
+
 ## Core Requirement
 
 Every AI project follows this file, plus the one for its kind: [[ml.rules.md]] for classical machine learning, [[dl.rules.md]] for deep learning.

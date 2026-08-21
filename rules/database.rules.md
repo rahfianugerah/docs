@@ -2,6 +2,9 @@
 
 # Database Standard
 
+> [!note]
+> Schema design, indexing, naming, and migrations, plus when a raw query beats the ORM and when it does not.
+
 ## Core Requirement
 
 PostgreSQL, accessed through **SQLAlchemy 2.x**, migrated through **Alembic**.

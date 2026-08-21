@@ -2,6 +2,9 @@
 
 # Branch Standard
 
+> [!important]
+> Three branches only. Work happens in `dev`, and promotion runs `dev` > `staging` > `main` through a pull request every time.
+
 ## Core Requirement
 
 **A project uses one of two shapes, and it says which one in its README.**

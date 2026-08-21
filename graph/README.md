@@ -6,6 +6,9 @@
 ![Graphify](https://img.shields.io/badge/Graphify-Structural-B45309)
 ![Cognee](https://img.shields.io/badge/Cognee-Semantic-0F766E)
 
+> [!warning]
+> Everything below this file is machine-generated and rebuilt from a command. Editing it by hand is lost on the next rebuild, so write to the notes in `memory/` instead.
+
 The machine-generated half of the memory. Everything below this file is rebuilt from a
 command and is not part of the memory itself.
 

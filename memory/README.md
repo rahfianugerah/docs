@@ -7,6 +7,9 @@
 ![Cognee](https://img.shields.io/badge/Cognee-Semantic-0F766E)
 ![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
 
+> [!info]
+> This vault is the durable store every model reads and writes. A note here outlives the session that produced it, which is the entire point.
+
 A shared, portable memory for every AI model that works on these projects. One store, many readers.
 
 ## The Idea

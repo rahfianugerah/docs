@@ -2,6 +2,9 @@
 
 # API Template
 
+> [!example]
+> Every bracketed passage below is guidance to be replaced, not structure to be kept.
+
 Copy the block below into `API.md` for any project that exposes endpoints. One row per endpoint, and a section only for those whose behaviour is not obvious from the row.
 
 Rules for filling it in are in [[docs.rules.md]].

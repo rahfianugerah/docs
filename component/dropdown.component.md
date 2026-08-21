@@ -2,6 +2,9 @@
 
 # Dropdown Standard
 
+> [!note]
+> Every dropdown: the sidebar list, the native select, and the shared themed listbox.
+
 ## Core Requirement
 
 Every dropdown follows this policy. It covers two cases that look alike and are not the same thing:

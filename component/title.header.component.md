@@ -2,6 +2,9 @@
 
 # Title and Header Standard
 
+> [!note]
+> The application name, and every surface it appears on. It never changes with the route.
+
 ## Core Requirement
 
 The product name is written as text, in one form, in every place it appears.

@@ -2,6 +2,9 @@
 
 # Refresh and State Standard
 
+> [!note]
+> State that survives a reload: the URL as the source of truth, the SPA fallback, and the session gate.
+
 ## Core Requirement
 
 **A refresh returns the user to exactly where they were.** Pressing F5, hitting reload, restoring a closed tab, or opening a bookmark lands on the same page, with the same tab, the same filters, and the same record open.

@@ -2,6 +2,9 @@
 
 # Code Standard
 
+> [!important]
+> YAGNI, KISS, and DRY as the three tests every piece of code passes before it is written.
+
 ## Core Requirement
 
 Code is read far more often than it is written, usually by someone who has forgotten writing it. Optimize for the reader.

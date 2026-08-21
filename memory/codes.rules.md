@@ -2,6 +2,9 @@
 
 # Reference Code Standard
 
+> [!note]
+> How a code-level note is filed under `memory/codes/`, separate from the four durable note types.
+
 ## Core Requirement
 
 `memory/codes/` holds a working piece of code worth reading again, and every file in it is paired with a markdown note of the same name.

@@ -9,6 +9,9 @@
 ![Templates](https://img.shields.io/badge/Templates-6-4C1D95)
 ![Status](https://img.shields.io/badge/Status-Active-2EA043)
 
+> [!important]
+> Every personal project applies these standards. A new project follows them from the first scaffold.
+
 The source of truth for how I build things: one set of standards across every project, and a shared memory every AI model can read.
 
 ## Overview
@@ -61,6 +64,10 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | [[stacks.rules.md]] | The stack every project starts from, and what needs a written exception |
 | [[api.rules.md]] | The REST contract: versioning, the error shape, pagination, and tool endpoints |
 | [[agent.rules.md]] | When an agent writes a memory note, and how many |
+| [[analytics.rules.md]] | Which chart a shape of data earns, the guardrails against distortion, and the no-3D gate |
+| [[prd.rules.md]] | The PRD every project carries, written before the code, and the non-goals that bound it |
+| [[media.rules.md]] | Document and media upload, covering PDF and photo |
+| [[pwa.rules.md]] | The PWA layer of a frontend: manifest, icons, and offline behavior |
 
 **What you build for the web:**
 
@@ -77,6 +84,7 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | [[search.component.md]] | Filter against search, the matching ladder, and normalization |
 | [[scrollbar.component.md]] | A scrollbar is an affordance, and where it must never be hidden |
 | [[title.header.component.md]] | The product name: one form, everywhere, never from configuration |
+| [[pagination.component.md]] | Every table: paging rather than scroll, adaptive page size, controls, and the data binding |
 
 **What you build with AI:**
 
@@ -210,10 +218,10 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 
 ### Decisions
 
-- [[plugmybrain-runs-on-a-flat-cost-vm.md]]
-- [[embeddings-are-voyage-3-5-at-1024-dimensions.md]]
-- [[postgres-holds-the-graph-as-a-demo-feature.md]]
-- [[retrieval-returns-chunks-not-a-written-answer.md]]
+- [[plugmybrain-runs-on-a-flat-cost-vm.decision.memory.md]]
+- [[embeddings-are-voyage-3-5-at-1024-dimensions.decision.memory.md]]
+- [[postgres-holds-the-graph-as-a-demo-feature.decision.memory.md]]
+- [[retrieval-returns-chunks-not-a-written-answer.decision.memory.md]]
 
 ### Configuration
 

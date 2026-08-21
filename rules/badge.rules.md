@@ -2,6 +2,9 @@
 
 # Badge Standard
 
+> [!info]
+> The shields.io badge set every README carries, in the regular style, ordered logo then name then version.
+
 ## Core Requirement
 
 Every project README opens with a row of badges. A badge answers one question at a glance: what is this built with, and which version.

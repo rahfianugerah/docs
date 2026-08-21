@@ -2,6 +2,9 @@
 
 # Calendar Standard
 
+> [!note]
+> Every date field: the trigger, the panel, and the day, month, and year views.
+
 ## Core Requirement
 
 Every date field follows this policy: the trigger that shows the chosen date, the panel that opens, and the day, month, and year views inside it.

@@ -7,6 +7,9 @@
 ![PyTorch](https://img.shields.io/badge/PyTorch-conda--forge-EE4C2C?logo=pytorch&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/Scikit--learn-Tabular-F7931E?logo=scikitlearn&logoColor=white)
 
+> [!info]
+> The AI standards: one shared policy, plus a companion for classical machine learning and one for deep learning.
+
 Standards for machine learning and deep learning projects, separated from the general project rules because AI projects fail differently.
 
 ## Why This Is Separate

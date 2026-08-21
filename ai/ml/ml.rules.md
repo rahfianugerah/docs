@@ -2,6 +2,9 @@
 
 # Classical Machine Learning Standard
 
+> [!note]
+> Classical machine learning: the split, the baseline, the metric, and the leak that makes a score look good.
+
 ## Core Requirement
 
 For tabular and classical machine learning: scikit-learn, gradient boosting, and anything that is not a neural network.

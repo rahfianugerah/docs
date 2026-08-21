@@ -2,6 +2,9 @@
 
 # Repository Quality and Operations Standard
 
+> [!note]
+> Repository hygiene: git history, `.gitignore`, logging, error handling, and testing.
+
 ## Core Requirement
 
 When creating, modifying, or reviewing a repository, follow the rules in this policy.

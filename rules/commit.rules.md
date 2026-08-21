@@ -2,6 +2,9 @@
 
 # Commit Standard
 
+> [!important]
+> Every commit follows Conventional Commits, written in English, with each change explained as a list item.
+
 ## Core Requirement
 
 Every commit follows **Conventional Commits 1.0.0** and explains each change as a list item.

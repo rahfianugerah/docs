@@ -2,6 +2,9 @@
 
 # Secret and Configuration Standard
 
+> [!warning]
+> API keys, signing keys, and `.pem` files live in a secret manager. A frontend bundle holds no secrets at all, because everything in it is public.
+
 ## Core Requirement
 
 Every value a project needs at runtime is either a **secret** or **configuration**. This policy decides which, and where each one lives.
