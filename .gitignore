@@ -11,3 +11,4 @@ __pycache__/
 # Machine-generated. Rebuilt by `pmb map` and `pmb export`; graph/README.md is not.
 graph/code/
 graph/kg/
+.pmb

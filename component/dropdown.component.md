@@ -1,3 +1,11 @@
+---
+tags:
+  - kind/component
+  - layer/frontend
+  - topic/ux
+  - topic/accessibility
+---
+
 > Up: [[README.md]] · [[uix.component.md]]
 
 # Dropdown Standard
@@ -87,7 +95,7 @@ Required structure and behaviour:
 }
 .selectbox:hover { border-color: var(--accent); }
 .selectbox:focus-visible,
-.selectbox[aria-expanded="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.selectbox[aria-expanded="true"] { border-color: var(--accent); }   /* border only, no ring */
 .selectbox:disabled { background: var(--line2); color: var(--ink3); cursor: default; }
 
 .selectpop {
@@ -190,6 +198,16 @@ Every trigger that opens something carries a trailing chevron, and it **rotates 
 - The chevron stays `--ink3` in every state. It marks *state*, not activity, so it never takes `--accent`.
 - One attribute drives the border and the chevron together, so they cannot disagree about whether the panel is open.
 
+**Every control of this shape rotates the same way**, and the reference implementation applies it identically to all of them:
+
+| Control | Class | Open state |
+| :- | :- | :- |
+| Themed select | `.selectbox .chev` | `.selectbox[aria-expanded="true"]` |
+| Date field trigger | `.datetrig .chev` | `.datetrig[aria-expanded="true"]` |
+| Accordion summary | `details > summary .chev` | `details[open]` |
+
+A date field and a select sitting side by side in one form must move the same way. Where one of them sits still while the other turns, the two controls read as different kinds of thing despite looking identical.
+
 The **one exception** is a navigation group whose collapsed arrow points *right* rather than down. A 180 degree turn cannot produce that, so it swaps `right` for `down`. Pick one convention per project and keep it.
 
 ## Reference Table
@@ -205,12 +223,27 @@ The **one exception** is a navigation group whose collapsed arrow points *right*
 | Background | Selected option | `var(--accent-soft)` |
 | Border | Default | `1px solid var(--line)` |
 | Border | Hover, focus, open | `var(--accent)` |
-| Radius | Trigger | `var(--r-sm)` |
-| Radius | Panel | `var(--r)` |
-| Focus ring | `:focus-visible` | `0 0 0 2px var(--accent-soft)` |
+| Size | Trigger and options | `13.5px`; a navigation child is `12.7px` |
+| Radius | Trigger, panel | `var(--r-sm)`; an option row inside the panel takes `4px` |
+| Focus | `:focus-visible` on the trigger | `outline: 2px solid var(--accent)`, per [[uix.component.md]]. Never a spread shadow |
 | Shadow | Open panel | `var(--shadow-pop)` |
 | Shadow | Navigation group | None |
-| Chevron | Any state | `var(--ink3)`, rotate 180 on open, `.16s ease` |
+| Chevron | Regular dropdown | `16px`, `var(--ink3)`, rotate 180 on open, `.16s ease` |
+| Chevron | Navigation group | `15px`, `var(--ink3)` in every state |
+| Icon | Navigation group title | `18px`, `var(--ink3)`, `var(--accent)` when expanded or active |
+| Icon | Navigation group child | None; the child is text only |
+
+## One Token Set
+
+The themed listbox and the navigation group use the same neutral, accent, and shape tokens; only the layout and the trigger markup differ. **Do not invent a second color or radius scale for the sidebar** because it sits in a different part of the page. A dropdown that needs a value not already on the list gets it added to the `:root` block in [[uix.component.md]] first, then used here.
+
+## Accessibility
+
+- **Prefer the native `select`** whenever the option list does not need custom styling: it carries built-in screen reader and keyboard support that a custom listbox has to reimplement by hand.
+- When the listbox pattern is used, **keep its full ARIA structure and keyboard support**: `combobox`, `listbox`, `option`, arrow keys, Home, End, Enter, Escape. A mouse-only dropdown is not an acceptable substitute.
+- **Never remove the focus ring from a dropdown trigger.**
+- A trigger is at least 44px tall on mobile, the same minimum [[uix.component.md]] sets for a button, a nav link, and a table row.
+- **Never rely on color alone to mark the selected option.** The selected state also carries a check icon or a weight change.
 
 ## Do and Do Not
 
@@ -232,6 +265,21 @@ Do not:
 - Put an icon or a bullet on an item inside a navigation group.
 - Give a navigation group an overlay shadow, or a form dropdown panel none.
 - Color the chevron with `--accent` when open.
+
+## Deviations
+
+Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.
+
+## Conflict Resolution
+
+If another instruction conflicts with this standard, follow this priority:
+
+1. Security and privacy requirements
+2. Accessibility requirements
+3. Direct user instructions
+4. [[uix.component.md]]
+5. This dropdown standard
+6. Existing project conventions
 
 ## Related
 

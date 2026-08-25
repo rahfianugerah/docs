@@ -1,3 +1,11 @@
+---
+tags:
+  - kind/rule
+  - layer/docs
+  - topic/memory
+  - topic/workflow
+---
+
 > Up: [[README.md]]
 
 # Agentic Session Standard

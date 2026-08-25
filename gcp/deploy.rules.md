@@ -1,3 +1,10 @@
+---
+tags:
+  - kind/rule
+  - layer/infra
+  - topic/deploy
+---
+
 > Up: [[README.md]]
 
 # Deploy Standard
@@ -172,6 +179,105 @@ Run inference on CPU. If a model is too slow on CPU:
 
 Only if all three fail does a GPU become the question, and then it is a budget decision made deliberately, not a flag added to a deploy command.
 
+## Required Repository Artifacts
+
+| Artifact | Minimum content |
+| :- | :- |
+| `Dockerfile` | A version-pinned base image; production dependencies only; a non-root user; a clear `CMD`; a server that listens on the `PORT` environment variable the platform injects |
+| `.dockerignore` | Exclude `node_modules`, `.env`, `.git`, and any local build or cache output |
+| `cloudbuild.yaml` | Build the image, push it to Artifact Registry, and deploy it, in that order |
+| `deploy.cloud.md` | A copy of [[deploy.cloud.md]] with this project's real values, section numbering unchanged |
+| README, deploy section | The deploy command, the CPU and memory allocation, the region, and the required environment variable names |
+
+## Artifact Registry
+
+Every project has a Docker repository in Artifact Registry before the first deploy, created once per project.
+
+```text
+asia-southeast1-docker.pkg.dev/[PROJECT_ID]/[REPOSITORY]/[SERVICE]:[TAG]
+```
+
+**Tag with the commit short SHA or a semantic version. Never deploy `:latest` to production.**
+
+- **Pass the tag explicitly**, as a `_TAG` substitution. The build system's own short-SHA variable is populated only for builds started from a connected trigger, not for a manual submit. Relying on it in a manual build produces an image reference ending in a bare colon, which the build rejects with `could not parse reference`.
+- **After a successful build, record the pushed tag in a local `.last-tag` file**, and on any later redeploy read the tag back from it rather than recomputing from git HEAD. HEAD moves the moment you commit again or open a new shell, and a recomputed tag can point at an image that was never pushed. Git-ignore `.last-tag`; it is a local pointer, not shared state.
+
+### Image Retention
+
+**Every repository carries a cleanup policy.** Without one, nothing is ever removed: each push adds a version, and the repository grows for as long as the project is worked on. What fills a registry is the rate of building, not the age of any single image, so a policy written on age alone leaves the growth untouched until the day it deletes hundreds of versions at once.
+
+The policy is two rules, applied together:
+
+| Rule | Action | Scope |
+| :- | :- | :- |
+| `keep-10-newest` | Keep | The 10 most recent versions of every image, whatever their age |
+| `delete-older-than-30d` | Delete | Any version older than 30 days |
+
+A Keep rule always wins over a Delete rule, so the two combine into a single meaning: **a version is deleted once it is both older than 30 days and outside the 10 most recent for its image.**
+
+> [!warning]
+> Never write the age rule on its own. A service that has not been deployed for a month still has its running image in the registry, and an age-only policy deletes the very image that is being served. Rollback and redeploy then have no source to return to. `keep-10-newest` is what makes the age rule safe, not an optimization on top of it.
+
+The policy file is identical for every project, and lives at [[cleanup-policy.template.json]].
+
+**Keep `--dry-run` on the first application.** The registry then logs what it would delete without deleting anything, which is the only way to see the effect before it is irreversible. Read those logs, confirm the list holds nothing a rollback still needs, and only then re-apply without the flag.
+
+**A deletion is permanent.** An image removed by this policy is not recoverable, and rebuilding it from the same commit does not reproduce it byte for byte, because base images and dependencies move underneath. When a specific build must outlive the window, such as the image behind a release under audit, give it a semantic tag and record it, rather than weakening the policy for every project.
+
+## Environment Variables and the Runtime Account
+
+- **Every environment variable is supplied at deploy time** through the flat flag, an env-vars file, or a secret mount. Never with `ENV` in the `Dockerfile`, never through a committed `.env`, and never baked into the image. It is injected when the container starts, not when it is built.
+- **If any value contains a comma**, use an env-vars file rather than the flat flag. A comma-separated string splits that value into the wrong variables. Create the file locally, git-ignore it, and delete it after the deploy; it holds real values.
+- List the required variable *names* in the README so the deploy command stays reproducible. Never a real value, per [[env.rules.md]].
+
+The revision runs as a service account. **That account, not your user account, must hold the permissions the running container needs.**
+
+- **A secret mount needs `roles/secretmanager.secretAccessor` on the secret.** Without it the revision fails to start with a permission error naming the secret.
+- **A managed database connection needs `roles/cloudsql.client` at the project level.** Without it the Auth Proxy sidecar cannot authenticate, the app blocks trying to reach the database, and the container never listens on `PORT`. That is reported only as a startup timeout with no permission error, which is easy to mistake for a port misconfiguration.
+- **A secret whose mount key contains a `/` is mounted as a file at that path**, not as an environment variable. Point the app's config at that path.
+
+### Build-Time Configuration for a Static Frontend
+
+A static bundle has no server-side process to read environment variables at runtime. **Any config it needs must be baked in at build time through a build argument.**
+
+- Supplying such a value at runtime does nothing: it reaches the container but nothing reads it, and the JavaScript already shipped to the browser still holds the old baked value.
+- **Changing it means rebuilding, not redeploying.** A plain tagged submit cannot pass a build argument, so a static frontend always builds through `cloudbuild.yaml`.
+- This applies only to a static frontend. A server-rendered frontend reads runtime variables and follows the backend rules instead.
+
+## Cloud Build Pipeline
+
+Every `cloudbuild.yaml` builds the image, pushes it, and deploys it, in that order.
+
+**Tag through a `_TAG` substitution**, so the same file works both for a manual submit and for a trigger that passes the short SHA.
+
+> [!danger]
+> A `cloudbuild.yaml` used by a trigger with an explicit service account **must declare a logging mode**, or the build never starts and fails before any step runs:
+>
+> `options: { logging: CLOUD_LOGGING_ONLY }`
+
+- The deploy step carries the resource allocation and **deliberately carries no environment variables and no secrets.** The deploy command preserves whatever the service already has, and that is what makes "the trigger owns the image" safe.
+- **A pipeline serving more than one environment carries a guard step** that whitelists the legal substitution combinations by name and fails the build on anything else. Without it a trigger that loses its substitutions deploys the wrong branch to the production service, and the build goes green.
+- A frontend pipeline's guard also fails on an empty or path-carrying base URL.
+
+Connecting the trigger, converting an inline one, and verifying it are section 7 of [[deploy.cloud.md]].
+
+## Runtime Rules
+
+- **Keep no state inside the container.** Instances are stateless and ephemeral; scale-to-zero and restarts discard anything written to local disk. Persist to a managed database or object store instead of a volume.
+- **Run database migrations as a job, never from the container `CMD`.** Migrating at container start works only at one instance. Above that, a cold-start burst starts several containers at once and they contend for the migration version table, and a failed migration crash-loops the service instead of failing one visible job. A release carrying a new migration runs the job first, then pushes.
+- **Build a job for any other work that runs on its own** rather than in response to a user. Choose a job over a scheduled endpoint when the work runs longer than the request timeout, needs more CPU or memory than the service, would compete with user traffic, or needs retries. A job uses the service's own image with a different entrypoint, never a second image, is named `[SERVICE]-[JOB]`, and must be idempotent and bounded because it retries. The full procedure is section 6.12 of [[deploy.cloud.md]].
+- **Never bake a secret into the image.** Check `docker history` to confirm none leaked into a layer.
+- **Read the port from the `PORT` environment variable** the platform injects. Do not hardcode a port in the application or the `Dockerfile`.
+- **Log to stdout and stderr only.** The platform forwards this automatically; never write a log file inside the container.
+- The platform terminates TLS and owns the public endpoint. **An app does not implement its own TLS.**
+- **A service a browser calls directly must be public.** If an organization policy blocks the public binding, the deploy silently fails to grant access and every request is denied before it reaches the container. Get the policy exception rather than making a browser-facing service authenticated.
+
+## Health and Observability
+
+- **Expose a `GET /health` endpoint.** It reports liveness without any sensitive data, may be public, and responds quickly. It is the one route outside the version prefix, per [[api.rules.md]].
+- Configure it as the startup or liveness probe where practical.
+- Add a `GET /health/ready` that checks a dependency such as the database, where practical. Liveness and readiness answer different questions, and a single endpoint that checks the database will fail a liveness probe during a brief database blip and restart a healthy container.
+
 ## Definition of Done
 
 - The image builds from a pinned base, runs as non-root, and listens on `PORT`.
@@ -185,6 +291,17 @@ Only if all three fail does a GPU become the question, and then it is a budget d
 - `max-instances x pool size` fits inside the database `max_connections`.
 - Migrations run as a job, never from `CMD`.
 - Model weights load from storage, not from the image, unless they are small.
+
+## Conflict Resolution
+
+If another instruction conflicts with this standard, follow this priority:
+
+1. Security and privacy requirements
+2. Direct user instructions
+3. This deploy standard
+4. Existing project conventions
+
+A direct user instruction must not override security or privacy requirements.
 
 ## Applies To
 

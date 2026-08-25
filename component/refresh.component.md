@@ -1,3 +1,10 @@
+---
+tags:
+  - kind/component
+  - layer/frontend
+  - topic/state
+---
+
 > Up: [[README.md]] · [[uix.component.md]]
 
 # Refresh and State Standard
@@ -154,6 +161,21 @@ Do not:
 - Force a scroll to top on mount.
 - Mirror form input into `localStorage`.
 - Let the catch-all route absorb a page that was simply never registered.
+
+## Deviations
+
+Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.
+
+## Conflict Resolution
+
+If another instruction conflicts with this standard, follow this priority:
+
+1. Security and privacy requirements
+2. Accessibility requirements
+3. Direct user instructions
+4. [[uix.component.md]]
+5. This refresh standard
+6. Existing project conventions
 
 ## Related
 

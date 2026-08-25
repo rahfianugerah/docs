@@ -1,3 +1,10 @@
+---
+tags:
+  - kind/component
+  - layer/frontend
+  - topic/ux
+---
+
 > Up: [[README.md]] · [[uix.component.md]]
 
 # Calendar Standard
@@ -58,17 +65,17 @@ The trigger looks like every other form control, so a date field and a select in
 
 ## The Panel
 
-An overlay layer, following the overlay rules in [[uix.component.md]]: portalled to `body`, `position: fixed`, `--shadow-pop`, `--r`.
+An overlay layer, following the overlay rules in [[uix.component.md]]: portalled to `body`, `position: fixed`, `--shadow-pop`, and `--r-sm`, because the panel holds cells rather than cards.
 
 ```css
 .datepop {
   position: fixed; z-index: 80; padding: 12px;
   background: var(--surface);
-  border: 1px solid var(--line); border-radius: var(--r);
+  border: 1px solid var(--line); border-radius: var(--r-sm);
   box-shadow: var(--shadow-pop);
 }
 .datepop-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 8px; }
-.datepop-nav { padding: 5px; border: none; background: none; border-radius: 6px; color: var(--ink2); cursor: pointer; }
+.datepop-nav { padding: 5px; border: none; background: none; border-radius: var(--r-sm); color: var(--ink2); cursor: pointer; }
 .datepop-nav:hover { background: var(--line2); color: var(--ink); }
 .datepop-nav:disabled { opacity: .3; pointer-events: none; }
 .datepop-title { font: inherit; font-weight: 600; color: var(--ink); border: none; background: none;
@@ -78,14 +85,14 @@ An overlay layer, following the overlay rules in [[uix.component.md]]: portalled
 .datepop-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
 .datepop-grid.months, .datepop-grid.years { grid-template-columns: repeat(3, 1fr); gap: 4px; }
 .datepop-dayname { font-size: .66rem; font-weight: 600; color: var(--ink3); padding: 4px 0; }
-.datepop-cell { padding: 6px 0; border: none; background: none; border-radius: 6px;
+.datepop-cell { padding: 6px 0; border: none; background: none; border-radius: 4px;
                 font: inherit; font-size: .8rem; color: var(--ink); cursor: pointer; }
 .datepop-cell:hover { background: var(--line2); }
 .datepop-cell[aria-selected="true"] { background: var(--accent); color: #fff; font-weight: 700; }
 .datepop-cell:disabled { color: var(--ink3); pointer-events: none; }
 ```
 
-The selected cell is the one place a solid `--accent` fill with white text appears inside a panel. The `6px` cell radius is the small nested radius; do not raise it to `--r`.
+The selected cell is the one place a solid `--accent` fill with white text appears inside a panel. A cell sits inside the panel, so its radius is smaller still: `4px` is right, and it is never raised to `--r-sm` or `--r`.
 
 ## Panel Width Matches the Trigger
 
@@ -105,6 +112,37 @@ const left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8));
 - **No CSS change is needed to support this.** The grid is `repeat(7, 1fr)` and `repeat(3, 1fr)`, so cells divide whatever width they are given. Never set a fixed cell width or add a media query to the panel.
 
 On mobile a form field is full width, so the calendar is full width and its day cells get *larger*. That is the behaviour this rule exists for.
+
+## Why the Panel Is Portalled
+
+The panel is rendered through a portal to `document.body` with `position: fixed`, never as a `position: absolute` child of the field.
+
+**This is not a preference.** A date field usually sits inside a sheet or a modal, and those use `overflow-y: auto`. An absolutely positioned panel cannot escape a scrollable ancestor, so the calendar would be clipped, or it would add its own height to the sheet and push the action buttons down the page. The portal is what keeps the panel a true overlay.
+
+The same rule and the same reason apply to the themed listbox in [[dropdown.component.md]]. **A component that opens a floating panel inside a scrollable container uses a portal.**
+
+## The Full-Card Month Grid
+
+A month view that fills a card, rather than the picker panel above, is a different surface, and this section is the only place it is specified.
+
+- **The grid runs to the card's edge**, with no padding between the outermost cells and the card border. Padding there would put a white margin inside a card whose whole purpose is a continuous grid.
+- Cells are square, separated by `--line2` hairlines, and the last column drops its right border so the card's own border is not doubled.
+- **A cell at a corner of the grid takes the card's radius on that outward corner**, computed as the card radius minus the card's border width so the two curves are concentric. Every other cell stays square.
+- **Only the corners the grid actually occupies are rounded.** Where a weekday header row sits above the grid, the grid owns the two bottom corners and the header owns the two top ones.
+- **The card clips its content, and clipping alone is not enough.** A selected corner cell draws a fill and a ring, and a square ring cut by the card's curve reads as a rendering fault rather than as a corner, so the cell has to carry the radius itself.
+
+```css
+.cal-wrap { overflow: hidden; }
+.cal-grid > .cal-sel:nth-last-child(-n + 7):nth-child(7n + 1) {
+  border-bottom-left-radius: calc(var(--r-sm) - 1px);
+}
+.cal-grid > .cal-sel:last-child { border-bottom-right-radius: calc(var(--r-sm) - 1px); }
+```
+
+This is the worked example of the edge-to-edge case in the nested radius rule in [[uix.component.md]], where there is no padding to subtract and the border width is what separates the two curves instead.
+
+- **The selected day uses `--accent-soft` with an inset `--accent` ring**, not the solid fill the picker's selected cell uses. A solid fill on a cell this large would dominate the card, and the cell also has to keep showing its contents.
+- **Today is marked the same way in both calendars**, so the project carries one visual language for the current day rather than two.
 
 ## Positioning
 
@@ -185,4 +223,5 @@ Do not:
 
 - [[uix.component.md]]
 - [[dropdown.component.md]]
+- [[search.component.md]]
 - [[refresh.component.md]]

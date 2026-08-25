@@ -1,3 +1,9 @@
+---
+tags:
+  - kind/rule
+  - topic/security
+---
+
 > Up: [[README.md]]
 
 # Code Security Standard
@@ -290,6 +296,165 @@ Produce, after the plan is approved:
 3. **Needs verification**: controls that cannot be confirmed from source alone: infrastructure, configuration, runtime.
 4. **Passed**: controls verified as satisfied, listed briefly for coverage assurance.
 
+## Stack Controls
+
+These extend the checklist above rather than replacing it. Where a control here and a checklist item cover the same ground, the concrete one here is the one to follow, because it names the library and the failure this stack actually produces.
+
+### Secrets and Configuration
+
+- Store secrets only in an environment file or a secret manager. Never hardcode a secret in source code, a compose file, or a web UI form. [[secret.rules.md]] decides which values go to a secret manager and which are plain environment variables.
+- `.env` stays gitignored. `.env.example` lists every required variable with a placeholder value, never a real one.
+- **Fail fast:** an app refuses to start when a required secret is empty or still set to its default. Do not let it run silently with a weak value.
+- Treat any secret that was ever committed as leaked. Rotate it; removing it from the file is not enough.
+- Never enable a debug mode in production.
+
+### HTTP Surface
+
+- Disable the interactive API docs and the OpenAPI schema in production, or require authentication for them.
+- Configure CORS with an explicit origin list. Never use `*`.
+- Apply rate limiting to the login endpoint and to any other sensitive one. Store lockout state in a shared store, such as a database or cache. Never store it only in the memory of a single worker.
+- Require authentication on every upload endpoint.
+- Bind services to `127.0.0.1` on the host, behind a reverse proxy. Never bind a database to `0.0.0.0`.
+- Terminate TLS at the proxy and serve every host over HTTPS.
+- Set `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY` or an equivalent CSP directive, and `Referrer-Policy` on responses.
+- Serve a Content Security Policy. Start from `default-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'`, and widen it only for a source the app genuinely loads. A CSP is the last line of defence when an XSS bug reaches production.
+- **Never use `unsafe-inline` or `unsafe-eval` in a CSP.** They remove most of what the policy is for.
+- Send `Strict-Transport-Security` on every HTTPS response.
+
+### Untrusted Input
+
+Anything that arrives from outside the process is untrusted: a request body, a query parameter, a path parameter, a header, a cookie, an uploaded file and its name, a webhook payload, a model response, and any value read back from another service's API. Trusted means written by this codebase, not sent by your own frontend.
+
+- Validate at the boundary with a Pydantic v2 model, per [[api.rules.md]]. Never read a raw `dict` out of a request and pass it into logic.
+- Set `model_config = ConfigDict(extra="forbid")` on a request model, so an unexpected field is rejected rather than silently ignored.
+- **Never bind a request body straight onto an ORM model.** Declare an explicit input schema listing only the fields a client may set, or a client will eventually set `role`, `is_admin`, or `tenant_id` on a record it does not own.
+- Bound every string with a maximum length and every number with a range. An unbounded string is a memory and storage problem before it is a security one.
+- Validate on the server even when the same rule already runs in the browser. Client-side validation is a convenience for the user, never a control.
+- Reject rather than repair. Do not strip characters and continue; a value that fails validation returns a `422`, per [[api.rules.md]].
+- Never build a regular expression from user input, and keep app-side patterns free of nested quantifiers, which can be driven into catastrophic backtracking.
+
+### Files and Paths
+
+These extend [[media.rules.md]], which owns the upload feature itself.
+
+- **Never build a filesystem path from a client-supplied name.** Generate a new server-side name, such as a UUID, and store the original name as a label only.
+- Reject a path segment containing `..`, a leading separator, a null byte, or an absolute path, and resolve the final path to confirm it is still inside the intended directory.
+- Determine the file type from its content, not from its extension or its `Content-Type` header.
+- Serve an upload with `Content-Disposition: attachment` and a non-executable content type, so an uploaded HTML or SVG file cannot run in the app's own origin.
+- Store uploads outside the web root, and require authentication on the endpoint that serves them.
+
+### Command Execution, Deserialization, and Templates
+
+- **Never pass user input to a shell.** Use an argument list and never `shell=True`; a shell is what turns a filename into a command.
+- **Never deserialize untrusted data with `pickle`, `yaml.load`, or an equivalent.** Use JSON, or `yaml.safe_load`. `pickle` executes arbitrary code, which makes a downloaded model file a remote code execution vector; prefer `safetensors` or a JSON format.
+- Never build a template from user input. A user value is passed to a template as data, never concatenated into the template source.
+- Never let a request name a module, a class, or a function to import or call.
+
+### Dependencies
+
+- Pin dependencies and commit the lock file, so a build is reproducible and a compromised release cannot arrive silently, per [[stacks.rules.md]].
+- Run a vulnerability audit as part of CI, and treat a high-severity finding in a direct dependency as a blocker.
+- Prefer a maintained library over a hand-rolled implementation for anything cryptographic, and never write your own password hashing, token signing, or encryption.
+
+### API Keys Between Services
+
+- Scope every key with a `resource:action` format, for example `report:read` or `user:read`. A key must only be able to perform what it is scoped for.
+- Issue one key per client. Never share a single global key across every client, so each key can be revoked and audited independently.
+- Send the key in an `X-API-Key` header. Store only its hash on the receiving side where possible.
+- Never issue a key with full administrative access.
+
+### SQL Injection
+
+> [!danger]
+> A user value that reaches SQL as text rather than as a bound parameter is an injection, whatever built the string. This is the single highest-cost prohibition here, because one such line reads the whole database.
+
+The stack runs SQLAlchemy 2.x on PostgreSQL, per [[stacks.rules.md]]. Used normally it is safe; the failures come from stepping around it.
+
+Build queries with the ORM expression API, which parameterizes automatically:
+
+```python
+stmt = select(User).where(User.email == email)          # correct
+```
+
+When raw SQL is genuinely required, use `text()` with bound parameters, never string formatting:
+
+```python
+db.execute(text("SELECT * FROM users WHERE email = :email"), {"email": email})   # correct
+db.execute(text(f"SELECT * FROM users WHERE email = '{email}'"))                 # forbidden
+```
+
+- The rule covers every way a string is joined: an f-string, `%`, `.format()`, `+`, and `str.join`. If a user value reaches SQL text rather than a parameter dictionary, it is an injection.
+- **An identifier cannot be bound.** A table name, a column name, a sort column, and a sort direction that come from a request are matched against an allowlist in code, and anything not on the list is rejected:
+
+```python
+SORT_COLUMNS = {"name": User.name, "created_at": User.created_at}
+column = SORT_COLUMNS.get(sort_by)
+if column is None:
+    raise HTTPException(422, "Unknown sort column")
+```
+
+- `LIMIT` and `OFFSET` are integers validated to a range, never interpolated text. Cap the page size, per [[api.rules.md]].
+- Escape `%`, `_`, and `\` in a value used inside a `LIKE` or `ILIKE` pattern. Unescaped, a user's `%` turns a prefix search into a full scan, which is a denial of service on a large table. See [[search.component.md]] for the search path itself.
+- Never let a request choose a raw SQL fragment, a `WHERE` clause, or a JSON path expression, however convenient the filter API becomes.
+- Grant the app's database role only what it needs. It does not need superuser, and it does not need `DROP` on tables it only reads.
+
+### Cross-Site Scripting
+
+React escapes text by default, so an XSS bug in this stack almost always comes from one of a small number of deliberate escapes from that default.
+
+- **Never use `dangerouslySetInnerHTML`.** If rendering stored HTML is genuinely required, sanitize it with a maintained sanitizer at render time, and record the deviation in the project README.
+- Never write to `innerHTML`, `outerHTML`, `document.write`, or `insertAdjacentHTML` with a value that is not a literal in the source.
+- Never pass a user value to `eval`, `new Function`, `setTimeout` with a string body, or a dynamic `import()` of a user-supplied path.
+- Validate any URL before putting it in `href` or `src`. Allow `http:` and `https:` only, so `javascript:`, `data:`, and `vbscript:` cannot execute. This applies to a link stored in the database as much as to one typed in a form.
+- **Never build a highlighted search result by concatenating HTML around the matched text.** Split the string and render the parts as children, so the user's own query cannot become markup. This is the most likely XSS in an app that has a search box, per [[search.component.md]].
+- Never inject a server value into an inline `<script>` block or into a global state assignment on `window`. Send it through the API as JSON.
+- Set `Content-Type: application/json` on every JSON response and never `text/html`, so a reflected value cannot be rendered as a document.
+- Treat a model response as untrusted input. It is generated from data a person typed, so it can carry markup or a prompt aimed at whatever renders it. Never render it as HTML.
+
+### Authorization and Object Access
+
+Authentication says who is calling. Authorization says whether that caller may touch this specific row, and it is the control most often missing.
+
+- Check ownership or entitlement on every object read, update, and delete, not only on the endpoint. An authenticated user changing an `id` in a URL must not reach another user's record.
+- **Scope the query itself rather than fetching and then comparing.** `where(Document.id == id, Document.tenant_id == user.tenant_id)` cannot leak a row that a later `if` might forget to check.
+- Never rely on an unguessable identifier as the control. A UUID is not an authorization decision.
+- Enforce the role check on the server. Hiding a button in the frontend is presentation, not a permission.
+- Return the same `404` for a record that does not exist and for one the caller may not see, so the API does not confirm that a record exists.
+- Apply the same checks to an export, a report, a bulk endpoint, and a search. A filter enforced on the list endpoint and forgotten on the export is a data leak, and it is the failure [[search.component.md]] requires one shared filter function to prevent.
+
+### Cross-Site Request Forgery
+
+Sessions are `HttpOnly` cookies, per [[auth.rules.md]], so the browser attaches them to a cross-site request automatically. Cookie auth without a CSRF control is exploitable.
+
+- Set `SameSite=Lax` at minimum on the session cookie, plus `Secure` and `HttpOnly`. Use `SameSite=Strict` where the app never needs to be entered from an external link.
+- Add a CSRF token, checked on every state-changing request, when any flow requires `SameSite=None`.
+- **Never perform a state change on a `GET`.** A `GET` that deletes something is exploitable through an image tag.
+- Keep the CORS origin list explicit, as above. `Access-Control-Allow-Credentials: true` combined with a reflected origin is equivalent to having no origin check at all.
+
+### Redirects and Outbound Requests
+
+- Validate every redirect target against an allowlist of known app origins. A `next` parameter in a login flow is the live example: unchecked, it turns a trusted login URL into a redirect to an attacker's page that looks like it came from the product.
+- Never redirect to a target taken from a request without that check, including one taken from the `Referer` header.
+- Validate every URL the server itself fetches. A user-supplied URL must not be able to reach `localhost`, a private range, or a cloud metadata address, which is how an internal service gets read from outside.
+- Give every outbound request a timeout and a size cap.
+
+## Personal Data
+
+Personal data means anything that identifies a person: a name, a national identity number, a bank account, a phone number, an email address, a location, a photograph of a face. Most data protection law treats it the same way, and the rules below satisfy the common core rather than any one statute.
+
+- **Redact personal data before it reaches a model or a memory layer.** Extract text first, redact the extracted text, then send it. Raw bytes cannot be redacted.
+- Use a provider whose region satisfies the project's obligations, and record that choice in the README.
+- **Log access to personal data:** who accessed it, what data, and when. This is mandatory for any project holding employee or customer records.
+- Minimize collection. Do not store or log personal data that is not required, and never write it into application logs.
+- Store confidential material only in the memory scope reserved for it. Never expose it to a general recall scope, per [[memory.rules.md]].
+- A model can memorize its training data. Know that before publishing weights trained on anything private.
+
+## Audit Trail
+
+- Log important actions, such as a login, a failed login, a configuration change, and a destructive action, together with the acting identity and a timestamp.
+- **Any write action performed by a model requires a confirmation flow and an audit trail** recording who approved it.
+- An audit entry is append-only. A record that can be edited by the same role it audits is not an audit trail.
+
 ## Python and Machine Learning Notes
 
 The checklist is technology-agnostic. These are where this stack maps onto it most often.
@@ -305,8 +470,46 @@ The checklist is technology-agnostic. These are where this stack maps onto it mo
 | 8 | A model can memorize its training data. Know that before publishing weights trained on anything private |
 | 1 | A prompt built from user input is an injection surface. Treat model output as untrusted input, and never render it as HTML or execute it |
 
+## Definition of Done
+
+Before treating a security task as complete, confirm:
+
+- No secret exists in the repository. `.env.example` uses placeholders only. Fail-fast is active.
+- Every API key is scoped per client. No administrative key exists.
+- The interactive API docs are closed or authenticated in production. CORS is explicit. Login rate limiting is active and its state is shared, not per worker.
+- Every upload and write endpoint requires authentication.
+- Personal data is redacted on every path to a model or a memory layer, and access to it is audited.
+- Every request is validated by a Pydantic model with `extra="forbid"`, and no request body is bound straight onto an ORM model.
+- No SQL is built by string formatting. Every identifier that comes from a request is matched against an allowlist.
+- No `dangerouslySetInnerHTML`, no `innerHTML`, and no `eval` reachable from user input. Every URL rendered into `href` or `src` is scheme-checked.
+- Every object read, update, and delete is scoped to the caller in the query itself, including on the export and search paths.
+- The session cookie sets `HttpOnly`, `Secure`, and `SameSite`, and no state change happens on a `GET`.
+- Every redirect target and every server-side outbound URL is checked against an allowlist.
+- No filesystem path is built from a client-supplied name, and no upload is served from the app's own origin as an executable type.
+- A CSP is served without `unsafe-inline` or `unsafe-eval`, and dependencies are pinned with an audit running in CI.
+- No untrusted data is deserialized with `pickle` or an unsafe YAML loader.
+
+## Conflict Resolution
+
+If another instruction conflicts with this standard, follow this priority:
+
+1. Security and privacy requirements
+2. Direct user instructions
+3. This security standard
+4. Existing project conventions
+
+**A direct user instruction must not override a security or privacy requirement.** When a request conflicts with this standard, say which standard is affected before proceeding, rather than proceeding and mentioning it after.
+
 ## Applies To
 
+- [[api.rules.md]]
+- [[auth.rules.md]]
 - [[codes.rules.md]]
-- [[secret.rules.md]]
+- [[database.rules.md]]
 - [[env.rules.md]]
+- [[media.rules.md]]
+- [[memory.rules.md]]
+- [[repository.rules.md]]
+- [[search.component.md]]
+- [[secret.rules.md]]
+- [[stacks.rules.md]]

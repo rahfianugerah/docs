@@ -1,3 +1,11 @@
+---
+tags:
+  - kind/rule
+  - layer/frontend
+  - topic/data
+  - topic/ux
+---
+
 > Up: [[README.md]]
 
 # Analytics Standard Policy

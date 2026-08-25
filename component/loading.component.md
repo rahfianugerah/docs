@@ -1,105 +1,195 @@
+---
+tags:
+  - kind/component
+  - layer/frontend
+  - topic/state
+  - topic/accessibility
+---
+
 > Up: [[README.md]] · [[uix.component.md]]
 
 # Loading Standard
 
 > [!note]
-> Every loading state: the route gate, the button spinner, the inline section loader, and the skeleton.
+> Four loading surfaces, and which wait each one serves. Every one of them pairs an indicator with visible text.
 
 ## Core Requirement
 
-Every wait a user can see uses one of the four surfaces below, chosen by what is waiting and where.
+Every wait in a project uses one of the four surfaces below, and **every one of them pairs an indicator with visible text naming what is being waited on.** A bare spinner announces nothing to a screen reader and tells a sighted user nothing either.
 
-A wait with no feedback is indistinguishable from a broken page, and a user who cannot tell the difference clicks again. Most double submissions are a loading problem, not a validation problem.
+**One indicator per wait.** A route gate does not sit above a section that is also loading.
 
-This extends [[uix.component.md]] and uses its tokens. It defines no color of its own.
+This standard extends [[uix.component.md]] and does not redefine a token.
 
 ## Choosing the Right Surface
 
-The question is not "is it loading" but **what part of the screen cannot be trusted yet**.
+| The wait | Surface | Why |
+| :- | :- | :- |
+| The session is being checked before the first paint | Route gate | Nothing can be drawn yet, and the wrong screen must not flash |
+| A form the user just submitted | Button loading | The wait belongs to the control the user pressed |
+| A section of an already-drawn page is fetching | Inline section loader | The rest of the page stays usable |
+| A component whose layout is already known is fetching | Skeleton, per [[skeleton.component.md]] | The page does not jump when the data lands |
 
-| The wait | Surface |
-| :- | :- |
-| The route itself, before anything can render | Route gate |
-| A user action, started by a control | Button loading |
-| One region of an otherwise usable page | Inline section loading |
-| Content whose shape is known before its data | Skeleton placeholder |
-
-Pick one per wait. Two surfaces for one wait, such as a skeleton inside a gated route, means the page is telling the user twice.
+The test between the last two is whether the shape is genuinely known before the data arrives. A table with fixed columns and a known page size passes. A search result that might return nothing does not.
 
 ## Case 1: Route Gate
 
-A full-surface state shown while the route decides whether it can render at all: an authentication check, a permission check, the first fetch a page cannot exist without.
+A route gate is a full-page hold shown while the app decides what the user is allowed to see, most often while the session is being checked on the first paint. It exists to stop the app flashing the login form at a user who is already signed in, and to stop it flashing a protected page at a user who is not.
 
-- It replaces the page content, never overlays it.
-- It holds a centered spinner and one line of text.
-- **It resolves into the page or into an error, never into an empty screen.** A gate that finishes with nothing to show is the most common way a blank page ships.
-- The authentication check must complete before any redirect, per [[refresh.component.md]]. Redirecting while the check is still pending is what sends a signed-in user to the login screen on refresh.
+```css
+.gate {
+  min-height: 100svh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 16px; padding: 32px;
+  color: var(--ink2); background: var(--surface);
+}
+.gate p { font-size: 13.5px; }
+.gate-spin { color: var(--accent); animation: gate-rotate .9s linear infinite; }
+@keyframes gate-rotate { to { transform: rotate(360deg); } }
+```
+
+```html
+<div class="gate" role="status" aria-live="polite">
+  <i class="ti ti-loader-2 gate-spin" style="font-size:28px" aria-hidden="true"></i>
+  <p>Checking your session...</p>
+</div>
+```
+
+- **The gate holds the full viewport with `100svh`, not `100vh`**, so mobile browser chrome does not push the indicator off centre.
+- **The background is `--surface`**, never a gradient and never a decorative shape. A gate is a hold, not a screen to be designed.
+- The spinner is `28px` here. **This is the one place a loader may exceed the 16 to 20px icon range** in [[uix.component.md]], because it is the only thing on the page.
+- The gate always carries visible text saying what is being waited on.
+- **Render the gate before the redirect decision, never after it.** A gate that runs after the redirect has already happened is the flash it was meant to prevent, per [[refresh.component.md]].
 
 ## Case 2: Button Loading
 
-The control that started the work shows the work.
+A button that has submitted shows the wait on itself. It is the only correct place for the wait, because it is the control the user just used.
 
-- **Disable the control while the request is in flight.** This is the double submission fix, and it belongs on the control rather than on a guard in the handler.
-- Replace the label with a spinner and a verb, or keep the label and place a spinner before it. Choose one and use it everywhere.
-- **Keep the button's width stable.** A button that shrinks to fit "Saving" moves everything beside it, and the user's next click lands somewhere else.
-- Re-enable on both success and failure. A control left disabled after an error strands the user on a form they cannot resubmit.
+```html
+<button type="submit" class="btn pri" disabled>
+  <i class="ti ti-loader-2 gate-spin" style="font-size:17px" aria-hidden="true"></i>
+  Signing in...
+</button>
+```
+
+- **The button is disabled for the whole wait**, with the `disabled` attribute present and not only the styling, so a second submit cannot be sent.
+- **The label is replaced with the loading label, not appended to it**, and the spinner sits before the label.
+- The spinner is `17px`, sized to the label next to it, and it reuses the shared rotation. **Do not write a second rotation keyframe for a button.**
+- **The button keeps its own width and padding while loading.** A button that shrinks to fit the loading label makes the page jump under the cursor.
+- **Never replace the whole form with a route gate while a submit is in flight.** The user must keep seeing what they typed.
 
 ## Case 3: Inline Section Loading
 
-One region is waiting while the rest of the page works: a panel, a table body, a chart.
+A section of a page that is already drawn shows its own wait in place, and the rest of the page stays usable.
 
-- The spinner sits inside that region's own bounds and nothing outside it changes.
-- **Reserve the region's height before the load.** A section that grows when its data arrives pushes the page down under a cursor that was already moving.
-- Never lock the whole page for a region. If the rest of the page is usable, it stays usable.
+```html
+<p class="muted" role="status" aria-live="polite">
+  <i class="ti ti-loader-2 gate-spin" style="font-size:16px" aria-hidden="true"></i>
+  Loading your profile...
+</p>
+```
+
+- The spinner is `16px` and the text uses `--ink2`.
+- **The text names what is loading**, so a page with two sections loading does not show the same sentence twice.
+- **The loading row, the error state, and the loaded content are mutually exclusive.** Guard each on the others, so an error is never shown under a spinner.
+- **Never collapse the section to zero height while it loads** if that moves the rest of the page. Use a skeleton instead.
 
 ## Case 4: Skeleton Placeholder
 
-Used when the shape of the content is known in advance: a list of rows, a card grid, a table.
+Skeletons are owned by [[skeleton.component.md]], which covers the class, the per-component shapes, the row counts, and what happens on a refetch. This file keeps only the rule that decides between them.
 
-- The skeleton matches the real layout's dimensions, so nothing jumps when the content replaces it.
-- Show the number of rows the page usually holds, not one and not fifty.
-- Use a skeleton only where the shape really is predictable. A skeleton that does not match what arrives is worse than a spinner, because it promised a layout and then changed it.
-- Prefer a skeleton over a spinner for content, and a spinner over a skeleton for an action. Content has a shape; an action does not.
+> [!important]
+> A component whose layout is already known shows a skeleton in its own place. It never hands the wait up to the page. The route gate above holds the whole viewport and exists for one thing, checking the session before the first paint; using it for a table that is fetching blanks a page the reader could have been reading.
+
+## The Loader Icon and Its Animation
+
+- **The loader is one glyph from the project's one icon set**, per [[uix.component.md]]. Never an emoji, an animated GIF, a third-party spinner library, or a glyph from a second icon set.
+- **The rotation is `.9s linear infinite` through a single shared keyframe.** Every spinner in a project turns at the same speed, so two spinners on one screen never look like two different states.
+- **The spinner color is `--accent`.** It is the only color a loader takes; **a loader never carries a semantic hue**, because a wait is not a success, a warning, or an error.
+- **Do not add a second animation to a loading state:** no pulsing opacity behind the spinner, no bouncing dots, no progress bar that is not tied to real progress.
 
 ## Text Rules
 
-- Say what is happening, in a verb: loading, saving, checking. Never a bare "please wait".
-- One line. A wait is not the place for an explanation.
-- **Never show a fake percentage.** A progress bar that is not driven by real progress is a lie the user will time.
-- After an unusually long wait, say what is slow rather than continuing to spin silently.
+Loading text is sentence case, per [[uix.component.md]], in the project's UI language.
 
-## Animation
+| Surface | String | Used for |
+| :- | :- | :- |
+| Route gate | `Checking your session...` | Checking the session on first paint |
+| Button | `Signing in...`, `Saving...` | A form submit that is in flight |
+| Inline section | `Loading <noun>...` | A section fetching its own data |
 
-- One spinner for the whole product, in one direction, at one speed.
-- Respect `prefers-reduced-motion`: replace the spin with a static or fading indicator rather than removing the feedback entirely.
-- Do not animate the page's background or layout while waiting.
+- **End the string with three periods, never with the single-character ellipsis.** [[docs.rules.md]] disallows a decorative Unicode character, and three periods read the same to a screen reader.
+- **Write what is being waited on, not the mechanism.** "Loading your profile..." is correct; "Fetching /api/v1/profile..." is not.
+- **Never show a percentage or a time estimate the app cannot actually measure.**
+
+## Reference Table
+
+Every loading state reads its values from here. Do not hardcode any of the right-hand values.
+
+| Property | Surface | Value |
+| :- | :- | :- |
+| Spinner color | All | `var(--accent)` |
+| Spinner size | Route gate | `28px` |
+| Spinner size | Button | `17px` |
+| Spinner size | Inline section | `16px` |
+| Rotation | All spinners | `.9s linear infinite` |
+| Text color | Route gate, inline section | `var(--ink2)` |
+| Font size | Route gate, inline section | `13.5px` |
+| Background | Route gate | `var(--surface)` |
+| Height | Route gate | `100svh` |
+| Gap, padding | Route gate | `16px`, `32px` |
 
 ## Accessibility
 
-- A loading region carries `aria-busy="true"` while it waits.
-- Announce the state with a live region, so the wait is not visual only.
-- A disabled loading button keeps an accessible name that says it is working.
-- Move focus to the new content when a route gate resolves, so a keyboard user is not left at the top of a page that changed underneath them.
+Accessibility ranks above the design standard itself, per [[uix.component.md]].
+
+- **Every loading state pairs the indicator with visible text.** A rotating icon announces nothing on its own.
+- **Wrap the loading region in `role="status"` with `aria-live="polite"`**, so the wait is announced without interrupting what the user is doing. **Do not use `role="alert"`;** a wait is not an error.
+- **Mark the spinner itself `aria-hidden="true"`** when the text next to it already says the same thing, so the state is announced once.
+- A disabled submit button keeps its `disabled` attribute rather than only looking disabled, so it is skipped correctly by keyboard and by assistive technology.
+- **Honour a reduced motion preference. Slow the rotation rather than removing the indicator**, because the indicator is the information:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .gate-spin { animation-duration: 2.4s; }
+}
+```
+
+- **Never trap the keyboard behind a loading state, and never move focus onto a spinner.** When a route gate resolves, focus stays where the user left it.
 
 ## Do and Do Not
 
-Do:
+| Do | Do not |
+| :- | :- |
+| Copy the shared gate, spinner, and keyframe rather than writing a new one per project | Write a second rotation keyframe for one surface |
+| Show the route gate while the session is being checked | Let the login form flash at a signed-in user |
+| Show the wait on the button the user pressed, and disable it for the whole wait | Replace the form with a full-page gate |
+| Name what is loading, in sentence case, ending in three periods | Ship a bare spinner, or a single-character ellipsis |
+| Use a skeleton when the layout is known and a spinner when it is not | Promise a layout the data will not match |
+| Keep one indicator per wait | Run a route gate above a section that is also loading |
+| Slow the rotation under reduced motion | Remove the indicator entirely |
+| Colour the spinner `--accent` | Give a loader a success, warning, or error hue |
 
-- Disable the control that started the work.
-- Reserve space before the content arrives.
-- Say what is loading, in a verb.
-- Resolve every gate into content or an error.
+## Deviations
 
-Do not:
+Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.
 
-- Show two loading surfaces for one wait.
-- Let a button change width when its label changes.
-- Fake a percentage.
-- Leave a control disabled after a failure.
-- Overlay the whole page for a region that is loading.
+## Conflict Resolution
+
+If another instruction conflicts with this standard, follow this priority:
+
+1. Security and privacy requirements
+2. Accessibility requirements
+3. Direct user instructions
+4. [[uix.component.md]]
+5. This loading standard
+6. Existing project conventions
 
 ## Related
 
 - [[uix.component.md]]
+- [[skeleton.component.md]]
+- [[button.component.md]]
+- [[table.component.md]]
+- [[login.component.md]]
 - [[refresh.component.md]]
-- [[dashboard.component.md]]
+- [[docs.rules.md]]
