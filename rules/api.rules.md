@@ -1,3 +1,10 @@
+---
+tags:
+  - kind/rule
+  - layer/backend
+  - topic/data
+---
+
 > Up: [[README.md]]
 
 # API Standard
@@ -11,15 +18,41 @@ When designing, building, or modifying a REST API, follow the rules in this poli
 
 One consistent style makes integration between services predictable and makes every endpoint safe to expose as a tool to an agent. This standard covers REST. An event bus is a later phase and is not part of it.
 
+## Route Shape
+
+**Every route is `api/<version>/<route>`. There is no exception, and nothing sits outside it.**
+
+```text
+api/v1/docs
+api/v1/users
+api/v1/users/{id}
+api/v1/orders/{id}/documents
+```
+
+The three parts are fixed:
+
+- **`api`** is the literal first segment on every route the backend serves. A backend serves nothing else.
+- **`<version>`** is `v` followed by an integer: `v1`, `v2`. Never a decimal, never a date, never a name.
+- **`<route>`** is the resource and whatever follows it, a plural noun in kebab-case: `purchase-orders`, `users`, `orders/{id}/documents`.
+
+Rules:
+
+- **Every route carries the prefix, including the ones that feel like infrastructure.** `api/v1/docs`, `api/v1/openapi.json`, and `api/v1/auth/login` all sit inside it. A framework that mounts `/docs` at the root by default is configured to move it, not left alone.
+- **`/health` is the one route outside the prefix**, at the root. Every uptime probe expects it there, it must answer before the app knows its own version, and it is the only route [[security.rules.md]] allows to be public. Nothing else joins it.
+- **Never a version anywhere but the path.** Not a header, not a query parameter, not a subdomain. A version in a header is invisible in a log, in a browser address bar, and in a bug report.
+- A breaking change ships as `api/v2`, mounted alongside `v1`. Never change the behavior of `v1` silently.
+
+This is what lets one proxy rule, one CORS origin, and one auth dependency cover the whole surface. It is also why a frontend is built with an origin and no path, per [[deploy.rules.md]]: the client holds the origin, every call appends `api/v1/...` itself, and the two halves are joined in exactly one place.
+
 ## Base Shape
 
-- Prefix every endpoint with `/api/v1`. Put the version in the path. A breaking change ships as `/api/v2`; never change the behavior of `v1` silently.
+- The route shape above applies to every endpoint. Everything below is what sits inside it.
 - Use JSON for every request and response body, with `Content-Type: application/json`.
 - Name a resource as a plural noun in kebab-case, for example `/api/v1/purchase-orders`.
 - Use HTTP methods for their intended purpose: `GET` to read, `POST` to create, `PUT` or `PATCH` to update, `DELETE` to remove. Never perform a write or a destructive action through `GET`.
 - Reference a person by the one stable identifier the system already uses, and use the same field name in every service. Two services calling it `user_id` and `employee_no` is how a join silently produces nothing.
 - Format every timestamp as ISO 8601 with an explicit offset, for example `2026-07-09T14:30:00+07:00`. Never a naive local time.
-- Keep OpenAPI generation enabled at all times. In production, `/docs` and `/openapi.json` are disabled or authenticated, per [[security.rules.md]].
+- Keep OpenAPI generation enabled at all times, mounted at `api/v1/docs` and `api/v1/openapi.json`. In production both are disabled or authenticated, per [[security.rules.md]].
 
 ## Error Format
 
@@ -58,7 +91,9 @@ Return every error in the same shape across every service:
 
 ## Definition of Done
 
-- Every endpoint sits under `/api/v1` and OpenAPI generation is valid.
+- Every route is `api/<version>/<route>`, including `api/v1/docs`, and `/health` is the only route outside the prefix.
+- No version appears in a header, a query parameter, or a subdomain.
+- OpenAPI generation is enabled and valid.
 - Every error follows the standard error format, and every HTTP status reflects the real outcome.
 - Every list endpoint is paginated.
 - Every machine-to-machine call authenticates through a scoped API key.

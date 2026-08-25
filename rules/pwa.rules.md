@@ -1,3 +1,9 @@
+---
+tags:
+  - kind/rule
+  - layer/frontend
+---
+
 > Up: [[README.md]]
 
 # PWA Standard Policy

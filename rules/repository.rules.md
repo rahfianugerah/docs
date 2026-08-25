@@ -1,3 +1,9 @@
+---
+tags:
+  - kind/rule
+  - topic/workflow
+---
+
 > Up: [[README.md]]
 
 # Repository Quality and Operations Standard
@@ -33,25 +39,26 @@ An existing repository holding both halves is migrated, not left alone. The orde
 1. **Freeze the combined state as `legacy`.** Create a `legacy` branch from the current release branch, push it, and protect it against a force push and a deletion. From that moment it is a read-only record of the project before the split, and nothing is ever committed to it again.
 2. **Create the two new repositories**, `[APP]-backend` and `[APP]-frontend`, each with the branches and protection settings [[branch.rules.md]] requires.
 3. **Move the code with its history** where practical, using `git subtree split` or `git filter-repo`, so `git blame` still answers questions afterwards. Where that is not practical, make a single initial commit whose message names the source repository and the commit it came from, so the trail is not lost entirely.
-4. **Give each new repository its own supporting files**: `.gitignore`, `.env.example`, a README from [[template/]], the build config, and its own deployment runbook. Do not copy the combined compose file into either one.
+4. **Give each new repository its own supporting files**: `.gitignore`, `.env.example`, a README from [[project.template.md]], the build config, and its own deployment runbook. Do not copy the combined compose file into either one.
 5. **Bootstrap each service** through the deployment runbook, then connect its own trigger. Deploy the backend first, because the frontend usually bakes the backend URL in at build time.
 6. **Retire the old repository** once both are live and verified: archive it, and never delete it. It carries the `legacy` branch, which is the only remaining record of the combined history.
 
 Point every reference, in documentation and in a runbook, at the new repositories in the same change. A link left pointing at the retired repository sends the next person to code that is no longer built.
+
+> [!danger]
+> A retired repository is archived, never deleted. It carries the `legacy` branch, which is the only remaining record of the combined history, and deleting it destroys the only copy.
 
 ## Version Control
 
 - Use git from the first commit. A project without git history is not acceptable.
 - Maintain a `.gitignore` excluding at minimum `.env`, database files (`*.db`, `*.sqlite*`), `uploads/`, `sessions/`, `node_modules/`, `__pycache__/`, and build artifacts.
 - Never commit a database file or user data.
-
-> [!danger]
-> A retired repository is archived, never deleted. It carries the `legacy` branch, which is the only remaining record of the combined history.
 - Write meaningful commit messages, per [[commit.rules.md]]. Use a branch for a large change, per [[branch.rules.md]].
+- Keep the permanent branches the project's shape declares, and promote a change through a pull request at every stage, per [[branch.rules.md]]. Nothing else lives on the remote long-term.
 
 ## Configuration and Documentation
 
-- Maintain a `.env.example` listing every variable the project uses, with a placeholder value and an explanatory comment, per [[env.rules.md]].
+- Maintain a `.env.example` listing every variable the project uses, with a placeholder value such as `__fill__` and an explanatory comment, per [[env.rules.md]].
 - Maintain a README covering what the project does, how to run it in development, how to run it in a container, the environment variables, the ports, the volumes, and a checklist against these standards.
 - Record an important architectural decision briefly, in the README or in the memory, so the reasoning stays traceable.
 
@@ -59,7 +66,8 @@ Point every reference, in documentation and in a runbook, at the new repositorie
 
 - Change the schema only through a migration, committed to the repository and replayable from an empty database, per [[database.rules.md]].
 - Seed data through a script, not an untracked manual insert. Never hardcode a seed user or a seed password.
-- Use a timezone-aware timestamp type for every time column.
+- Use a timezone-aware timestamp type for every time column, never a naive one. A naive timestamp is correct until the first reader in another offset.
+- Use one column name for a person reference across the whole project, chosen once. Two names for the same identity is two joins nobody can see are the same.
 
 ## Logging and Error Handling
 
@@ -110,3 +118,6 @@ A direct user instruction must not override security or privacy requirements. If
 - [[env.rules.md]]
 - [[security.rules.md]]
 - [[stacks.rules.md]]
+- [[deploy.rules.md]]
+- [[deploy.cloud.md]]
+- [[codes.rules.md]]

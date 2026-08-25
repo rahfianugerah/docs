@@ -1,3 +1,10 @@
+---
+tags:
+  - kind/template
+  - layer/docs
+  - topic/memory
+---
+
 > Up: [[README.md]]
 
 # Agent Entry Point Template
@@ -5,12 +12,9 @@
 > [!example]
 > Every bracketed passage below is guidance to be replaced, not structure to be kept.
 
-Copy the block below into a project's `CLAUDE.md`, then copy that file to `AGENTS.md` so the two
-are byte-identical. Claude Code reads the first, Codex reads the second, and a rule that lives
-in only one of them is a rule half the tools ignore.
+Copy the block below into a project's `CLAUDE.md`, then copy that file to `AGENTS.md` so the two are byte-identical. Claude Code reads the first, Codex reads the second, and a rule that lives in only one of them is a rule half the tools ignore.
 
-Fill in every bracket. The point of this file is to stop an agent rediscovering the codebase by
-grepping it, which costs tokens every session and gets slower as the project grows.
+Fill in every bracket. The point of this file is to stop an agent rediscovering the codebase by grepping it, which costs tokens every session and gets slower as the project grows.
 
 Rules for filling it in are in [[docs.rules.md]]; the memory protocol is [[memory.rules.md]].
 
@@ -43,28 +47,34 @@ already made rather than re-deriving them.
 
 Never read the whole vault to answer a question about this code. That is what the map is for.
 
-## The Cognee MCP Server
+## The Memory Server
 
-Read with `recall`, always passing `datasets`, so one project's memory cannot leak into
-another's answer. This project's dataset is `[dataset]`.
+The memory is connected as an MCP server exposing two read-only tools:
 
-```json
-{"query": "[a question]", "datasets": ["[dataset]"], "search_type": "CHUNKS", "top_k": 15}
-```
+- `recall` answers a question from the memory. **Always pass the brain**, which is the folder's
+  own name lowercased, so one project's memory cannot leak into another's answer. This
+  project's brain is `[brain]`.
+- `brains` lists which memories exist on this machine.
 
-**Never call `remember` or `forget`.** The MCP server exposes them and they write straight into
-the index, which the next `pmb digest` overwrites. Write a note into the vault instead.
+Call `recall` before answering anything about this project's rules, decisions, architecture, or
+history. `/pmb-map <brain>` switches which memory the session reads from when the work moves
+elsewhere.
+
+**Nothing here writes, on purpose.** To add a memory, write a markdown note under
+`[path-to-vault]/memory/` and run `pmb digest`.
 
 ## Two Things Not to Do
 
-- Do not write to Cognee directly. Write markdown into `[path-to-vault]/memory/`, then run
-  `pmb digest`. A direct write is an index write and is lost on the next rebuild.
-- Do not hand-edit anything under `[path-to-vault]/graph/`. It is regenerated and gitignored.
+- **Do not write to the index directly.** It is derived from the markdown, so a direct write is
+  gone at the next rebuild. Write the note, then digest.
+- **Do not hand-edit anything under `[path-to-vault]/graph/`.** It is regenerated and gitignored.
 ```
 
 ## Related
 
 - [[docs.rules.md]]
 - [[memory.rules.md]]
+- [[agent.rules.md]]
+- [[memory/README.md]]
 - [[graph/README.md]]
 - [[project.template.md]]

@@ -1,3 +1,10 @@
+---
+tags:
+  - kind/component
+  - layer/frontend
+  - topic/data
+---
+
 > Up: [[README.md]]
 
 # Pagination Standard Policy
@@ -52,8 +59,8 @@ Every paginated table carries the full control set. A partial set is what forces
 | First and last | Jump to page 1 or page N. Disabled, not hidden, when already there |
 | Previous and next | Step one page. Disabled, not hidden, at the ends |
 | Page number | The current page, and direct entry or selection of another |
-| Range indicator | `Menampilkan 21-40 dari 137` |
-| Total pages | `Halaman 2 dari 7` |
+| Range indicator | `Showing 21-40 of 137` |
+| Total pages | `Page 2 of 7` |
 
 - Disable a control at a boundary rather than removing it. A control that disappears makes the row of controls change width and move the others under the pointer.
 - The range indicator is not optional. It is the only element that tells a reader both where they are and how much there is, and it is what makes a page count meaningful rather than abstract.
@@ -78,7 +85,7 @@ Rules:
 - The controls keep their position while a page loads. A set that unmounts during the request moves the content under a pointer that was already travelling toward it, which is the same failure endless scroll has.
 - Do not pin the controls to the viewport. A floating bar covers content on short screens and adds a layer that has to be dismissed on touch.
 - The pager is one row on desktop. Below the mobile breakpoint it wraps to two, range above and navigation below, both still full width and both still clearing the 44px minimum from [[uix.component.md]].
-- Give the pager an `aria-label` naming what it pages, such as `Paginasi daftar project`. A page carries more than one pager as soon as a dashboard carries more than one list, and `Halaman 2 dari 7` alone does not say which one it belongs to.
+- Give the pager an `aria-label` naming what it pages, such as `Project list pagination`. A page carries more than one pager as soon as a dashboard carries more than one list, and `Page 2 of 7` alone does not say which one it belongs to.
 
 ## The Control Set Is Never Trimmed
 
@@ -92,7 +99,7 @@ Rules:
 
 - **A control never removes the way to undo the state it produced.** This is the general form, and it is worth checking against any control that hides itself based on its own effect.
 - Disable at a boundary; never remove. A control that disappears changes the width of the row and moves its neighbours under a pointer already travelling toward them.
-- The range indicator renders even at one page. `Menampilkan 1-22 dari 22` is a fact the reader wants; `Halaman 1 dari 1` beside it is the price, and it is a smaller cost than a dead end.
+- The range indicator renders even at one page. `Showing 1-22 of 22` is a fact the reader wants; `Page 1 of 1` beside it is the price, and it is a smaller cost than a dead end.
 - Applies to the facet grid as well as the table, per [[dashboard.component.md#Paged Small Multiples]].
 
 ## Table Data Source
@@ -125,7 +132,7 @@ The guardrails in [[analytics.rules.md#Guardrails]] apply to tables in the forms
 - **No hidden columns on load.** Every column the table defines renders on first paint. A user may hide one afterwards; nothing starts hidden. A column hidden by default is a decision made for the reader that the reader cannot see was made.
 - **No silently dropped rows.** Every row in the filtered set is reachable by paging. A table never trims its own result, never caps at a round number, and never quietly excludes rows the renderer found awkward.
 - **No truncated cell content without a way to read it.** A cell may clip its text visually, but the full value stays reachable through a title attribute, a tooltip, or a detail view. Text that is gone with no way to recover it is data loss dressed as layout.
-- **No aggregated placeholder rows.** A table does not invent a Lainnya, Other, or Total row that is not in the data. A genuine total belongs in a footer that is labeled as computed.
+- **No aggregated placeholder rows.** A table does not invent an "Other", a "Misc", or a "Total" row that is not in the data. A genuine total belongs in a footer that is labeled as computed.
 - **No horizontal cropping.** A table wider than its container scrolls, per [[scrollbar.component.md]]. Columns are not dropped to make it fit.
 
 > [!warning]
@@ -133,7 +140,7 @@ The guardrails in [[analytics.rules.md#Guardrails]] apply to tables in the forms
 
 ## Empty, Loading, and Error
 
-- An empty result renders the shared empty state from [[uix.component.md]] with the controls hidden, not a table of zero rows with a pager reading `Halaman 0 dari 0`.
+- An empty result renders the shared empty state from [[uix.component.md]] with the controls hidden, not a table of zero rows with a pager reading `Page 0 of 0`.
 - A page change shows the loading state from [[loading.component.md]] over the table body while the previous rows stay in place, so the layout does not jump and the controls do not move under the pointer.
 - A failed request keeps the current page and its controls, and shows the error beside them. A table that empties itself on a network error looks exactly like a table with no data.
 
@@ -145,7 +152,7 @@ The guardrails in [[analytics.rules.md#Guardrails]] apply to tables in the forms
 | Ask the server for `limit` and `offset` | Fetch a large set and slice it on the client |
 | Start at 20 and adapt once `total` is known | Guess a page size before the total exists |
 | Disable a control at a boundary | Remove it and let the row reflow |
-| Show `Menampilkan 21-40 dari 137` | Show a page number alone |
+| Show `Showing 21-40 of 137` | Show a page number alone |
 | Keep the page in the URL | Keep it only in component state |
 | Repeat the controls above a region taller than a screen | Make the reader scroll a full page to reach the next one |
 | Hide the controls when there is only one page | Render a row of disabled arrows |

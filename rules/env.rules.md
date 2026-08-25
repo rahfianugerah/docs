@@ -1,3 +1,10 @@
+---
+tags:
+  - kind/rule
+  - layer/infra
+  - topic/security
+---
+
 > Up: [[README.md]]
 
 # Environment File Standard
@@ -28,6 +35,8 @@ The format does not change the rule. A secret in YAML is the same secret as one 
 | Any file | Holding a secret, credential, token, key, password, or production configuration |
 
 `~/.kaggle/kaggle.json` and a Hugging Face token cache are worth naming, because an ML project reaches for them constantly and both are real credentials.
+
+The deploy-time file deserves naming directly. Whatever the platform calls it, the file passed to a deploy command through an `--env-vars-file` flag holds real production values and sits on disk in the repository working tree. Treat it exactly as `.env`: never read it, never print it, never copy a value out of it.
 
 ## May Read
 
@@ -73,7 +82,18 @@ DATABASE_URL=your_database_url_here
 DATA_DIR=/path/to/data
 ```
 
+The same shape applies in every other format the project uses:
+
+```yaml
+# env-vars.example.yaml
+API_KEY: your_api_key_here
+DATABASE_URL: your_database_url_here
+CORS_ORIGINS: https://example.com,https://app.example.com
+```
+
 Keep the placeholder file in step with the real one: a new variable is added to `.env.example` in the same commit that introduces it, so the example never falls behind what the project needs.
+
+Which values belong in one of these files at all, and which belong in a secret store instead, is decided by [[secret.rules.md]].
 
 ## Missing Configuration
 
@@ -123,3 +143,4 @@ If a task cannot be completed without reading one, stop that part and state whic
 - [[security.rules.md]]
 - [[commit.rules.md]]
 - [[codes.rules.md]]
+- [[deploy.cloud.md]]

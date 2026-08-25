@@ -1,3 +1,10 @@
+---
+tags:
+  - kind/rule
+  - layer/backend
+  - topic/security
+---
+
 > Up: [[README.md]]
 
 # Upload and Media Standard Policy
@@ -9,7 +16,7 @@
 
 When building, modifying, or reviewing a document or media upload feature (PDF or photo) for a project, you must follow the rules in this policy.
 
-Every upload feature must be compressed while keeping usable quality. All apps share one EC2 server with limited disk, so uncompressed uploads are not acceptable. Compression must not come at the cost of security or consistency across apps.
+Every upload is compressed while keeping usable quality. Disk and egress are both metered on any host worth deploying to, so an uncompressed upload path is a cost that grows with use and is never noticed until the bill. Compression must not come at the cost of security or of consistency between projects.
 
 ## Security Prerequisites
 
@@ -30,7 +37,7 @@ The server always re-encodes an uploaded photo. Re-encoding also normalizes the 
 | :- | :- |
 | Storage format | WebP as the primary choice, or JPEG, at quality 80 to 85, which stays visually lossless for a document or receipt photo |
 | Maximum dimension | 2000 px on the longest side, enough to read a receipt or a field photo. Resize anything larger |
-| Metadata | Strip EXIF data. This is mandatory, since EXIF can carry GPS location, which is personal data under UU PDP |
+| Metadata | Strip EXIF data. This is mandatory, since EXIF can carry GPS location, which counts as personal data under every data protection law worth naming, Indonesia's UU PDP and the GDPR included |
 | Thumbnail | Generate a thumbnail around 300 px for list views, to save bandwidth |
 | Library | `Pillow` in Python, `sharp` in Node.js |
 
@@ -50,7 +57,7 @@ Client-side compression, for example with `browser-image-compression`, is allowe
 ## Storage Policy
 
 - Store the compressed version as the primary copy. Do not keep the original file unless a specific app has a documented legal requirement to do so. When that requirement exists, record it in the app's README together with its retention policy.
-- Record metadata for every file: original filename, MIME type, original size, stored size, SHA-256 hash, the uploader's identity, and an ISO 8601 timestamp, per `api.rules.md`.
+- Record metadata for every file: original filename, MIME type, original size, stored size, SHA-256 hash, the uploader's identity, and an ISO 8601 timestamp, per [[api.rules.md]].
 - Deduplicate by SHA-256 when the feature allows it, so the same file uploaded twice is stored once.
 
 ## Definition of Done
@@ -77,3 +84,7 @@ A direct user instruction must not override security or privacy requirements. If
 ## Applies To
 
 - [[api.rules.md]]
+- [[auth.rules.md]]
+- [[security.rules.md]]
+- [[secret.rules.md]]
+- [[stacks.rules.md]]

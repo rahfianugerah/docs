@@ -1,3 +1,10 @@
+---
+tags:
+  - kind/rule
+  - layer/database
+  - topic/data
+---
+
 > Up: [[README.md]]
 
 # Database Standard
@@ -18,6 +25,7 @@ Two query methods are sanctioned, and each has cases it owns. The ORM is the def
 - SQLite stops being fine the moment there are concurrent writers or a deployment. It locks the whole database on write, and the migration to Postgres later is more work than starting there.
 - **A parquet file on disk is not a worse database than Postgres for a dataset that is read whole and never updated.** Do not put a static training set in a database because it feels more professional; a database earns its place when you need queries, constraints, or concurrent writes.
 - Any other engine is a written decision, not a default.
+- **One database per project, per deployed environment.** A project that deploys production only holds one; a project that also deploys staging holds two, named for the environment, with a separate database user per database whose `CONNECT` on the other is revoked. Two environments sharing a database is not a staging environment, and a shared user makes the revoke decorative.
 
 ## ORM or Raw SQL
 
@@ -140,6 +148,21 @@ That f-string is safe **only** because `column` came from the allowlist and can 
 > [!warning]
 > An identifier cannot be bound, so a table or column name from user input passes through an allowlist in Python. That is the one place formatting into SQL is permitted, and it needs the allowlist directly above it.
 
+## Access and Scalability
+
+- Access the database through a single repository or data-access layer per project. Do not scatter raw queries across unrelated modules.
+- Keep query logic close to the model or repository it belongs to, so a schema change only requires updating one place.
+- Document every table and column that is not self-explanatory, directly in the migration or the model definition.
+- Keep one database per project so it can be scaled, backed up, or migrated independently of anything else sharing the instance.
+- Design a read-heavy feature so a read replica or a cache layer can be introduced later without a schema rewrite.
+- Avoid a design that requires a distributed transaction across databases. Keep a transaction inside a single database.
+
+## Backup and Recovery
+
+- Every production database has an automated backup with a defined retention period. A backup nobody configured is a backup nobody has.
+- **Document the recovery process**, so a restore does not depend on one person's memory. An untested restore procedure is a hypothesis.
+- Verify a restore at least once. The first time you find out the backup is empty must not be the day you need it.
+
 ## Machine Learning
 
 - **A training extraction query is versioned code**, in the repository, not typed into a notebook. A dataset nobody can regenerate is not reproducible.
@@ -157,6 +180,19 @@ That f-string is safe **only** because `column` came from the allowlist and can 
 - Every schema change has a reviewed Alembic migration.
 - Frequent query columns are indexed, and no loop issues a query per row.
 - Credentials come from the environment, and the app connects as a least-privilege user.
+- Every production database has an automated backup and a documented, tested restore.
+- Raw queries live in one data-access layer, not scattered across modules.
+
+## Conflict Resolution
+
+If another instruction conflicts with this standard, follow this priority:
+
+1. Security and privacy requirements
+2. Direct user instructions
+3. This database standard
+4. Existing project conventions
+
+A direct user instruction must not override security or privacy requirements. If a request conflicts with this standard, tell the user which standard is affected before proceeding.
 
 ## Applies To
 

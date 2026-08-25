@@ -1,0 +1,153 @@
+# cloudbuild.yaml STATIC FRONTEND template
+#
+# Implements deploy.rules.md and deploy.cloud.md.
+# Copy to the frontend repository root as `cloudbuild.yaml` and fill in the
+# [PLACEHOLDER] values below. Every other substitution already carries its real
+# default and should not be changed.
+#
+# EXACTLY TWO SUBSTITUTIONS ARE PASSED AT BUILD TIME: _TAG and _API_BASE_URL.
+# Region, repository, service name, and product name are declared as
+# substitutions WITH their real defaults, so nothing else is passed.
+#
+#   Trigger : --substitutions='_TAG=$SHORT_SHA,_API_BASE_URL=https://[HOST]'
+#   Manual  : gcloud builds submit --config cloudbuild.yaml "--substitutions=_TAG=$TAG,_API_BASE_URL=$API_BASE_URL"
+#
+# Single quotes in the trigger command are mandatory. With double quotes the
+# shell expands $SHORT_SHA to an empty string before Cloud Build sees it, and
+# the image reference ends in a bare colon, which Cloud Build rejects with
+# "could not parse reference". The manual form is quoted because the argument
+# contains a comma, which PowerShell would otherwise split.
+#
+# _TAG is a substitution and NOT Cloud Build's own $SHORT_SHA, because
+# $SHORT_SHA is populated only for trigger-started builds. In a manual
+# `gcloud builds submit` it is empty and produces that same broken reference.
+#
+# STATIC CONFIG IS BAKED AT BUILD TIME, NOT AT DEPLOY TIME.
+# A static bundle has no server-side process that reads environment variables at
+# runtime. The container only serves pre-built files and the browser runs the
+# already-built JavaScript. The API address is therefore passed as --build-arg.
+# Supplying it with --set-env-vars does nothing at all.
+#
+# Consequence: changing the backend URL is NOT a config change. It requires a
+# rebuild. Deploy the backend first so its URL is known.
+#
+# These are public endpoints, not secrets: every build-time value ends up inside
+# the bundle the browser downloads. Never put a token or key in one.
+#
+# _API_BASE_URL is an ORIGIN and nothing else: scheme and host, no path, no
+# route, no trailing slash. The HTTP client holds the origin and appends
+# api/v1/... itself, per api.rules.md.
+#
+# The deploy step deliberately omits --env-vars-file and --set-secrets, so
+# "the trigger owns the image, the terminal owns the config" still holds.
+
+substitutions:
+  _REGION: asia-southeast1
+  # FILL IN: the Artifact Registry repository name.
+  _REPOSITORY: "[REPOSITORY]"
+  # FILL IN: the Cloud Run service name.
+  _SERVICE: "[SERVICE_NAME]"
+  # Passed by the trigger. An origin only. The default is deliberately invalid
+  # so that forgetting it fails the build at the guard step below, instead of
+  # silently shipping a bundle that calls its own origin and gets index.html
+  # back for every API request.
+  _API_BASE_URL: "NOT_SET"
+  # FILL IN: display name shown in the UI.
+  _APP_NAME: "[APP NAME]"
+  # The tag. The `latest` default exists so a manual build does not fail on an
+  # undeclared key. Never deploy it to production.
+  _TAG: latest
+
+# Required. A trigger runs the build under an explicit service account, and
+# Cloud Build refuses such a build unless a logging mode is chosen. Without this
+# block the build fails before the first step:
+#   "the build must ... use either CLOUD_LOGGING_ONLY / NONE logging options".
+# Logs go to Cloud Logging only, no storage bucket needed.
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+steps:
+  # Fail early when the API address is unset or carries a path. Without this
+  # guard the build succeeds and produces a bundle that calls its own origin, or
+  # one that doubles the version prefix. The single-page fallback then answers
+  # every API request with index.html, and the symptom surfaces much later as
+  # "the API returns HTML instead of JSON".
+  - name: gcr.io/cloud-builders/gcloud
+    id: check-substitutions
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        if [ "${_API_BASE_URL}" = "NOT_SET" ] || [ -z "${_API_BASE_URL}" ]; then
+          echo "FAILED: _API_BASE_URL is not set."
+          echo "Set it to the backend origin, for example https://api.example.com"
+          exit 1
+        fi
+        case "${_API_BASE_URL}" in
+          */) echo "FAILED: _API_BASE_URL must not end with a slash."; exit 1 ;;
+        esac
+        if echo "${_API_BASE_URL}" | grep -qE '^https?://[^/]+/'; then
+          echo "FAILED: _API_BASE_URL must be an origin, with no path."
+          echo "The HTTP client appends api/v1/... itself."
+          exit 1
+        fi
+        echo "_SERVICE      = ${_SERVICE}"
+        echo "_API_BASE_URL = ${_API_BASE_URL}"
+        echo "_TAG          = ${_TAG}"
+
+  # One --build-arg pair per ARG this repository's own Dockerfile declares.
+  # Delete the ones it does not declare: an unknown build-arg is ignored
+  # silently, so the value would simply never reach the bundle.
+  #
+  # The image path is composed here rather than declared as a single _IMAGE
+  # substitution, because Cloud Build does not expand a substitution inside
+  # another substitution's default value. $PROJECT_ID is a Cloud Build built-in
+  # and already resolves to the project running the build.
+  - name: gcr.io/cloud-builders/docker
+    id: build
+    args:
+      - build
+      - --build-arg
+      - VITE_API_BASE_URL=${_API_BASE_URL}
+      - --build-arg
+      - VITE_APP_NAME=${_APP_NAME}
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG}
+      - .
+
+  - name: gcr.io/cloud-builders/docker
+    id: push
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG}
+
+  # Frontend allocation per deploy.cloud.md: cpu 1, memory 512Mi,
+  # max-instances 2, concurrency 80 to 100.
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    id: deploy
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG}
+      - --region=${_REGION}
+      - --platform=managed
+      - --cpu=1
+      - --memory=512Mi
+      - --min-instances=0
+      # One instance absorbs a lot of traffic for pre-built files. This ceiling
+      # caps cost, it does not carry load.
+      - --max-instances=2
+      # Do not raise to save instances. An instance's CPU share is fixed, so
+      # extra in-flight requests only queue and surface as timeouts.
+      - --concurrency=80
+      # Cloud Run injects PORT with this value. The web server renders its
+      # config from it and must not hardcode a port.
+      - --port=8080
+      - --timeout=60
+      # A browser-facing frontend must be public.
+      - --allow-unauthenticated
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG}
