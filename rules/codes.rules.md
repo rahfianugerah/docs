@@ -176,3 +176,4 @@ Do not:
 - [[env.rules.md]]
 - [[security.rules.md]]
 - [[commit.rules.md]]
+- [[path.rules.md]]

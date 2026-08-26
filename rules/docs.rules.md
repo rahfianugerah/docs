@@ -214,6 +214,8 @@ An absolute path fails three ways at once, and all three are invisible to whoeve
 
 Fix the environment once instead. If a toolchain ships a binary the shell cannot find, its `bin` directory belongs on `PATH`: one change on one machine, against a path repeated in every runbook.
 
+That rule covers a command. [[path.rules.md]] covers every other path: in source, in configuration, and in a document.
+
 ### The Two Exceptions
 
 - **A variable that names an interpreter or a file is a path by definition.** `CLOUDSDK_PYTHON` points at an interpreter and `--key-file` points at a file. Those take paths because that is what they are for. Write them as a placeholder such as `C:\path\to\python.exe`, never as a real path from the machine the document was written on.

@@ -163,4 +163,5 @@ No layer answers "what was true in March". Git history does.
 - [[secret.rules.md]]
 - [[env.rules.md]]
 - [[docs.rules.md]]
+- [[path.rules.md]]
 - [[callout.rules.md]]

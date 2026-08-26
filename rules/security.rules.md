@@ -335,7 +335,7 @@ Anything that arrives from outside the process is untrusted: a request body, a q
 
 ### Files and Paths
 
-These extend [[media.rules.md]], which owns the upload feature itself.
+These extend [[media.rules.md]], which owns the upload feature itself, and [[path.rules.md]], which owns the shape of a path before any input reaches it.
 
 - **Never build a filesystem path from a client-supplied name.** Generate a new server-side name, such as a UUID, and store the original name as a label only.
 - Reject a path segment containing `..`, a leading separator, a null byte, or an absolute path, and resolve the final path to confirm it is still inside the intended directory.

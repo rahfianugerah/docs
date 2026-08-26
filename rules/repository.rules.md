@@ -121,3 +121,4 @@ A direct user instruction must not override security or privacy requirements. If
 - [[deploy.rules.md]]
 - [[deploy.cloud.md]]
 - [[codes.rules.md]]
+- [[path.rules.md]]

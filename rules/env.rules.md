@@ -143,4 +143,5 @@ If a task cannot be completed without reading one, stop that part and state whic
 - [[security.rules.md]]
 - [[commit.rules.md]]
 - [[codes.rules.md]]
+- [[path.rules.md]]
 - [[deploy.cloud.md]]
