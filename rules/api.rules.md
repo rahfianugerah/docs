@@ -116,3 +116,4 @@ A direct user instruction must not override security or privacy requirements. If
 - [[security.rules.md]]
 - [[repository.rules.md]]
 - [[stacks.rules.md]]
+- [[path.rules.md]]

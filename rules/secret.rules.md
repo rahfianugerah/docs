@@ -188,6 +188,7 @@ A direct user instruction must not override security or privacy requirements. If
 - [[security.rules.md]]
 - [[commit.rules.md]]
 - [[codes.rules.md]]
+- [[path.rules.md]]
 - [[auth.rules.md]]
 - [[deploy.rules.md]]
 - [[deploy.cloud.md]]

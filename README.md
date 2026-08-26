@@ -4,7 +4,7 @@
 ![Conda](https://img.shields.io/badge/Conda-Miniconda-44A833?logo=anaconda&logoColor=white)
 ![Cloud Run](https://img.shields.io/badge/Cloud_Run-Deploy-4285F4?logo=googlecloud&logoColor=white)
 ![Obsidian](https://img.shields.io/badge/Obsidian-Vault-7C3AED?logo=obsidian&logoColor=white)
-![Rules](https://img.shields.io/badge/Rules-22-4C1D95)
+![Rules](https://img.shields.io/badge/Rules-23-4C1D95)
 ![Components](https://img.shields.io/badge/Components-15-4C1D95)
 ![Templates](https://img.shields.io/badge/Templates-10-4C1D95)
 ![Patterns](https://img.shields.io/badge/Patterns-16-4C1D95)
@@ -60,6 +60,7 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | [[codes.rules.md]] | YAGNI, KISS, DRY, readability, Python 3.13, conda and `.venv`, and the ML practices that differ |
 | [[database.rules.md]] | PostgreSQL and SQLAlchemy, which cases take the ORM and which take raw SQL, and the restore nobody tested |
 | [[env.rules.md]] | Why a real environment file is never read, in any format, including a notebook cell |
+| [[path.rules.md]] | Every path relative to a named anchor, and the three path namespaces that never mix |
 | [[secret.rules.md]] | Which values are secrets, where each one lives, and why a frontend holds none |
 | [[security.rules.md]] | The OWASP checklist, the stack controls it turns into, personal data, and the audit trail |
 | [[auth.rules.md]] | One identity source, one identity key, one swappable abstraction, and the non-human account |
@@ -188,6 +189,7 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[docs.rules.md]]
 - [[env.rules.md]]
 - [[media.rules.md]]
+- [[path.rules.md]]
 - [[pr.rules.md]]
 - [[prd.rules.md]]
 - [[pwa.rules.md]]
