@@ -251,12 +251,9 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[note.template.md]]
 - [[graph/README.md]]
 
-### Decisions
+### Memory Notes and Reference Code
 
-- [[plugmybrain-runs-on-a-flat-cost-vm.decision.memory.md]]
-- [[embeddings-are-voyage-3-5-at-1024-dimensions.decision.memory.md]]
-- [[postgres-holds-the-graph-as-a-demo-feature.decision.memory.md]]
-- [[retrieval-returns-chunks-not-a-written-answer.decision.memory.md]]
+Every note and every kept script is indexed in [[memory/README.md]], grouped by type and carrying its title. That index is the one place they are listed, so this file does not repeat it and the two cannot drift.
 
 ### Configuration
 

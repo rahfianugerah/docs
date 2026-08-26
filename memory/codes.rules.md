@@ -103,6 +103,7 @@ The searchable half still obeys the rule, because the note is what `recall` sees
 - A markdown note of the same stem sits beside it.
 - The code file opens with the four-line header naming the project, the date, why it was kept, and its note.
 - The note follows [[memory.rules.md]], names the code file in its first body line, and carries the `code` tag with the project.
+- **The pair is listed in the Reference Code table in [[memory/README.md]]**, added in the same commit that writes it. A script nothing links to is a script nobody finds, because `recall` indexes markdown and not source.
 - Neither file holds a secret, a credential, or a real configuration value.
 - Nothing in the note repeats the body of the code.
 
