@@ -21,3 +21,4 @@ status: current
 
 - [[memory/codes.rules.md]]
 - [[memory.rules.md]]
+- [[memory/codes/plugmybrain/2026-08-18-check-digest-is-incremental.py]]

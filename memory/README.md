@@ -82,6 +82,39 @@ Digest after a batch of writes, not after every note. The index is derived; it c
 
 **3. Any coding agent.** Claude Code, Codex, opencode, anything speaking MCP. The memory is connected as a server with two read-only tools, `recall` and `brains`, so a question needs no command at all: ask, and the agent reads. `/pmb-map <brain>` switches which memory the session reads from when the work moves elsewhere.
 
+## Reference Code
+
+`codes/` holds a working script worth running again, paired with a note of the same name. **The note is the memory and the script is the attachment**, per [[memory/codes.rules.md]]: the note is what is chunked and found by `recall`, and the script is opened only when its body is actually needed.
+
+| Note | Script | Records |
+| :- | :- | :- |
+| [[2026-08-18-check-digest-is-incremental.md]] | `codes/plugmybrain/2026-08-18-check-digest-is-incremental.py` | A repeat digest of an unchanged folder embeds nothing |
+
+**A script with no note beside it is unfindable**, because nothing indexes source. A note with no script beside it points at nothing. Delete or add the pair together.
+
+## Index
+
+Every note the memory holds. **A note that is not listed here is unreachable**, so it is added on the same commit that writes it, per [[memory.rules.md]].
+
+### Decisions
+
+- [[embeddings-are-voyage-3-5-at-1024-dimensions.decision.memory.md]] - embeddings are voyage-3.5 at 1024 dimensions
+- [[plugmybrain-runs-on-a-flat-cost-vm.decision.memory.md]] - PlugMyBrain runs on a flat-cost VM, not Cloud Run
+- [[postgres-holds-the-graph-as-a-demo-feature.decision.memory.md]] - Postgres holds the knowledge graph, and that is a demo feature
+- [[retrieval-returns-chunks-not-a-written-answer.decision.memory.md]] - retrieval returns chunks and sources, not a written answer
+
+### Sessions
+
+- [[2026-08-11-ingestion-must-run-in-the-container-not-on-windows.session.memory.md]] - ingestion must run in the container, not on Windows
+
+### Facts
+
+None yet. A durable fact about the environment, the data, or a stated preference lands in `fact/`.
+
+### References
+
+None yet. A pointer to an external resource lands in `reference/`.
+
 ## Rules
 
 The protocol for writing and recalling is [[memory.rules.md]]. Read it before writing a note.
@@ -93,3 +126,5 @@ The protocol for writing and recalling is [[memory.rules.md]]. Read it before wr
 - [[graph/README.md]]
 - [[docs.rules.md]]
 - [[secret.rules.md]]
+- [[memory/codes.rules.md]]
+- [[agent.rules.md]]

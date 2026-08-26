@@ -54,8 +54,9 @@ Rules:
 3. **`created` and `updated` are real dates**, written absolutely. Never "last week"; a relative date in a durable note is meaningless the moment it is read.
 4. **Frontmatter is required.** Cognee reads it, and Obsidian shows it as properties.
 5. **Link liberally.** A wikilink whose target does not exist yet is fine; it marks a note worth writing.
-6. **Keep it short.** If a note runs past a screen, it holds more than one thing.
-7. **At most one callout**, per [[callout.rules.md]], and only for the line that changes what the reader does. A note holds one thing, so only one line in it can be the thing that must not be missed.
+6. **No orphans.** Every note is reachable from the index in [[memory/README.md]], and a note that is only reachable by knowing its filename is a note nobody will find. A folder listing is not an index: it carries no titles, so a reader has to open ten files to find the one they meant. Reference code is reachable the same way, through the pair table in that index, per [[memory/codes.rules.md]].
+7. **Keep it short.** If a note runs past a screen, it holds more than one thing.
+8. **At most one callout**, per [[callout.rules.md]], and only for the line that changes what the reader does. A note holds one thing, so only one line in it can be the thing that must not be missed.
 
 ## Formatting
 
@@ -148,7 +149,7 @@ No layer answers "what was true in March". Git history does.
 - The note holds one thing, and its title states that thing.
 - Frontmatter is present, with absolute dates and a real type.
 - The reason is written down, not just the conclusion.
-- It links to at least one related note where one exists.
+- It links to at least one related note where one exists, and **it is listed in the index in [[memory/README.md]]**, added in the same commit that writes it.
 - The filename ends in `.<type>.memory.md`, and that type is the same word as the `type:` field and the folder it sits in.
 - `Source` names a real path from the workspace root, such as `plugmybrain/src/pmb/ingest.py`, and that path exists today. A bare `src/pmb/ingest.py` is fine inside a sentence that already said which repository, but never on the `Source` line, where there is no sentence to carry the context.
 - Where no file backs the note, `Source` says so and says how to confirm the claim instead. An environment fact, a DNS record, or a role membership on a managed instance has no file, and inventing one is worse than admitting there is none.
