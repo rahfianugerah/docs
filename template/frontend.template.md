@@ -442,6 +442,13 @@ Use this status when there are none:
 <code style="color: green">No Known Limitations</code>
 ```
 
+
+## Deviations From the Standards
+
+[Where this project departs from a rule in the vault. Numbered, each naming the rule, the reason, and the cost accepted. A project with none writes one line saying so, because an empty section is information and a missing one is a question. Name the rule in backticks, not as a wikilink: a project repository is not the vault, so a wikilink resolves to nothing there.]
+
+1. **[What is different.]** `[rule].rules.md` requires [what]. This does [what] instead, because [reason]. The cost accepted: [what is given up]. [Whether it generalises.]
+
 ## Related
 
 - [[docs.rules.md]]
