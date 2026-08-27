@@ -37,6 +37,32 @@ A summary at this point is cheap: the reasoning is still in context, the rejecte
 
 The summary is held in the session, not written to disk. It becomes a note when the user asks to save the memory.
 
+## Report the Generation in Bahasa Indonesia
+
+> [!important]
+> **Every explanation of what was generated is written in Bahasa Indonesia.** The summary at the end of a generation, the report of what changed, what was skipped, and why: all of it, always, without being asked.
+
+This is about **what the agent says to the person**, not about what it writes to disk. The two are separate and the distinction is the whole rule.
+
+| Written in Bahasa Indonesia | Stays as its own standard says |
+| :- | :- |
+| The end-of-generation summary | Code identifiers, which are English per [[codes.rules.md]] |
+| The report of what was created, changed, or deleted | Commit messages, which are English per [[commit.rules.md]] |
+| What was deliberately not done, and why | Pull request titles and bodies, per [[pr.rules.md]] |
+| A finding, a trade-off, or a rejected approach | A vault document, which is English per [[docs.rules.md]] |
+| A question back to the user, and any warning | A project document, which follows its readers' language per [[prd.rules.md]] |
+| The reason a rule was followed or a deviation was taken | A memory note, which follows [[memory.rules.md]] |
+
+**A technical term keeps its original form.** A library name, a framework, a command, a file name, a variable, a database field, a route path, and an error message are quoted as they are. Writing "berkas konfigurasi lingkungan" where the thing is called `.env.example` makes the sentence longer and the reference harder to find.
+
+Rules:
+
+1. **Report in Bahasa Indonesia even when the work was entirely in English.** Rewriting a rules document, which is an English artifact, is still explained in Bahasa Indonesia, because the explanation is for the person and the artifact is for the repository.
+2. **Do not translate the artifact to match the report.** The report being Indonesian never licenses renaming an identifier, retitling a commit, or rewriting a vault document.
+3. **Name the file and the section in their real form.** `rules/docs.rules.md`, not a translated description of it, so the path in the report is the path the reader opens.
+4. **Say what was skipped, in the same language.** A generation that produced nothing durable, a rule that could not be satisfied, or a check that was not run is reported as plainly as the work that succeeded.
+5. **A warning is reported before the work it concerns, not after.** Where a request conflicts with a standard, say which standard in Bahasa Indonesia and say it first, per the conflict resolution every rules document carries.
+
 ## On "Save the Memory"
 
 When the user says to save the memory, write the notes and digest them, per [[memory.rules.md]].
