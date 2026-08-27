@@ -49,6 +49,169 @@ Required, in this order:
 
 Write the setup commands as a block that can be pasted whole. Do not describe the steps in prose and leave the reader to assemble them.
 
+## The Shape of a Project Document
+
+**A project document opens with the title, then the badge row, then one paragraph that says what the thing is and why it exists, then the Table of Contents.** Nothing else comes before those four.
+
+```markdown
+# Project Name
+
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Active-2EA043)
+
+A one-line description of what it is, then the sentence that says **why it exists**, with the
+claim that matters in bold.
+
+## Table of Contents
+```
+
+> [!important]
+> **A project document carries no YAML frontmatter and no `---` anywhere in it.** Frontmatter belongs to a vault document, where the tag axes below need it. A README, a PRD, an `API.md`, and a `MODEL.md` open with `# Title` and nothing above it.
+
+### The Lead Paragraph Says Why, Not What
+
+The first paragraph is the only one most readers finish. **Say what it is in one line, then say why it exists**, because the second is the part nobody can reconstruct from the code.
+
+Weak, because it describes the mechanism and stops:
+
+```text
+A CLI that reads markdown files and writes them into a vector database.
+```
+
+Strong, because it names the problem being solved and puts the surprising claim in bold:
+
+```text
+A plug-and-play memory for coding agents. Point it at a folder of markdown and that folder
+becomes a brain the agent searches over MCP. **No chat model anywhere in it**: the agent
+asking the question already has one.
+
+It exists because an agent with no memory relearns the same context every session and pays
+for that in tokens every time.
+```
+
+### The Table of Contents
+
+**Every project document carries one, directly under the lead paragraph**, as a numbered list linking to each top-level section.
+
+```markdown
+## Table of Contents
+
+1. [Setup](#setup)
+2. [Usage](#usage)
+3. [Configuration](#configuration)
+```
+
+- **It lists the `##` headings only.** A `###` in the contents makes the contents longer than the reader's patience.
+- **It is updated in the same commit that adds or renames a section.** A contents entry pointing at a heading that no longer exists is the first thing a reader tries and the first thing that fails.
+- A document short enough to read without scrolling does not need one. That is roughly one screen, and almost nothing real is that short.
+
+### Name a Section for the Question It Answers
+
+**A heading is a question the reader already has, answered.** Not a category the writer filed it under.
+
+| Write | Not |
+| :- | :- |
+| `Four Commands` | `Commands` |
+| `No Chat Model` | `Architecture Notes` |
+| `Nothing Is Written Into a Digested Folder` | `File Handling` |
+| `Known Limitations` | `Notes` |
+| `One Stack or Several` | `Deployment Options` |
+
+A heading that states the answer means a reader scanning the contents already learns something, and a reader who needs the detail knows exactly which section holds it.
+
+### Show the Real Thing
+
+- **A command in a document is the command that runs**, copied from a shell where it worked. Not a paraphrase, and not a placeholder where a real value could be shown.
+- **A table for anything with two or more parallel attributes.** A list of things that each have a name, a purpose, and a default is a table, and reading it as prose is work the writer pushed onto the reader.
+- **A code block carries a language tag**, and shows the smallest thing that does something real.
+- **Bold the sentence that carries the point**, inline, where the reader is. A paragraph whose claim is buried in the third line is a paragraph most readers leave before reaching it.
+
+### A Setup Section Is a Numbered Walkthrough
+
+**Setup is numbered steps with a bolded name, not a wall of commands.** Each step is a short line saying what it is, then the block that runs, then anything the reader needs to know before the next one.
+
+````markdown
+**1. Environment.** Conda, an environment named `env`, Python 3.13.
+
+```bash
+conda env update -f environment.yml
+conda activate env
+```
+
+Never use bare `pip` or bare `python` outside the activated environment. On this machine they
+resolve to different interpreters, and an install lands somewhere the code cannot import it.
+
+**2. Configuration.** Copy the template and fill it in by hand.
+````
+
+- **Say what the step is before the command**, in one line. A block with no lead is a block the reader has to run to understand.
+- **Number the steps, and say up front which are already done.** "Steps 1 and 2 are done; step 3 onward needs your keys" tells a returning reader where to start.
+- Where the walkthrough is long enough that the steps need their own headings, they become numbered `###` headings and the contents entry points at each one.
+
+### State the Trap Where It Bites
+
+**The gotcha goes directly under the command that triggers it, in bold, with the mechanism.** Not in a Troubleshooting section at the bottom, where it is found only after the reader has already hit it.
+
+```markdown
+**Step 3 has to come first.** `compose.yaml` declares `.env` as a required env file, so
+`docker compose up` without it fails with `env file ... not found`. That is deliberate: made
+optional, the service would start on its embedded defaults and quietly serve the wrong database.
+```
+
+Three parts, and all three are needed:
+
+1. **The rule, in bold**, as a sentence the reader can act on.
+2. **The mechanism**: what the tool actually does, and the error it produces.
+3. **Why it is that way**, where the behaviour is deliberate rather than a bug. That is what stops the next reader "fixing" it.
+
+**Quote the real error text.** A reader who is already staring at `env file ... not found` finds the answer by matching the string, and a paraphrase does not match.
+
+### Say What Is Committed and What Is Not
+
+A project document carries a **Data** section, or a row inside Project Structure, that says where each thing lives and whether it is in git.
+
+```markdown
+| Item | Location | Notes |
+| :- | :- | :- |
+| Code maps | `graph/<project>/` | Gitignored. Produced by `pmb map` |
+| The memory itself | `<vault>/memory/` | Committed, human-authored, the source of truth |
+```
+
+**"Gitignored" and "committed" are the two words that matter**, and the reader is looking for exactly one of them. A path with no such note is a path somebody will commit.
+
+### Two Sections Every Project Document Ends With
+
+**Known Limitations.** What the thing does not do, what it is bad at, and the ceiling of each part. This is the section everybody skips writing and every reader needs, and it is what separates a document from a sales page. State the limit and the reason:
+
+```markdown
+- **Only markdown is digested.** Obsidian is the viewer and markdown is the substrate, so PDF,
+  docx, and csv are not read. Convert first if you need them.
+- **1024 dimensions is a ceiling, not a preference.** The index will not build above 2000, and
+  it does not fail loudly; it just leaves every search doing a sequential scan.
+```
+
+**Deviations From the Standards.** Where the project departs from a rule in this vault, **numbered, each naming the rule it departs from, the reason, and the cost accepted.** Several standards already require a deviation to be written down; this is the one place it goes.
+
+```markdown
+1. **Not Cloud Run.** [[deploy.rules.md]] requires every deployed project to ship to Cloud Run.
+   This runs as one Docker stack on a flat-cost VM instead, because an always-on database has
+   no idle state to scale down to. The exception does not generalise.
+```
+
+A project with no deviations writes the heading and one line saying so. **An empty section is information; a missing one is a question.**
+
+Which document carries which:
+
+| Document | Known Limitations | Deviations |
+| :- | :- | :- |
+| `README.md` | Yes | Yes |
+| `API.md` | Yes | Only where the API itself departs from a standard |
+| `MODEL.md` | Yes | Only where the training or evaluation departs from one |
+| `PRD.md` | No; its non-goals section already does this work | No |
+| The agent entry point | No; it is instructions, not a description | No |
+
+The README is the one document that speaks for the whole project, so it is the one that always carries both.
+
 ## Template Usage Rules
 
 You must:
@@ -156,9 +319,9 @@ The service handles authentication - including token validation.
 
 Never place a `---` horizontal rule in a document body. Headings already mark where one section ends and the next begins, so a rule on top of them is decoration that carries no meaning, and a document that leans on it reads as a stack of fragments rather than one continuous piece. Add one only when the owner asks for it directly.
 
-This bans the rule as a separator in the body. It does not touch two things that look the same:
+**A project document carries no `---` at all**, because it carries no frontmatter either, per "The Shape of a Project Document" above. In a vault document the ban covers the body only, and does not touch two things that look the same:
 
-- YAML frontmatter, where the opening and closing `---` are what make a note readable by Obsidian and by the memory indexer. Removing those breaks the file rather than tidying it.
+- YAML frontmatter on a **vault** document, where the opening and closing `---` are what make a rule, a component standard, a pattern, or a memory note readable by Obsidian and by the memory indexer. Removing those breaks the file rather than tidying it, and they are the only `---` permitted anywhere in this vault.
 - A `---` inside a fenced code block, which is sample content being shown, not formatting being applied.
 
 ## Tags
@@ -408,6 +571,11 @@ An experiment's result belongs in the pull request that carried it, per [[pr.rul
 ## Definition of Done
 
 - Written in English, from the right template, with the template's section order.
+- A project document opens with the title, the badge row, the lead paragraph, and the Table of Contents, and carries no frontmatter and no `---`.
+- The Table of Contents lists every `##` heading and every entry resolves.
+- Every heading names the question it answers, not the category it belongs to.
+- Known Limitations is present and says what the thing is bad at.
+- Deviations From the Standards is present, and names the rule, the reason, and the cost for each one.
 - The README takes a reader from clone to running with no other source.
 - The frontmatter carries exactly one `kind/`, and at most two `topic/` values.
 - The badge row follows [[badge.rules.md]], every version is current, and no badge claims something the repository does not do.
