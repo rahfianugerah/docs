@@ -162,6 +162,19 @@ Do not:
 - Mirror form input into `localStorage`.
 - Let the catch-all route absorb a page that was simply never registered.
 
+## Related Standards
+
+| Document | Owns | Read it for |
+| :- | :- | :- |
+| [[uix.component.md]] | The tokens and the shared component rules | Any value this file names but does not define |
+| [[auth.rules.md]] | The session and the cookie | Why the session check must settle before any redirect |
+| [[login.component.md]] | The sign-in screen | The screen the gate exists to stop flashing |
+| [[loading.component.md]] | The route gate | The wait this file requires before the first paint |
+| [[search.component.md]] | The query and the filters | Which state has to reach the URL |
+| [[pagination.component.md]] | The page and the page size | The rest of the state that has to reach the URL |
+| [[dashboard.component.md]] | Filters above the charts | Why a filtered report is reproducible only if it is in the URL |
+| [[deploy.rules.md]] | How the frontend is served | The fallback that stops a deep link returning a 404 |
+
 ## Deviations
 
 Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.

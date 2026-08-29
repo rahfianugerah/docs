@@ -15,11 +15,14 @@ tags:
 
 ## Core Requirement
 
-Every wait in a project uses one of the four surfaces below, and **every one of them pairs an indicator with visible text naming what is being waited on.** A bare spinner announces nothing to a screen reader and tells a sighted user nothing either.
+Every loading state uses one of **four surfaces**: a route gate that holds a whole page, a button that is submitting, a section inside a page that is still fetching, and a skeleton standing in for content whose shape is already known.
+
+**Every one of them pairs an indicator with visible text naming what is being waited on.** A bare spinner announces nothing to a screen reader and tells a sighted user nothing either.
+
+This standard does not redefine a token. A loading state that introduces its own hex value or its own animation timing, instead of reading the tokens in [[uix.component.md]] and the values in this file, is not following it.
 
 **One indicator per wait.** A route gate does not sit above a section that is also loading.
 
-This standard extends [[uix.component.md]] and does not redefine a token.
 
 ## Choosing the Right Surface
 
@@ -168,6 +171,21 @@ Accessibility ranks above the design standard itself, per [[uix.component.md]].
 | Keep one indicator per wait | Run a route gate above a section that is also loading |
 | Slow the rotation under reduced motion | Remove the indicator entirely |
 | Colour the spinner `--accent` | Give a loader a success, warning, or error hue |
+| Land a failed request on an error state | Leave a spinner turning forever with no way out |
+| Keep the surface plain | Put a gradient or a decorative shape on a loading surface |
+| Use `100svh` for the route gate | Use `100vh`, which mobile browser chrome pushes off centre |
+
+## Related Standards
+
+| Document | Owns | Read it for |
+| :- | :- | :- |
+| [[uix.component.md]] | The tokens, the icon set, and the icon size range | Why the route gate spinner is the one documented exception to that range |
+| [[skeleton.component.md]] | The fourth surface | The class, the per-component shapes, and what happens on a refetch |
+| [[button.component.md]] | The button that is submitting | The variant, and why the width must not change |
+| [[table.component.md]] | How a table combines loading with empty and error | Why the three are mutually exclusive |
+| [[login.component.md]] | The sign-in screen | The two waits it carries, and the gate that stops the form flashing |
+| [[refresh.component.md]] | The session check on first paint | Why the gate runs before the redirect decision |
+| [[docs.rules.md]] | The formatting restrictions | Why the label ends in three periods and not an ellipsis character |
 
 ## Deviations
 

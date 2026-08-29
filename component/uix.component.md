@@ -442,6 +442,19 @@ Do not:
 - Mix two icon sets, or use an emoji as an icon.
 - Add a partial dark mode.
 
+## Related Standards
+
+The companion components are listed in "Core Requirement" above. These are the rules outside `component/` that this file answers to.
+
+| Document | Owns | Read it for |
+| :- | :- | :- |
+| [[docs.rules.md]] | Documentation formatting and the tag axes | The Title Case rule this file applies to the interface, and the ban on a decorative divider |
+| [[badge.rules.md]] | The badge row and how a product name is written | The same Title Case rule, applied to a README rather than a screen |
+| [[analytics.rules.md]] | Which chart a shape of data earns | Why a chart's colors come from a validated palette rather than from this token block |
+| [[pwa.rules.md]] | The manifest, the icons, and offline behavior | Where the logo and the product name go outside the app itself |
+| [[codes.rules.md]] | How code is written | Why a component reads a token instead of hardcoding a value |
+| [[stacks.rules.md]] | The approved stack | Which icon set, which font, and which charting library this system assumes |
+
 ## Deviations
 
 Any intentional deviation from this system is documented in the project's README, together with the reason and a plan to return to the standard.

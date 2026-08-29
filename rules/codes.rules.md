@@ -170,6 +170,32 @@ Do not:
 - Commit data, weights, or checkpoints.
 - Let a notebook become the thing that runs in production.
 
+## Definition of Done
+
+- Every new abstraction has more than one caller today.
+- No dependency was added for something the standard library already does.
+- Every public function carries a type hint, and Ruff passes with no manual formatting.
+- Every identifier is English, and no comment carries a decorative border.
+- No commented-out code, dead branch, or unused parameter remains.
+- No bare `except`, no mutable default, and no `print()` in library code.
+- No SQL is built by string formatting, per [[security.rules.md]].
+- No absolute path appears in source, per [[path.rules.md]].
+- The environment file is committed, the environment is named after the project, and nothing was installed into base.
+- Every random seed is set and recorded, and no data, weight, or checkpoint entered git.
+- A bug fix ships with the test that would have caught it.
+
+## Conflict Resolution
+
+If another instruction conflicts with this standard, follow this priority:
+
+1. Security and privacy requirements
+2. Direct user instructions
+3. [[stacks.rules.md]], on what a project is built with
+4. This code standard
+5. Existing project conventions
+
+A direct user instruction must not override security or privacy requirements. If a request conflicts with this standard, tell the user which standard is affected before proceeding.
+
 ## Applies To
 
 - [[docs.rules.md]]
@@ -177,3 +203,5 @@ Do not:
 - [[security.rules.md]]
 - [[commit.rules.md]]
 - [[path.rules.md]]
+- [[stacks.rules.md]]
+- [[repository.rules.md]]

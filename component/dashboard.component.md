@@ -247,6 +247,21 @@ Two alternatives were considered and rejected. A print stylesheet driven by the 
 | Register only the controllers the project draws | Import the auto bundle |
 | Build a tooltip from `textContent` | Build it from `innerHTML` |
 
+## Related Standards
+
+| Document | Owns | Read it for |
+| :- | :- | :- |
+| [[analytics.rules.md]] | Which chart the data earns, and the guardrails | The matrix every chart here must satisfy, and the source of the rendering settings |
+| [[pagination.component.md]] | Every table this dashboard renders | How a chart and its table stay on one query result |
+| [[table.component.md]] | The table itself | Why the table is also the accessibility path for its chart |
+| [[uix.component.md]] | The tokens, the grid, and the stat tiles | Why a series color is never an ink token, and why text never wears a series color |
+| [[loading.component.md]] | The loading, empty, and error states a chart uses | Why empty axes are never rendered as data |
+| [[skeleton.component.md]] | The chart panel's loading state | Why only the plot area is skeletoned |
+| [[scrollbar.component.md]] | The scrollbar a chart region uses rather than cropping | Why a container scrolls instead of shrinking the figure |
+| [[refresh.component.md]] | The URL state | What makes a filtered report reproducible and shareable |
+| [[title.header.component.md]] | The product name | What goes in the header of an exported report |
+| [[stacks.rules.md]] | The approved stack | Why the library is pinned and loaded on use |
+
 ## Deviations
 
 A deviation is allowed only when it is documented in the project README, names the rule it departs from, and gives the reason. An undocumented deviation is a defect.

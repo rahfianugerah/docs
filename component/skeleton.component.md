@@ -123,6 +123,16 @@ When a table changes page, the previous rows stay in place and the loading state
 | Give the region `role="status"` and a name | Ship silent grey blocks |
 | Drop the shimmer under reduced motion | Drop the block and leave nothing |
 
+## Related Standards
+
+| Document | Owns | Read it for |
+| :- | :- | :- |
+| [[loading.component.md]] | The other three waits: the route gate, the button, and the inline loader | The table that sends a wait here rather than to a spinner |
+| [[table.component.md]] | How a table combines this state with empty and error | Why the three are mutually exclusive and how they are guarded |
+| [[pagination.component.md]] | What the pager does while this state is showing | Why a pager reading "Page 1 of 0" beside a skeleton is a contradiction |
+| [[dashboard.component.md]] | The chart panel whose plot area this state covers | Why the title and axis labels render real |
+| [[uix.component.md]] | The tokens, the radius scale, and the empty state | Why a skeleton takes the leaf radius |
+
 ## Deviations
 
 Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.

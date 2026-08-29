@@ -219,6 +219,31 @@ Do not:
 - Hardcode Sunday as the first day of the week.
 - Ship a custom panel without the keyboard map and the ARIA structure.
 
+
+## Related Standards
+
+| Document | Owns | Read it for |
+| :- | :- | :- |
+| [[uix.component.md]] | The tokens, the radius scale, and the overlay rules | Why the panel takes the leaf radius, and why a cell is smaller still |
+| [[dropdown.component.md]] | The themed listbox | The same portal reasoning, and the chevron that rotates on both controls |
+| [[search.component.md]] | Filters and the query underneath them | A date range used as a filter, and why a date is matched exactly |
+| [[refresh.component.md]] | The URL state | Why a chosen date survives a reload |
+| [[api.rules.md]] | The API contract | The ISO date format the component emits |
+
+## Deviations
+
+Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.
+
+## Conflict Resolution
+
+If another instruction conflicts with this standard, follow this priority:
+
+1. Security and privacy requirements
+2. Accessibility requirements
+3. Direct user instructions
+4. [[uix.component.md]]
+5. This standard
+6. Existing project conventions
 ## Related
 
 - [[uix.component.md]]

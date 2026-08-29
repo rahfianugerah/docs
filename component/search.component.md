@@ -253,6 +253,21 @@ Do not:
 - Send a request per keystroke, or let a stale response overwrite a newer one.
 - Show a similarity score, a stage, or a phonetic key to the user.
 
+## Related Standards
+
+| Document | Owns | Read it for |
+| :- | :- | :- |
+| [[uix.component.md]] | The tokens and the shared component rules | The search box, the empty state, and the control sizing |
+| [[table.component.md]] | The table the results land in | Why the table renders exactly what it was given |
+| [[pagination.component.md]] | Paging over the result | Why filtering and paging happen in the same request |
+| [[calendar.component.md]] | Date fields | A date range used as a filter |
+| [[loading.component.md]] | Loading states | The inline loader shown while a search runs |
+| [[refresh.component.md]] | The URL state | Why the query lives in the URL |
+| [[database.rules.md]] | Schema, indexes, and migrations | The index rules this file builds on, and how a generated column is added |
+| [[api.rules.md]] | The API contract | How a query parameter and a paginated response are shaped |
+| [[security.rules.md]] | Injection, rate limiting, and logging | Parameter binding, and why a raw query is never logged beside an identity |
+| [[stacks.rules.md]] | The approved stack | The engine and the ORM every query rule here assumes |
+
 ## Deviations
 
 Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.

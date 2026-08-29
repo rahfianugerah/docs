@@ -347,11 +347,14 @@ A tag comes from one of three axes, and the axis is the prefix. Nesting them thi
 
 | Axis | Values | Answers |
 | :- | :- | :- |
-| `kind/` | `rule`, `component`, `runbook`, `template`, `pattern` | What this document is |
+| `kind/` | `rule`, `component`, `runbook`, `template`, `pattern`, `journal` | What this document is |
 | `layer/` | `frontend`, `backend`, `database`, `infra`, `docs` | Where it applies |
-| `topic/` | `security`, `accessibility`, `data`, `ux`, `state`, `workflow`, `deploy`, `memory` | The concern it belongs to |
+| `topic/` | `security`, `accessibility`, `data`, `ux`, `state`, `workflow`, `deploy`, `memory`, `performance` | The concern it belongs to |
+| `project/` | The project folder name | Which project the work touched. Journals only |
 
 Every document carries exactly one `kind/`. Most carry one `layer/`, and a document that genuinely applies everywhere, such as the commit or branch standard, carries none rather than a wrong one. One or two `topic/` tags is the working range.
+
+The `project/` axis exists for a journal and is empty on a rule or a component. A rule that named one project would be a rule that does not apply to the rest, which is a contradiction; a journal is always about specific work on a specific project, and work that spans two carries both, per [[journal.rules.md]].
 
 > [!warning]
 > Two `topic/` tags is the ceiling in practice, and three is a signal the document holds more than one thing. A standard tagged with five concerns is a standard nobody looking for any of them will find, because the tag has stopped narrowing anything.

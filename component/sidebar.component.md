@@ -264,6 +264,18 @@ Do not:
 - Paint a hover background on a nav row.
 - Animate the drawer with `left`, or use a `body` class instead of a real backdrop.
 
+## Related Standards
+
+| Document | Owns | Read it for |
+| :- | :- | :- |
+| [[uix.component.md]] | The tokens, typography, spacing, shape, and elevation | Any value this file names but does not define |
+| [[dropdown.component.md]] | The collapsible group itself | The icon placement rule, the chevron, and why a child carries no icon |
+| [[login.component.md]] | The sign-in screen | The screen before this one, and the identity shown in the footer |
+| [[loading.component.md]] | Loading states | The route gate that runs before the shell is drawn |
+| [[title.header.component.md]] | The product name | What the brand block at the top of the rail shows |
+| [[scrollbar.component.md]] | Where a scrollbar is visible | Why the rail is one of the two documented exceptions |
+| [[security.rules.md]] | Authorization | Why hiding a menu is presentation and never the permission itself |
+
 ## Deviations
 
 Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.

@@ -145,6 +145,20 @@ The guardrails in [[analytics.rules.md]] apply to a table in the forms a table c
 | Name the record in a delete confirmation | Ask "delete this item?" |
 | Give `<th>` a `scope` and the table a name | Build the table from `div` elements |
 
+## Related Standards
+
+| Document | Owns | Read it for |
+| :- | :- | :- |
+| [[pagination.component.md]] | How the reader moves between pages, and the data contract behind the rows | The seam this file describes from the rendering side |
+| [[dropdown.component.md]] | The row action menu and the filter selects in the toolbar | What a third row action becomes |
+| [[button.component.md]] | Every button in the toolbar and the action column | The small variant, and why a destructive action sits apart |
+| [[skeleton.component.md]] | The loading state a table uses instead of a spinner | Why the header renders real and the rows do not |
+| [[search.component.md]] | The search field above the table and the query underneath it | Why sorting and filtering happen in the database |
+| [[scrollbar.component.md]] | The scrollbar a wide table uses rather than cropping | Why the horizontal bar is always visible |
+| [[uix.component.md]] | The tokens, the radius scale, and the empty state | Any value this file names but does not define |
+| [[refresh.component.md]] | The URL state | What makes a sorted, filtered page shareable |
+| [[security.rules.md]] | Injection and object authorization | Why a sort column from a request goes through an allowlist |
+
 ## Deviations
 
 Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.

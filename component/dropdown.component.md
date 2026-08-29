@@ -44,7 +44,7 @@ select {
   outline: none;
 }
 select:hover { border-color: var(--accent); }
-select:focus-visible { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+select:focus-visible { border-color: var(--accent); }   /* border only, no ring */
 select:disabled { background: var(--line2); color: var(--ink3); cursor: default; }
 ```
 
@@ -64,6 +64,12 @@ Replace the native select with a **themed listbox** only when the open list itse
 - Options are grouped with styled headers
 
 **Plain is correct for most dropdowns.** Reaching for a custom listbox because the native one "looks basic" costs you every accessibility behaviour it gave you for free, and you have to rebuild all of it.
+
+### Proximity Counts as a Reason
+
+**A native select sitting in the same row as a themed control is a stronger mismatch than a plain one standing alone.** The operating system's own highlight colour, its square corners, and its own gap before the arrow appear directly beside the project's rounded panel and accent tokens, and the two read as controls from two different applications.
+
+The page size control in a pager is the worked example, per [[pagination.component.md]]: it sits inside a row of themed buttons, so it earns the themed listbox. **Where a dropdown stands alone in a form, plain remains correct.**
 
 ## The Themed Listbox
 
@@ -129,6 +135,7 @@ Rules:
 
 5. **The keyboard cursor is separate from hover.** `.active` follows the arrow keys; hover follows the mouse. One state for both makes the mouse steal the keyboard's place.
 6. **Selection is announced by `aria-selected`, not by color alone.** Add a check icon or a weight change so it survives greyscale and colorblindness.
+7. **The panel is an overlay layer**, so it is one of the few places [[uix.component.md]] allows the pronounced shadow. **Do not flatten it to a hairline border to match a content card**; a panel and a card are different elevation levels by design.
 7. **Focus returns to the trigger on close.** Leaving focus on a removed node drops the user to the top of the page.
 
 ## Navigation Groups
@@ -265,6 +272,17 @@ Do not:
 - Put an icon or a bullet on an item inside a navigation group.
 - Give a navigation group an overlay shadow, or a form dropdown panel none.
 - Color the chevron with `--accent` when open.
+
+## Related Standards
+
+| Document | Owns | Read it for |
+| :- | :- | :- |
+| [[uix.component.md]] | The tokens, the radius scale, and the overlay rules | Any value this file names but does not define, and why a panel is portalled |
+| [[sidebar.component.md]] | The rail the navigation group sits in | The grouping, the markers, and the drawer around it |
+| [[button.component.md]] | The button that opens a menu | The chevron that sits after the label rather than before it |
+| [[calendar.component.md]] | The date panel | The same portal and the same rotation, on a control that looks identical |
+| [[table.component.md]] | The row action menu and the toolbar filters | Where a third row action becomes a dropdown |
+| [[loading.component.md]] | Loading states | What a select shows while its options are being fetched |
 
 ## Deviations
 
