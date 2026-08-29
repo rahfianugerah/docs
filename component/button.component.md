@@ -127,6 +127,17 @@ Labels follow the Title Case rule in [[uix.component.md]] and are written in the
 | Keep the button width while it loads | Let it shrink to fit the loading label |
 | Set the `disabled` attribute | Style a button to look disabled while it still fires |
 
+## Related Standards
+
+| Document | Owns | Read it for |
+| :- | :- | :- |
+| [[uix.component.md]] | The tokens, the radius scale, the icon set, and the Title Case rule | Any value this file names but does not define, and why a button takes the leaf radius |
+| [[dropdown.component.md]] | The button that opens a menu, and the chevron on it | The one case where an icon sits after the label |
+| [[loading.component.md]] | The button that is submitting | What replaces the label, and why the width must not change |
+| [[table.component.md]] | The toolbar and the action column | Where two inline buttons become a menu |
+| [[pagination.component.md]] | The pager | The small variant, and why it keeps the same radius |
+| [[login.component.md]] | The sign-in screen | The one full-width primary button in the system |
+
 ## Deviations
 
 Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard, the same requirement [[uix.component.md]] sets for the rest of the system.

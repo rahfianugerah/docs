@@ -4,7 +4,7 @@
 ![Conda](https://img.shields.io/badge/Conda-Miniconda-44A833?logo=anaconda&logoColor=white)
 ![Cloud Run](https://img.shields.io/badge/Cloud_Run-Deploy-4285F4?logo=googlecloud&logoColor=white)
 ![Obsidian](https://img.shields.io/badge/Obsidian-Vault-7C3AED?logo=obsidian&logoColor=white)
-![Rules](https://img.shields.io/badge/Rules-23-4C1D95)
+![Rules](https://img.shields.io/badge/Rules-24-4C1D95)
 ![Components](https://img.shields.io/badge/Components-15-4C1D95)
 ![Templates](https://img.shields.io/badge/Templates-10-4C1D95)
 ![Patterns](https://img.shields.io/badge/Patterns-16-4C1D95)
@@ -35,6 +35,7 @@ The whole repository is an Obsidian vault. Open the folder and the graph is alre
 | [gcp/](gcp/) | The Cloud Run deploy standard, the runbook, and the build templates |
 | [template/](template/) | Documentation templates: backend, frontend, project README, API, model card, agent entry point |
 | [pattern/](pattern/) | Lessons lifted from real incidents, generalized. A failure and its mechanism, so it is not paid for twice |
+| [journal/](journal/) | One record per project per day: what was wrong, what was found, and what changed as a number |
 | [memory/](memory/) | The portable AI memory: markdown notes, indexed by Cognee |
 | [graph/](graph/) | The machine-generated half: code maps and the knowledge graph export. Rebuilt, never hand-edited |
 
@@ -50,6 +51,7 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | [[commit.rules.md]] | Conventional Commits, an `exp` type for experiments, and what never enters a commit |
 | [[pr.rules.md]] | When a pull request is worth opening, what an experiment must record, and when an AI may open or merge one |
 | [[docs.rules.md]] | What every project documents, how it is written, the tag taxonomy, and the Obsidian conventions |
+| [[journal.rules.md]] | The journal written when a piece of work ends, its four questions, and the numbers it must carry |
 | [[badge.rules.md]] | shields.io badges: the two kinds, the product name, and Title Case on every state |
 | [[callout.rules.md]] | The callout types, where one is required, and where it is forbidden |
 
@@ -188,6 +190,7 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[database.rules.md]]
 - [[docs.rules.md]]
 - [[env.rules.md]]
+- [[journal.rules.md]]
 - [[media.rules.md]]
 - [[path.rules.md]]
 - [[pr.rules.md]]

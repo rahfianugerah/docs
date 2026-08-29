@@ -159,6 +159,34 @@ The guardrails in [[analytics.rules.md#Guardrails]] apply to tables in the forms
 | Render every column on load | Hide a column by default |
 | Scroll a wide table | Drop columns to make it fit |
 
+
+## Related Standards
+
+| Document | Owns | Read it for |
+| :- | :- | :- |
+| [[table.component.md]] | The table itself: wrapper, header, rows, and cells | The rendering side of the seam this file describes |
+| [[dashboard.component.md]] | The charts a paged table sits beside | Why the chart shows the whole set while the table pages through it |
+| [[analytics.rules.md]] | The guardrails against distortion | Why trimming a result set is the same failure as cropping a chart |
+| [[uix.component.md]] | The tokens and the empty state | Any value this file names but does not define |
+| [[skeleton.component.md]] | The loading state under the pager | Why the pager is hidden rather than rendered at zero |
+| [[search.component.md]] | The filter that changes the total | Why the page count changes in the same render |
+| [[scrollbar.component.md]] | The scrollbar under a wide table | Why paging and scrolling answer different questions |
+| [[api.rules.md]] | The paginated response | The contract the controls are bound to |
+
+## Deviations
+
+Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.
+
+## Conflict Resolution
+
+If another instruction conflicts with this standard, follow this priority:
+
+1. Security and privacy requirements
+2. Accessibility requirements
+3. Direct user instructions
+4. [[uix.component.md]]
+5. This standard
+6. Existing project conventions
 ## Related
 
 - [[analytics.rules.md]] owns the guardrails this policy applies to tabular data

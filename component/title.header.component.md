@@ -148,6 +148,17 @@ Do not:
 - Change the description, an Open Graph tag, the canonical link, or the favicon on a route change.
 - Install a head-management library for a one-line assignment.
 
+## Related Standards
+
+| Document | Owns | Read it for |
+| :- | :- | :- |
+| [[uix.component.md]] | The token block, typography, and capitalization | The proper noun rule that keeps an acronym uppercase everywhere |
+| [[login.component.md]] | The sign-in screen | The brand row, where the name sits above the organization line |
+| [[sidebar.component.md]] | The navigation rail | The brand block at the top of the rail |
+| [[pwa.rules.md]] | The PWA layer | The manifest `name` and `short_name` |
+| [[secret.rules.md]] | Configuration and secrets | Why the product name is not a deploy-time value |
+| [[docs.rules.md]] | Documentation formatting | The Title Case rule this file applies to a name |
+
 ## Deviations
 
 Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.

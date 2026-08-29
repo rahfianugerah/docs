@@ -144,6 +144,33 @@ Do not:
 - Use a fade alone to signal more content.
 - Style the thumb so thin it cannot be grabbed.
 
+
+## Related Standards
+
+| Document | Owns | Read it for |
+| :- | :- | :- |
+| [[uix.component.md]] | The tokens and the shape scale | Why the thumb is a full pill and not a token radius |
+| [[table.component.md]] | The wide table | The case this component exists for |
+| [[pagination.component.md]] | Paging rather than scrolling | Why a long list pages and a wide one scrolls |
+| [[dropdown.component.md]] | The panel that scrolls when the list is long | One of the regions this style applies to |
+| [[calendar.component.md]] | The year grid | One of the two documented exceptions that hides its scrollbar |
+| [[sidebar.component.md]] | The rail | The other documented exception |
+| [[dashboard.component.md]] | The chart region | Why a chart scrolls rather than cropping |
+
+## Deviations
+
+Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.
+
+## Conflict Resolution
+
+If another instruction conflicts with this standard, follow this priority:
+
+1. Security and privacy requirements
+2. Accessibility requirements
+3. Direct user instructions
+4. [[uix.component.md]]
+5. This standard
+6. Existing project conventions
 ## Related
 
 - [[uix.component.md]]

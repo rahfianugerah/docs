@@ -321,6 +321,18 @@ Do not:
 - Round, scale, or tidy a value in the Sizing Reference table, including to fit a longer product name.
 - Move the inline layout styles into a shared class, or change their values.
 
+## Related Standards
+
+| Document | Owns | Read it for |
+| :- | :- | :- |
+| [[uix.component.md]] | The tokens, typography, spacing, shape, and elevation | Any value this file names but does not define, and any work outside the sign-in screen |
+| [[button.component.md]] | The six variants | The primary button this screen stretches to full width |
+| [[loading.component.md]] | The route gate and the button loading state | The two waits this screen carries |
+| [[auth.rules.md]] | The identity key, the token, and the cookie | Why the session is an `HttpOnly` cookie and never browser storage |
+| [[security.rules.md]] | Rate limiting, audit, and what a response may not reveal | Why every credential failure reads the same |
+| [[secret.rules.md]] | What is a secret and what is configuration | Why a sign-on URL is configuration and safe to bake in |
+| [[refresh.component.md]] | What survives a reload | Why the route gate runs before the redirect decision |
+
 ## Deviations
 
 Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.
