@@ -79,7 +79,7 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 
 | Document | Owns |
 | :- | :- |
-| [[uix.component.md]] | The token contract, the radius rule, Inter, and the shared component rules |
+| [[uix.component.md]] | The token contract, the radius rule, Google Sans, and the shared component rules |
 | [[button.component.md]] | The six variants, the icon before the label, and one primary action per view |
 | [[table.component.md]] | The table itself: wrapper, header, rows, cells, and the row actions |
 | [[pagination.component.md]] | Every table: paging rather than scroll, adaptive page size, controls, and the data binding |
@@ -160,7 +160,7 @@ Both are built by `plugmybrain`, whose command is `pmb`.
 | :- | :- |
 | Language | Python 3.13, English identifiers and English documentation |
 | Backend | FastAPI with Pydantic v2, `uvicorn`, `psycopg` v3 |
-| Frontend | React 19 on Vite with TypeScript, TanStack Query, Tabler icons, Inter |
+| Frontend | React 19 on Vite with TypeScript, TanStack Query, Tabler icons, Google Sans |
 | Environment | Conda (Miniconda) for machine learning, `.venv` for plain Python |
 | Database | PostgreSQL 18 with SQLAlchemy 2.x and Alembic; SQLite for a local single-user tool |
 | Lint and format | Ruff |
