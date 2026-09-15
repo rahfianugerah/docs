@@ -40,7 +40,7 @@ One stack across every project is what makes a second project cheap. A stack cho
 - **Routing:** `react-router-dom` v7.
 - **Language:** TypeScript. A JavaScript project is a legacy state to converge, not a second option for something new.
 - **Icons: Tabler only**, per [[uix.component.md]]. The Tabler webfont is the reference; `@tabler/icons-react` is acceptable where tree shaking is needed. Never a second icon set in the same project, and never an emoji as an icon.
-- **Fonts: Inter, and only Inter**, per [[uix.component.md]]. One family carries display, headings, body, UI, and numerals, with a system sans-serif fallback stack behind it.
+- **Fonts: Google Sans, and only Google Sans**, per [[uix.component.md]]. One family carries display, headings, body, UI, and numerals, with a system sans-serif fallback stack behind it.
 - **Styling:** the token contract in [[uix.component.md]] is the source of truth. It is a hand-written token and semantic class layer (`:root`, `.btn`, `.field`, `.selectbox`, `.datepop`). Tailwind is available through `@tailwindcss/vite` and may be used for one-off layout, but it never replaces a semantic class the component standards define, and a component is never rebuilt out of utility classes.
 - **Data fetching:** `@tanstack/react-query` v5 with `axios`. A project starts here rather than writing its own fetch and cache layer.
 - **State:** React context and hooks. Introduce a state management library only when complexity genuinely requires it. Do not over-engineer.

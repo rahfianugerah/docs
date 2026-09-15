@@ -42,7 +42,7 @@ Every companion reads its values from the `:root` block below and none of them r
 
 ## Black on White Is the Base
 
-**The base is black on white, in Inter, and every project starts there.**
+**The base is black on white, in Google Sans, and every project starts there.**
 
 Black text, black accent, white background. No brand color, no gradient, no colored surface. A project adds its own palette by overriding the tokens below, and until it does, it is already correct rather than unstyled.
 
@@ -70,7 +70,7 @@ This file does not pick your palette. It names the **roles** a component expects
 ```css
 :root {
   /* Type: one family, everywhere */
-  --font: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font: "Google Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
   /* Surfaces */
@@ -178,9 +178,9 @@ Dark mode is not part of the base. Adding it is a deliberate project decision th
 
 ## Typography
 
-**One family, everywhere: Inter.** Headings, body text, UI labels, buttons, form controls, tables, numerals, and every other string a user reads.
+**One family, everywhere: Google Sans.** Headings, body text, UI labels, buttons, form controls, tables, numerals, and every other string a user reads.
 
-Inter is drawn for interface text. It holds up at 12px in a dense table, its digits line up, and its letterforms stay distinct at small sizes. That is the whole requirement, and one family that meets it is better than two that split the job, because the second family is always the one somebody forgets to set.
+Google Sans is drawn for interface text. It holds up at 12px in a dense table, and its letterforms stay open and distinct at small sizes. That is the whole requirement, and one family that meets it is better than two that split the job, because the second family is always the one somebody forgets to set.
 
 Set it once, on `body`, and let everything inherit:
 
@@ -197,20 +197,20 @@ body {
 button, input, select, textarea { font-family: inherit }
 ```
 
-The system stack behind Inter in `--font` is the fallback for the moment before the webfont loads, not an alternative. Never set it deliberately.
+The system stack behind Google Sans in `--font` is the fallback for the moment before the webfont loads, not an alternative. Never set it deliberately.
 
-### Loading Inter
+### Loading Google Sans
 
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 ```
 
 - **Load exactly the four weights and no others.** Every extra weight is a file the user downloads and never sees.
 - Keep `display=swap`, so text renders in the fallback immediately rather than staying invisible while the webfont downloads.
 - Keep both `preconnect` links. Without them the font request waits on a fresh connection to a second origin.
-- **Set the utility framework's sans stack to Inter as well.** A framework's preflight applies its own stack to `html`, and every `sans` utility resolves to it, so a stack that still names something else sends any later use of that utility to the wrong family, silently, while `body` keeps the visible result correct.
+- **Set the utility framework's sans stack to Google Sans as well.** A framework's preflight applies its own stack to `html`, and every `sans` utility resolves to it, so a stack that still names something else sends any later use of that utility to the wrong family, silently, while `body` keeps the visible result correct.
 - **Self-hosting is preferred** for a project that must work offline or that has a privacy requirement. Keep the same family and the same weights either way.
 - Every component inherits the family. Do not re-declare a family on a component; a control that sets its own is how a button ends up on the browser default.
 
@@ -417,7 +417,7 @@ Do:
 - Define every token once at `:root` and read it everywhere.
 - Derive a text color from a brand hue rather than using the bright hex, and keep the bright one for fills.
 - Give a leaf card `8px`, a card that wraps cards `16px`, and every gap `8px`.
-- Set Inter once on `body`, and set the utility framework's sans stack to Inter as well.
+- Set Google Sans once on `body`, and set the utility framework's sans stack to Google Sans as well.
 - Load only the four weights, and keep `display=swap` with both `preconnect` links.
 - Keep controls in a row the same height.
 - Use `:focus-visible` for the focus ring, and the border for a text field.
