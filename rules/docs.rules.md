@@ -16,9 +16,31 @@ tags:
 
 Documentation is written for the person who arrives with no context, which is usually you in six months.
 
-Everything in this vault is written in **English**: every document, every heading, every comment, every commit, every identifier. A project's own documentation is written in the language its readers use, which is a different question and is settled in [[prd.rules.md]].
+Everything in this vault is written in **English**: every document, every heading, every comment, every commit, every identifier. A project's own documentation defaults to English and keeps whatever language it already uses, per "Language" below.
 
 The template is the single source of truth for structure, section order, formatting, and content scope. Read it before writing, not after.
+
+## Language
+
+Everything in this vault is **English**. A project's documentation defaults to English too, and the rest of this section is about when it does not.
+
+### An Existing Project Keeps Its Language
+
+**A project already written in another language stays in that language.** Consistency inside one repository beats consistency across the set.
+
+A half-translated repository is worse than either language on its own: a reader meets two languages in one README, the terminology stops matching between sections, and nobody can tell which half is current. That mixed state is the thing this rule exists to prevent, not the second language itself.
+
+- **Open the README before writing a new document, and match what is already there.** Whatever the repository uses is what the next file uses.
+- **Never mix inside one document, and never inside one repository.** One language per repository.
+- **A new repository starts in English**, and so does a new document in a repository that has none yet.
+- **Converting a repository is one deliberate pass over all of it**, in a single change. Never file by file as each one happens to be edited, because that is how the mixed state arrives.
+- A `PRD.md` follows its readers rather than the repository, per [[prd.rules.md]]. It is the one document whose audience is not the people reading the code.
+
+### What Is Not Governed by This
+
+- **Interface text is not documentation.** A label, a button, a placeholder, a loading string, and an error message shown to a user follow that product's audience, per [[prd.rules.md]] and [[stacks.rules.md]].
+- **Code is always English**, whatever language the documentation uses: every identifier, every comment, every docstring, every commit message, and every branch name, per [[codes.rules.md]] and [[commit.rules.md]]. This is the one thing that never varies, because it sits next to library and language keywords that are English already.
+- **A technical term keeps its original form**: a library name, a framework, a command, a file name, a variable, a database field, a route path.
 
 ## What Every Project Documents
 
