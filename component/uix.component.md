@@ -98,8 +98,8 @@ This file does not pick your palette. It names the **roles** a component expects
   --info: #1a1a1a; --info-soft: #f0f0f0; --info-tua: #000000;
 
   /* Shape: two values, and the gap that makes them concentric */
-  --r: 16px;                 /* a surface that wraps other cards */
-  --r-sm: 8px;               /* a leaf card, and every control */
+  --r: 8px;                  /* every surface: card, modal, panel, table wrapper */
+  --r-sm: 8px;               /* every nested item: control, nav row, menu item, cell */
   --gap: 8px;                /* the gap and the inset, everywhere */
 
   /* Elevation */
@@ -255,31 +255,33 @@ A proper noun, an acronym, and a product name keep their own casing in both mode
 ## Layout and Spacing
 
 - **Base spacing unit is 4px**, using the fixed scale: 4, 8, 12, 16, 24, 32, 40.
-- **The gap between cards is always 8px**, and so is the inset of a card inside another card. That single value is what makes the radius scale below concentric without arithmetic.
+- **The gap between cards is always 8px**, and so is the inset of a card inside another card. It is the same value as the radius below, so a gap and a corner never have to be reconciled.
 - Maximum content width is 1280px, centered, shared by the page and the primary navigation.
 - Navigation depends on the surface. A public or marketing page uses a horizontal topbar. An internal console may use a sidebar when the section count makes a topbar impractical; the choice is consistent inside one project. Its collapsible groups follow [[dropdown.component.md]].
 - Use a two-column grid for forms and detail views, and a four-column grid for stat cards. Both collapse to a single column below 900px.
 
 ## Shape and Elevation
 
-### The Radius Says What Contains What
+### One Radius, 8px, Everywhere
 
-**The scale is two values, and which one applies is decided by nesting, not by the kind of element.**
+**Every rounded corner is `8px`.** Since 27 September 2026 there is one radius, and `8px` is the maximum any corner takes.
 
-| Token | Value | Belongs to |
+Both tokens are kept so existing CSS keeps working, and both hold that same value. The names still say where a value is used, which is what keeps a stylesheet readable:
+
+| Token | Value | Names |
 | :- | :- | :- |
-| `--r-sm` | `8px` | **The leaf.** A card that contains no other card, however large. Every control: a button, an input, a select, a textarea, a nav row, a menu item, a calendar cell, a skeleton |
-| `--r` | `16px` | **A surface that wraps other cards.** An outer card holding a grid of cards, a page panel containing sections, a modal that holds cards |
+| `--r` | `8px` | **A surface.** A card, a stat card, a page panel, a modal, the login card, a popover panel, a table wrapper |
+| `--r-sm` | `8px` | **A nested item.** A button, an input, a select, a textarea, a nav row, a menu item, a calendar cell, a skeleton |
 
-- **A single card on a page is a leaf, so it takes `8px`.** Size does not change this; a full-width card with nothing inside it is still a leaf.
-- **When one card wraps others, the outer takes `16px` and the inner ones take `8px`.** That difference is what says which contains which, before anything else on the screen is read.
-- **The gap and the inset are always `8px`**, which is exactly what makes the two values concentric: `16px` outer minus an `8px` inset is `8px`, so the nesting formula below resolves onto the scale with no arithmetic in the common case.
-- **Deeper nesting is not designed for.** A third level would need `0` for the middle surface, which is the signal to flatten the layout rather than to invent a third radius.
+- **Size and nesting no longer change the value.** A single card, an outer card holding a grid of cards, and the buttons inside them all carry `8px`.
+- **Containment is carried by the border, the background, and the shadow, not by the curve.** Until 27 September 2026 the scale was `16px` for a wrapping surface and `8px` for what sat inside it, and that contrast said which box held which. With one radius a card and the button inside it share a corner, and the card still reads as the container through its hairline border, its surface color against the canvas, and its `--shadow` lift. **Do not bring back a larger radius to make a container stand out.**
+- **A project styled with Tailwind maps `rounded-xl` and `rounded-2xl` to `8px` as well**, in its theme, so a utility class lands on the same corner as the tokens.
+- **A mark is not a surface, and neither token reaches it.** A color swatch, a legend key, a chart bar, a progress segment, a status dot: anything under about `12px` whose job is to carry a color rather than to contain something. These take `2px` to `4px`, or a full circle.
 
-Fixed values outside the scale, used only where listed: a full pill (`999px`) for a tag, badge, chip, nav badge, or scrollbar thumb; `16px 16px 0 0` for a bottom sheet; and `50%` for an avatar, a round icon button, or a decorative circle. Do not introduce a radius that is not on this list or produced by the nesting rule.
+Fixed values outside the tokens, used only where listed: a full pill (`999px`) for a tag, badge, chip, nav badge, header pill, or scrollbar thumb; `8px 8px 0 0` for a bottom sheet; and `50%` for an avatar, a round icon button, a dot, or a decorative circle. **A pill and a circle keep their shape; the 8px maximum does not reach them**, because neither is a corner radius on a rectangle. Do not introduce any other value.
 
 > [!warning]
-> A hard-coded pixel radius in a component stylesheet is a defect, even when it happens to equal a token. It is how a third and fourth curve arrive: each one looks locally reasonable and nothing compares them.
+> A hard-coded pixel radius in a component stylesheet is a defect, even when it happens to equal a token. It is how a second and third curve arrive: each one looks locally reasonable and nothing compares them.
 
 ### Nested Radius
 
@@ -293,11 +295,11 @@ Two curves separated by a gap are only concentric when the inner one is tighter 
 
 | Outer | Padding | Inner |
 | -: | -: | -: |
-| 24px | 8px | 16px |
-| 16px | 8px | 8px |
 | 8px | 8px | 0 |
+| 8px | 4px | 4px |
+| 8px | 2px | 6px |
 
-The scale is built so the formula usually resolves onto it. Reach for the arithmetic only when a surface deliberately departs from `16px`, or when the padding is not `8px`.
+With one `8px` radius the formula no longer lands on a token: an `8px` surface with `8px` of padding computes to a square inner box. **It governs only a box inset tightly enough that its corner is read against the outer one**, such as an image or a nested panel set a few pixels inside a card. **A control standing in a surface's ordinary content padding keeps the `8px` of the tokens** and does not compute anything.
 
 A grid that fills its container to the edge is the one case the formula does not cover, because there is no padding to subtract. There the cells at the container's corners take the container's radius minus its border width, so the two curves sit concentric; every other cell stays square. A month calendar is the worked example: only the two bottom cells are rounded, and only on their outward corners.
 
@@ -382,7 +384,7 @@ Each of these is a summary. The companion file is the standard.
 A floating panel is an overlay, and every overlay in a project behaves the same way.
 
 - Render it through a **portal to `document.body`** with `position: fixed`. An absolutely positioned panel cannot escape an ancestor with `overflow: auto`, so it gets clipped or it pushes the container taller.
-- Give it `--shadow-pop`, a `1px solid var(--line)` border, and the radius its nesting earns: `--r-sm` for a panel holding controls or menu items, `--r` only for an overlay that wraps cards, such as a modal holding a card grid.
+- Give it `--shadow-pop`, a `1px solid var(--line)` border, and the one `8px` radius. A panel holding menu items and a modal holding a card grid carry the same corner.
 - Close it on outside click, on `Escape`, and on selection where selection ends the interaction.
 - The outside-click check must test **both** the trigger and the portal, because the panel is not a DOM descendant of the trigger.
 - Position it in the open handler, not in an effect, so it never paints once in the wrong place.
@@ -433,7 +435,7 @@ Do:
 Do not:
 
 - Hardcode a hex, a radius, or a shadow inside a component.
-- Add a third ink, a third radius, or a second accent.
+- Add a third ink, a second radius, or a second accent.
 - Use a bright brand hex as text on white.
 - Place small body text directly on a gradient.
 - Put a shadow on a card, or a border that separates nothing.

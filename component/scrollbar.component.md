@@ -69,7 +69,7 @@ Two properties matter and are non-negotiable: **the thumb is a full pill**, and 
 
 Rules:
 
-- **The thumb radius is `999px`, the full pill** from the shape scale in [[uix.component.md]]. Not `--r`, not `--r-sm`. A rectangular or slightly rounded thumb is not this component.
+- **The thumb radius is `999px`, the full pill** from the fixed values in [[uix.component.md]]. Not `--r`, not `--r-sm`. A pill is a shape, not a corner radius, so the `8px` maximum does not reach it. A rectangular or slightly rounded thumb is not this component.
 - **`::-webkit-scrollbar-button` is `display: none`**, so there is no arrow at the start and none at the end. Firefox with `scrollbar-width: thin` draws none either, so the two engines match.
 - **The track is transparent.** It takes the color of whatever the component's own background is, which is what makes the scrollbar follow the layout rather than sit on top of it. Never a contrasting stripe.
 - **The `2px` border with `background-clip: padding-box` insets the thumb** inside the 10px channel, leaving a visible 6px pill with breathing room on both sides. Without it the pill touches the container edge and stops reading as a pill.
@@ -149,7 +149,7 @@ Do not:
 
 | Document | Owns | Read it for |
 | :- | :- | :- |
-| [[uix.component.md]] | The tokens and the shape scale | Why the thumb is a full pill and not a token radius |
+| [[uix.component.md]] | The tokens and the fixed shape values | Why a pill is exempt from the 8px maximum |
 | [[table.component.md]] | The wide table | The case this component exists for |
 | [[pagination.component.md]] | Paging rather than scrolling | Why a long list pages and a wide one scrolls |
 | [[dropdown.component.md]] | The panel that scrolls when the list is long | One of the regions this style applies to |

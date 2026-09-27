@@ -48,7 +48,7 @@ The test is whether the shape is genuinely known before the data arrives. A tabl
 ```
 
 - `.skel` carries the shimmer and the radius. **The size comes from where it is used**, never from the class. One class, many shapes.
-- The radius is `--r-sm`, because a skeleton always stands inside a surface, so it takes the leaf value the same as a button or an input, per [[uix.component.md]].
+- The radius is `--r-sm`, which is `8px`, the same as a button or an input, per [[uix.component.md]]. A skeleton stands in for a real box, so it must carry that box's corner exactly or the swap is visible.
 - **Do not add a second grey, a second radius, or a second animation to `.skel`.** Every skeleton in a project shimmers at one speed, or two loading regions on one screen look like two different states.
 
 ## Per Component
@@ -131,7 +131,7 @@ When a table changes page, the previous rows stay in place and the loading state
 | [[table.component.md]] | How a table combines this state with empty and error | Why the three are mutually exclusive and how they are guarded |
 | [[pagination.component.md]] | What the pager does while this state is showing | Why a pager reading "Page 1 of 0" beside a skeleton is a contradiction |
 | [[dashboard.component.md]] | The chart panel whose plot area this state covers | Why the title and axis labels render real |
-| [[uix.component.md]] | The tokens, the radius scale, and the empty state | Why a skeleton takes the leaf radius |
+| [[uix.component.md]] | The tokens, the one 8px radius, and the empty state | The value a skeleton has to match, and the shimmer tokens |
 
 ## Deviations
 

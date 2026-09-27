@@ -83,9 +83,9 @@ An icon alone is unreadable to a screen reader and ambiguous to everyone else, s
 | Gap | `7px` | `.btn` |
 | Small variant | `6px 11px`, `12.5px` | `.btn.sm` |
 
-The radius is `--r-sm` because a button is always nested inside something: a card, a toolbar, a table wrapper.
+The radius is `--r-sm`, which is `8px`, the one radius in the project. `--r` is the same value, so either token renders identically; `--r-sm` is the name a nested item carries, per [[uix.component.md]].
 
-**Never give a button `--r` or a hardcoded `16px`.** A button at the same radius as the card it sits in makes the two read as siblings at the same level, and the card stops looking like a container. The difference between the two values is what says which box holds which, per [[uix.component.md]].
+**Never hardcode a radius on a button, and never give it a value above `8px`.** `8px` is the maximum any corner takes. A button that curves more than the card it sits in reads as the container, which inverts what the screen is saying.
 
 `.btn.sm` is for a button inside a dense row, such as a table row action or a pager, per [[pagination.component.md]]. It changes padding and font size only. **It never changes the radius**, so a small button and a full button on the same screen still read as the same control.
 
@@ -120,7 +120,7 @@ Labels follow the Title Case rule in [[uix.component.md]] and are written in the
 | :- | :- |
 | Use one `.btn.pri` per view | Put two filled accent buttons on one screen |
 | Put the icon before the label | Add an icon after the label, except the dropdown chevron |
-| Set the radius from `--r-sm` | Hardcode a radius, or borrow `--r` from the card |
+| Set the radius from `--r-sm` | Hardcode a radius, or raise it above the `8px` maximum |
 | Give an icon-only button an `aria-label` | Ship a bare icon button and rely on the tooltip |
 | Separate a destructive action from the primary one | Seat `Delete` next to `Save` |
 | Move the fourth action into a dropdown | Line up five buttons in a row |
@@ -131,7 +131,7 @@ Labels follow the Title Case rule in [[uix.component.md]] and are written in the
 
 | Document | Owns | Read it for |
 | :- | :- | :- |
-| [[uix.component.md]] | The tokens, the radius scale, the icon set, and the Title Case rule | Any value this file names but does not define, and why a button takes the leaf radius |
+| [[uix.component.md]] | The tokens, the one 8px radius, the icon set, and the Title Case rule | Any value this file names but does not define, and what carries containment now that the curve does not |
 | [[dropdown.component.md]] | The button that opens a menu, and the chevron on it | The one case where an icon sits after the label |
 | [[loading.component.md]] | The button that is submitting | What replaces the label, and why the width must not change |
 | [[table.component.md]] | The toolbar and the action column | Where two inline buttons become a menu |
