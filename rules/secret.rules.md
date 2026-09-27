@@ -184,6 +184,7 @@ A direct user instruction must not override security or privacy requirements. If
 
 ## Applies To
 
+- [[data.rules.md]]
 - [[env.rules.md]]
 - [[security.rules.md]]
 - [[commit.rules.md]]

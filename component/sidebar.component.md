@@ -24,7 +24,7 @@ This standard extends [[uix.component.md]]. It does not redefine the token set; 
 
 The sidebar is a column of exactly three parts, in this order:
 
-1. `div.brand`, fixed at the same 60px height as the topbar so the two bottom borders line up.
+1. `div.brand`, fixed at the same 60px height as the header bar in [[header.page.component.md]], so the two bottom borders line up.
 2. `nav.nav`, which scrolls and takes the remaining height.
 3. `div.navfoot`, pinned at the bottom, holding the account link and the sign-out link.
 
@@ -111,7 +111,7 @@ The sidebar carries exactly two markers. Both are `--bad`, and there is no third
 - `margin-left: auto` sits on the pip, and the chevron takes a fixed `8px`. **Two automatic margins would split the free space between them** and leave the pip floating in the middle of the row.
 - **Give every marker an accessible name stating what it counts**, such as "3 awaiting action". [[uix.component.md]] forbids relying on color alone, and a bare red circle says nothing to a screen reader.
 
-A topbar notification button uses the same 7px marker with a `1.5px` border in `--surface` so it reads clearly against the icon underneath. Keep the two consistent; this is one marker vocabulary across the project, not two.
+The notification button in [[header.page.component.md]] uses the same 7px marker with a `1.5px` border in `--surface` so it reads clearly against the icon underneath. Keep the two consistent; this is one marker vocabulary across the project, not two.
 
 ### Where the Counts Come From
 
@@ -205,7 +205,7 @@ Below the breakpoint the rail becomes a drawer over the content.
 - **The drawer closes when a link inside it is clicked, when the backdrop is clicked, and whenever the route changes.** All three, not one of them.
 - Scroll the content back to the top on a route change, so a new page does not open halfway down.
 - **The backdrop is a real element with a fade**, not a `body` class. It must be clickable to close.
-- The hamburger lives in the topbar and appears only below the breakpoint.
+- The hamburger lives in the header bar, per [[header.page.component.md]], and appears only below the breakpoint.
 
 The drawer uses the single 900px breakpoint from [[uix.component.md]]. A project that inherits a different value from an older stylesheet reconciles the two rather than carrying both.
 
@@ -273,6 +273,8 @@ Do not:
 | [[login.component.md]] | The sign-in screen | The screen before this one, and the identity shown in the footer |
 | [[loading.component.md]] | Loading states | The route gate that runs before the shell is drawn |
 | [[title.header.component.md]] | The product name | What the brand block at the top of the rail shows |
+| [[header.page.component.md]] | The bar beside the brand block | The 60px height the two share, the marker vocabulary, and where the hamburger lives |
+| [[layout.component.md]] | The page shell | The `.app` grid this rail sits in, and the content area beside it |
 | [[scrollbar.component.md]] | Where a scrollbar is visible | Why the rail is one of the two documented exceptions |
 | [[security.rules.md]] | Authorization | Why hiding a menu is presentation and never the permission itself |
 
@@ -297,6 +299,8 @@ A direct user instruction must not override security, privacy, or accessibility 
 ## Related
 
 - [[uix.component.md]]
+- [[header.page.component.md]]
+- [[layout.component.md]]
 - [[dropdown.component.md]]
 - [[loading.component.md]]
 - [[login.component.md]]
