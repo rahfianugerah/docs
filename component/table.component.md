@@ -36,7 +36,7 @@ The toolbar and the pager sit outside the scroll region on purpose. A wide table
 .tablewrap.scroll thead th { position: sticky; top: 0; z-index: 1; }
 ```
 
-- **The wrapper is a leaf surface**, so it carries `--r-sm`, per the radius rule in [[uix.component.md]]. It only takes `--r` when it is itself a card wrapping other cards, which a table wrapper is not. Everything inside it, including a row action button, also carries `--r-sm`.
+- **The wrapper carries `--r-sm`**, which is `8px`, the one radius in the project, per [[uix.component.md]]. Everything inside it, including a row action button, carries the same value. A wrapper does not curve more than what sits in it.
 - **A table wider than its container scrolls**, following [[scrollbar.component.md]]. It never drops columns to fit, and it never shrinks the font until the columns fit.
 - `.scroll` adds a vertical scroll with a sticky header, for a page whose table is the whole content. Use it sparingly: a table that needs an inner vertical scroll on top of paging is usually a page size problem, per [[pagination.component.md]].
 - **Never nest a scroll region inside another scroll region.** A table inside a scrolling card traps the wheel and the reader cannot tell which surface is moving.
@@ -155,13 +155,13 @@ The guardrails in [[analytics.rules.md]] apply to a table in the forms a table c
 | [[skeleton.component.md]] | The loading state a table uses instead of a spinner | Why the header renders real and the rows do not |
 | [[search.component.md]] | The search field above the table and the query underneath it | Why sorting and filtering happen in the database |
 | [[scrollbar.component.md]] | The scrollbar a wide table uses rather than cropping | Why the horizontal bar is always visible |
-| [[uix.component.md]] | The tokens, the radius scale, and the empty state | Any value this file names but does not define |
+| [[uix.component.md]] | The tokens, the one 8px radius, and the empty state | Any value this file names but does not define |
 | [[refresh.component.md]] | The URL state | What makes a sorted, filtered page shareable |
 | [[security.rules.md]] | Injection and object authorization | Why a sort column from a request goes through an allowlist |
 
 ## Deviations
 
-Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.
+Any intentional deviation is recorded in the vault as a `decision` note naming this standard, the reason, and a plan to return to it, per [[memory.rules.md]]. It is never written into the project README, because this vault is private and a list of departures from it discloses the standards themselves.
 
 ## Conflict Resolution
 

@@ -34,13 +34,13 @@ Forbidden, with the reason each one gets tried:
 
 | Not this | Why it is wrong |
 | :- | :- |
-| `Ops Control - Acme Group` | A descriptor and a company suffix. The app has a name; that is not it |
-| `Legal Module` | "Module" is an implementation detail, not part of the name |
-| `Legal - Contract Management` | A tagline. It belongs in the page description, not the name |
-| `Legal` | Drops the family. Says nothing about which system it belongs to |
-| `Acme legal`, `ACME Legal` where the family is `Acme` | Wrong casing on one of the two words |
-| `Legal v2`, `Legal (Beta)` | A version or a state. It changes; the name does not |
-| `Legal Dev`, `Legal Staging` | An environment. See "Environments" below |
+| `Acme Ledger - Acme Group` | A descriptor and a company suffix. The product has a name; that is not it |
+| `Ledger Module` | "Module" is an implementation detail, not part of the name |
+| `Acme Ledger - Invoice Management` | A tagline. It belongs in the page description, not the name |
+| `Ledger` | Drops the family. Says nothing about which system it belongs to |
+| `Acme ledger`, `ACME Ledger` where the family is `Acme` | Wrong casing on one of the two words |
+| `Acme Ledger v2`, `Acme Ledger (Beta)` | A version or a state. It changes; the name does not |
+| `Acme Ledger Dev`, `Acme Ledger Staging` | An environment. See "Environments" below |
 | `Bluebird` | An internal codename. Nobody outside the project knows what it refers to |
 
 ## Where the Name Appears
@@ -161,7 +161,7 @@ Do not:
 
 ## Deviations
 
-Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.
+Any intentional deviation is recorded in the vault as a `decision` note naming this standard, the reason, and a plan to return to it, per [[memory.rules.md]]. It is never written into the project README, because this vault is private and a list of departures from it discloses the standards themselves.
 
 ## Conflict Resolution
 

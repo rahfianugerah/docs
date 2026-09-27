@@ -89,7 +89,7 @@ One stack across every project is what makes a second project cheap. A stack cho
 
 A project may use a different runtime only when a specific library requires it. Any exception must:
 
-1. Be recorded in that project's README with the reason.
+1. Be recorded in the vault as a `decision` note with the reason, per [[memory.rules.md]], never in the project README.
 2. Still comply with every other rule here, including the database, versioning, and model rules.
 
 ## Definition of Done
@@ -99,7 +99,7 @@ A project may use a different runtime only when a specific library requires it. 
 - Migrations run from an empty database.
 - No model is called from the browser, and no personal data reaches one unredacted.
 - The frontend carries one icon set and one font family.
-- Any deviation from this stack is written in the project README with its reason.
+- Any deviation from this stack is recorded in the vault with its reason, and no project document names a standard in this vault.
 
 ## Conflict Resolution
 

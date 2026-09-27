@@ -92,7 +92,7 @@ An overlay layer, following the overlay rules in [[uix.component.md]]: portalled
 .datepop-cell:disabled { color: var(--ink3); pointer-events: none; }
 ```
 
-The selected cell is the one place a solid `--accent` fill with white text appears inside a panel. A cell sits inside the panel, so its radius is smaller still: `4px` is right, and it is never raised to `--r-sm` or `--r`.
+The selected cell is the one place a solid `--accent` fill with white text appears inside a panel. A cell is a mark rather than a surface, so it takes `4px`, and it is never raised to `--r-sm` or `--r`.
 
 ## Panel Width Matches the Trigger
 
@@ -139,7 +139,7 @@ A month view that fills a card, rather than the picker panel above, is a differe
 .cal-grid > .cal-sel:last-child { border-bottom-right-radius: calc(var(--r-sm) - 1px); }
 ```
 
-This is the worked example of the edge-to-edge case in the nested radius rule in [[uix.component.md]], where there is no padding to subtract and the border width is what separates the two curves instead.
+This is the worked example of the edge-to-edge case in the inset rule in [[uix.component.md]], where there is no inset to subtract and the border width is what separates the two curves instead.
 
 - **The selected day uses `--accent-soft` with an inset `--accent` ring**, not the solid fill the picker's selected cell uses. A solid fill on a cell this large would dominate the card, and the cell also has to keep showing its contents.
 - **Today is marked the same way in both calendars**, so the project carries one visual language for the current day rather than two.
@@ -224,7 +224,7 @@ Do not:
 
 | Document | Owns | Read it for |
 | :- | :- | :- |
-| [[uix.component.md]] | The tokens, the radius scale, and the overlay rules | Why the panel takes the leaf radius, and why a cell is smaller still |
+| [[uix.component.md]] | The tokens, the one 8px radius, and the overlay rules | Why a cell is a mark at `4px` rather than a surface at `8px` |
 | [[dropdown.component.md]] | The themed listbox | The same portal reasoning, and the chevron that rotates on both controls |
 | [[search.component.md]] | Filters and the query underneath them | A date range used as a filter, and why a date is matched exactly |
 | [[refresh.component.md]] | The URL state | Why a chosen date survives a reload |
@@ -232,7 +232,7 @@ Do not:
 
 ## Deviations
 
-Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.
+Any intentional deviation is recorded in the vault as a `decision` note naming this standard, the reason, and a plan to return to it, per [[memory.rules.md]]. It is never written into the project README, because this vault is private and a list of departures from it discloses the standards themselves.
 
 ## Conflict Resolution
 

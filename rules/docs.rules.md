@@ -16,9 +16,31 @@ tags:
 
 Documentation is written for the person who arrives with no context, which is usually you in six months.
 
-Everything in this vault is written in **English**: every document, every heading, every comment, every commit, every identifier. A project's own documentation is written in the language its readers use, which is a different question and is settled in [[prd.rules.md]].
+Everything in this vault is written in **English**: every document, every heading, every comment, every commit, every identifier. A project's own documentation defaults to English and keeps whatever language it already uses, per "Language" below.
 
 The template is the single source of truth for structure, section order, formatting, and content scope. Read it before writing, not after.
+
+## Language
+
+Everything in this vault is **English**. A project's documentation defaults to English too, and the rest of this section is about when it does not.
+
+### An Existing Project Keeps Its Language
+
+**A project already written in another language stays in that language.** Consistency inside one repository beats consistency across the set.
+
+A half-translated repository is worse than either language on its own: a reader meets two languages in one README, the terminology stops matching between sections, and nobody can tell which half is current. That mixed state is the thing this rule exists to prevent, not the second language itself.
+
+- **Open the README before writing a new document, and match what is already there.** Whatever the repository uses is what the next file uses.
+- **Never mix inside one document, and never inside one repository.** One language per repository.
+- **A new repository starts in English**, and so does a new document in a repository that has none yet.
+- **Converting a repository is one deliberate pass over all of it**, in a single change. Never file by file as each one happens to be edited, because that is how the mixed state arrives.
+- A `PRD.md` follows its readers rather than the repository, per [[prd.rules.md]]. It is the one document whose audience is not the people reading the code.
+
+### What Is Not Governed by This
+
+- **Interface text is not documentation.** A label, a button, a placeholder, a loading string, and an error message shown to a user follow that product's audience, per [[prd.rules.md]] and [[stacks.rules.md]].
+- **Code is always English**, whatever language the documentation uses: every identifier, every comment, every docstring, every commit message, and every branch name, per [[codes.rules.md]] and [[commit.rules.md]]. This is the one thing that never varies, because it sits next to library and language keywords that are English already.
+- **A technical term keeps its original form**: a library name, a framework, a command, a file name, a variable, a database field, a route path.
 
 ## What Every Project Documents
 
@@ -179,7 +201,7 @@ A project document carries a **Data** section, or a row inside Project Structure
 
 **"Gitignored" and "committed" are the two words that matter**, and the reader is looking for exactly one of them. A path with no such note is a path somebody will commit.
 
-### Two Sections Every Project Document Ends With
+### The Section Every Project Document Ends With
 
 **Known Limitations.** What the thing does not do, what it is bad at, and the ceiling of each part. This is the section everybody skips writing and every reader needs, and it is what separates a document from a sales page. State the limit and the reason:
 
@@ -190,27 +212,25 @@ A project document carries a **Data** section, or a row inside Project Structure
   it does not fail loudly; it just leaves every search doing a sequential scan.
 ```
 
-**Deviations From the Standards.** Where the project departs from a rule in this vault, **numbered, each naming the rule it departs from, the reason, and the cost accepted.** Several standards already require a deviation to be written down; this is the one place it goes.
+**A deviation from a standard is never written in a project document.** This vault is private, and a section enumerating departures from it discloses that the standards exist, what they require, and where this project is weaker than they ask. A reader of the project does not need any of that, and a stranger should not have it.
 
-```markdown
-1. **Not Cloud Run.** [[deploy.rules.md]] requires every deployed project to ship to Cloud Run.
-   This runs as one Docker stack on a flat-cost VM instead, because an always-on database has
-   no idle state to scale down to. The exception does not generalise.
-```
+A deviation is recorded in the vault instead, as a `decision` note naming the standard, the reason, and the cost accepted, per [[memory.rules.md]]. The project document states what the project does; it says nothing about what it was measured against.
 
-A project with no deviations writes the heading and one line saying so. **An empty section is information; a missing one is a question.**
+Where a limitation genuinely affects someone using the project, it belongs in **Known Limitations**, written as a property of the project rather than as a departure from a rule. "The scheduler runs in-process, so a restart drops a pending job" is useful. "Deviates from the deploy standard" is not, and it leaks.
 
-Which document carries which:
+**Known Limitations is never deleted.** A project with none writes the heading and one line saying so: an empty section is information, a missing one is a question.
 
-| Document | Known Limitations | Deviations |
-| :- | :- | :- |
-| `README.md` | Yes | Yes |
-| `API.md` | Yes | Only where the API itself departs from a standard |
-| `MODEL.md` | Yes | Only where the training or evaluation departs from one |
-| `PRD.md` | No; its non-goals section already does this work | No |
-| The agent entry point | No; it is instructions, not a description | No |
+Which document carries it:
 
-The README is the one document that speaks for the whole project, so it is the one that always carries both.
+| Document | Known Limitations |
+| :- | :- |
+| `README.md` | Yes, always |
+| `API.md` | Yes |
+| `MODEL.md` | Yes |
+| `PRD.md` | No; its non-goals section already does this work |
+| The agent entry point | No; it is instructions, not a description |
+
+The README is the one document that speaks for the whole project, so it is the one that always carries it.
 
 ## Template Usage Rules
 
@@ -274,6 +294,7 @@ Do not use:
 - A macOS-specific symbol or format.
 - A decorative Unicode symbol that is not required.
 - ALL CAPS for emphasis.
+- **Any tool, AI, model, or bot attribution.** No "generated with", "created with", or "written with" line, no bot co-author, no product link presented as a credit, and no signature or watermark. A document records what the thing does, not what wrote the document. This is the same ban [[commit.rules.md]] applies to a commit message, and it applies to every document, every template, and every code comment.
 - A wall of bold text. If everything is bold, nothing is.
 
 The replacements, since each banned character has exactly one:
@@ -391,9 +412,42 @@ That rule covers a command. [[path.rules.md]] covers every other path: in source
 
 These apply to comments inside source code, not only to Markdown.
 
+### A Comment Is a Label, Not a Paragraph
+
+**One line is the default, and three is the hard ceiling.** A comment that runs longer is almost always restating what the code already says, and a reader stops reading comments at all once a few of them have wasted their time.
+
+**Write the label, not the sentence.** Name the thing and stop. A comment needs no article, no verb, and no full stop to be clear:
+
+```bash
+# API key for Ollama
+OLLAMA_AI_KEY=
+
+# Ollama model
+OLLAMA_MODEL=
+```
+
+- **Never restate the identifier.** `# This variable holds the API key used to authenticate against the Ollama service` says nothing the key name does not, at eleven times the length.
+- **One short label per key in a configuration file**, and no paragraph above the group explaining the group.
+- **A docstring does not repeat the signature.** The parameter names and types are already there. Write only what a caller cannot infer from them, and nothing at all for a function whose name and signature already say it.
+- **No comment on an obvious line.** An assignment, a getter, an import, and a loop over a named collection need none.
+- **Length is earned only by what nobody can reconstruct**: a workaround, a rejected approach, a value that came from measurement. Even then it stays within three lines and names the reason rather than narrating the investigation.
+- **The ceiling counts the comment, not a usage example inside it.** A snippet keeps its own lines, per the exception below.
+
+| Do | Do not |
+| :- | :- |
+| `# Ollama model` | `# The name of the Ollama model this application uses when it sends a prompt` |
+| `# Retry budget, tuned against the provider's 429 rate` | Four lines explaining what a retry is |
+| Say why a value is what it is | Say what the line does |
+| Delete a comment the code made obvious | Keep it because it was already written |
+
+### No Decoration
+
+
 Do not use a special character as a decorator, border, or separator inside a code comment. This includes, but is not limited to, a repeated `=`, `-`, `*`, `+`, `#`, `$`, `~`, `_`, `^`, `/`, `\`, or `|` arranged into a line, a box, a banner, or a divider. Do not use extra blank lines or padding spaces to box a comment either.
 
 A code comment states its purpose directly, in plain language, with no surrounding decoration. Readability comes from clear wording, not visual styling.
+
+**Every comment, docstring, and configuration label is written in English**, like every identifier and every document, per [[codes.rules.md]].
 
 The one exception is a short code snippet inside a comment showing how something is called. That snippet keeps its own natural formatting and line breaks.
 
@@ -578,7 +632,7 @@ An experiment's result belongs in the pull request that carried it, per [[pr.rul
 - The Table of Contents lists every `##` heading and every entry resolves.
 - Every heading names the question it answers, not the category it belongs to.
 - Known Limitations is present and says what the thing is bad at.
-- Deviations From the Standards is present, and names the rule, the reason, and the cost for each one.
+- No section enumerates deviations from this vault, and no standard in it is named or quoted anywhere in the document.
 - The README takes a reader from clone to running with no other source.
 - The frontmatter carries exactly one `kind/`, and at most two `topic/` values.
 - The badge row follows [[badge.rules.md]], every version is current, and no badge claims something the repository does not do.

@@ -114,6 +114,7 @@ A direct user instruction must not override security or privacy requirements. If
 - [[api.rules.md]]
 - [[branch.rules.md]]
 - [[commit.rules.md]]
+- [[data.rules.md]]
 - [[database.rules.md]]
 - [[env.rules.md]]
 - [[security.rules.md]]

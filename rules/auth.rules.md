@@ -51,7 +51,7 @@ Configure the mode through one environment variable. Every mode fills the same `
 
 ## Password and Credential Handling
 
-- Accept only strong hashes: **Argon2id** as the primary choice, bcrypt as acceptable, both through a maintained library.
+- Accept only strong hashes: **Argon2id** as the primary choice, bcrypt as acceptable, both through a maintained library. The parameters, the AES-256-GCM layer over the digest, and the key handling are in [[security.rules.md]].
 - **Prohibited:** MD5, plain SHA1 or SHA256, a plaintext password, and any plaintext initial password stored in a database.
 - Verify only against an allowlist of accepted hash schemes. A hash outside the allowlist is rejected, never guessed as plaintext.
 - Store a stopgap password only as a hash in the environment file, never in a database and never in the repository, per [[secret.rules.md]].
@@ -182,7 +182,7 @@ Recognize it instead at the service's single authorization chokepoint, by its id
 - No token is stored in `localStorage` or `sessionStorage`. The browser holds only an `HttpOnly` cookie.
 - Access tokens are RS256, validated offline through a cached key set, and every token has an `exp`.
 - Refresh tokens rotate, are stored server-side as a hash, and are revoked on logout and on reuse detection.
-- Passwords exist only as an Argon2id or bcrypt hash. No plaintext password exists in any database or in the repository.
+- Passwords exist only as an Argon2id or bcrypt hash, sealed at rest with AES-256-GCM per [[security.rules.md]]. No plaintext password, and no reversible transform of one, exists in any database or in the repository.
 - Production rejects the dev mode, the cookie is secure, public docs are closed, login is rate-limited, and the signing key is persistent and backed up separately.
 - A non-human account is recognized by its identifier at a named chokepoint, not by a role in the identity source.
 
