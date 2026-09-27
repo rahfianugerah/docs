@@ -80,7 +80,7 @@ The rules above shape the structure. These shape the surface.
 - **Comments say why, never what.** The code already says what. If a comment explains what, rewrite the code instead.
 - **A comment that explains a non-obvious decision is worth keeping.** A workaround, a chosen trade-off, a reason a naive approach fails; write those down, they are the ones nobody can reconstruct.
 - **No commented-out code.** Delete it.
-- **Consistent formatting is not negotiable.** Run the formatter; do not argue with it.
+- **Consistent formatting is not negotiable.** Match the style of the surrounding code.
 - **Type hints on every public function.** They are documentation the interpreter checks.
 
 ## Python
@@ -122,7 +122,7 @@ dependencies:
 
 ### Style
 
-- Follow PEP 8. Do not hand-format; run **Ruff** for both linting and formatting, and let it settle every argument.
+- Follow PEP 8.
 - `snake_case` for functions and variables, `PascalCase` for classes, `SCREAMING_SNAKE_CASE` for constants.
 - Type hints on public functions. `list[str]`, not `List[str]`; the builtin generics are standard now.
 - Docstrings on anything whose purpose is not obvious from the signature. One line is usually enough.
@@ -174,7 +174,7 @@ Do not:
 
 - Every new abstraction has more than one caller today.
 - No dependency was added for something the standard library already does.
-- Every public function carries a type hint, and Ruff passes with no manual formatting.
+- Every public function carries a type hint.
 - Every identifier is English, and no comment carries a decorative border.
 - No commented-out code, dead branch, or unused parameter remains.
 - No bare `except`, no mutable default, and no `print()` in library code.

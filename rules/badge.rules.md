@@ -98,7 +98,7 @@ One state has one spelling across every project. Three repositories writing `Not
 
 1. **Regular style is the default.** It is what shields.io returns with no `style` parameter, so omit the parameter. Never `style=for-the-badge`, `plastic`, or `social`, and never a hand-drawn image.
 2. **A technology badge always carries its logo**, `?logo=<slug>`, using the simple-icons slug: the lowercase name with spaces and dots removed, such as `react`, `nodedotjs`, `postgresql`, `tailwindcss`, `scikitlearn`.
-3. **Always set `logoColor=white`.** Most brand hexes are dark and a default-colored logo disappears into the background. A light brand color such as Ruff's or Hugging Face's takes `logoColor=black` instead, or the logo vanishes.
+3. **Always set `logoColor=white`.** Most brand hexes are dark and a default-colored logo disappears into the background. A light brand color such as Hugging Face's takes `logoColor=black` instead, or the logo vanishes.
 4. **Always carry a version** where one exists. `React-19`, not a bare `React`. A badge with no version says nothing a reader could not guess from the file listing.
 5. **Use the brand hex without the `#`.** shields.io reads `61DAFB`, not `#61DAFB`.
 6. **Escape a hyphen in a name** by doubling it: `Scikit--learn`. A single hyphen is the field separator and splits the badge.
@@ -136,7 +136,6 @@ Use these rather than looking one up per project, so the same technology is the 
 | SQLAlchemy | `sqlalchemy` | `D71F00` |
 | PostgreSQL | `postgresql` | `4169E1` |
 | pytest | `pytest` | `0A9EDC` |
-| Ruff | `ruff` | `D7FF64` (use `logoColor=black`) |
 
 **Frontend:**
 

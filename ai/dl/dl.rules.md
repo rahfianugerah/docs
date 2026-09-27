@@ -31,7 +31,6 @@ dependencies:
   - tensorboard
   - jupyterlab
   - pytest
-  - ruff
 ```
 
 **GPU (NVIDIA):**
