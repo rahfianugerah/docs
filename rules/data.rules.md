@@ -57,7 +57,7 @@ Permitted, because no individual can be recovered from the answer:
 SELECT count(*) FROM person;
 SELECT count(*) FILTER (WHERE bank_account IS NULL) FROM person;
 SELECT min(created_at), max(created_at) FROM sale_order;
-SELECT count(DISTINCT status) FROM leave_request;
+SELECT count(DISTINCT status) FROM invoice;
 ```
 
 Not permitted, because each one hands back a record or narrows to one:
@@ -66,7 +66,7 @@ Not permitted, because each one hands back a record or narrows to one:
 SELECT * FROM person LIMIT 1;                                  -- a row is a row, even one
 SELECT name, email FROM person;                                -- a projection is still contents
 SELECT count(*) FROM person WHERE identity_key = '20230101';   -- an aggregate about one person
-SELECT name, count(*) FROM leave_request GROUP BY name;        -- the group key is the data
+SELECT name, count(*) FROM invoice GROUP BY name;              -- the group key is the data
 ```
 
 Rules:
@@ -83,7 +83,7 @@ The memory vault is plain markdown in a git repository, read by every model, ind
 - Never write a row, a record, a field value, an export, a query result, or a log excerpt carrying real values into a note in `memory/`, into `graph/`, or into a journal.
 - Never point a digest, an embedding job, or any indexer at a folder holding a dump, an export, a backup, or user-uploaded files. The index is built from what it is pointed at, and an embedding of a real record is a copy of that record in a form nobody can review by reading it.
 - [[memory.rules.md]] already bans a secret and a large paste. This extends it: **the ban is on the data itself, at any size.** One person's bank account in a note is worse than a hundred-line traceback, not better.
-- A note records the **finding**, and names the source so a reader can go and look. A note stating that a column was populated for 56 of 109 rows and that no screen ever read it is the shape: the count is the finding, and not one value appears.
+- A note records the **finding**, and names the source so a reader can go and look. A note stating that a column is populated for about half the rows and that no screen ever reads it is the shape: the count is the finding, and not one value appears.
 - [[security.rules.md]] requires confidential material to stay in the memory scope reserved for it. That is where confidential material lives when it must live somewhere. It is not an exemption from this rule; it is the narrower place for what this rule would otherwise have nowhere to put.
 
 ## Seed Data Is Only Safe If It Was Generated

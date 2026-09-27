@@ -100,7 +100,7 @@ When a table changes page, the previous rows stay in place and the loading state
 
 ## Accessibility
 
-- Wrap the skeleton region in `role="status"` with `aria-live="polite"`, and give it visible or screen-reader text naming what is loading, such as "Loading the employee list". A grey block announces nothing on its own.
+- Wrap the skeleton region in `role="status"` with `aria-live="polite"`, and give it visible or screen-reader text naming what is loading, such as "Loading the client list". A grey block announces nothing on its own.
 - Mark the skeleton blocks themselves `aria-hidden="true"`, so the wait is announced once rather than as a run of empty elements.
 - **Honour reduced motion by removing the shimmer, not the block.** The block is the information; the animation is decoration:
 
