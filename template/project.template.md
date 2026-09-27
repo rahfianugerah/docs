@@ -112,8 +112,6 @@ tests/
 ## Development
 
 ```bash
-ruff check .          # lint
-ruff format .         # format
 pytest                # tests
 ```
 

@@ -42,7 +42,6 @@ dependencies:
   - matplotlib
   - jupyterlab
   - pytest
-  - ruff
 ```
 
 Install LightGBM and XGBoost from conda-forge rather than pip. The conda-forge builds bring their own OpenMP runtime; the pip wheels on macOS need one installed separately and fail at import without it.

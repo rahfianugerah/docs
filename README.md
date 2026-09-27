@@ -163,7 +163,6 @@ Both are built by `plugmybrain`, whose command is `pmb`.
 | Frontend | React 19 on Vite with TypeScript, TanStack Query, Tabler icons, Google Sans |
 | Environment | Conda (Miniconda) for machine learning, `.venv` for plain Python |
 | Database | PostgreSQL 18 with SQLAlchemy 2.x and Alembic; SQLite for a local single-user tool |
-| Lint and format | Ruff |
 | Tests | pytest, and Playwright for end-to-end flows |
 | Deploy | Cloud Run, built by Cloud Build, images in Artifact Registry |
 | Vault | Obsidian, with Graphify and Cognee over the same files, built by `plugmybrain` |

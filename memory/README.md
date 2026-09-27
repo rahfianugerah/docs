@@ -58,7 +58,7 @@ Four note types, and no fifth without a reason. A type that holds three notes af
 
 | Type | Answers | Example |
 | :- | :- | :- |
-| `fact` | What is true | The conda env for project X is `xyz`; the user prefers Ruff over Black |
+| `fact` | What is true | The conda env for project X is `xyz`; the user prefers pytest over unittest |
 | `decision` | Why it is this way | Chose Polars over pandas for the loader, because the file is 40GB |
 | `session` | What happened | 2026-02-11, debugged the scaler leak, found it in `preprocess.py` |
 | `reference` | Where to look | The dataset licence page, the paper the architecture came from |

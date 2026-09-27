@@ -30,7 +30,7 @@ One stack across every project is what makes a second project cheap. A stack cho
 - **Auth:** `PyJWT[crypto]` for RS256 verification and `passlib[argon2]` for any local hash. Never hand-roll token signing or a password hash, per [[security.rules.md]] and [[auth.rules.md]].
 - **Uploads:** `python-multipart` for request parsing and an object-store client for storage, per [[media.rules.md]].
 - **Scheduled work:** APScheduler in-process, or a scheduled container job. Do not build an event bus at this stage.
-- **Dev tooling**, kept in `pyproject.toml` under `[project.optional-dependencies]` and out of the runtime image: `ruff`, `mypy`, `pytest`, `pytest-asyncio`, `pytest-cov`, and `testcontainers[postgresql]` for integration tests against a real database.
+- **Dev tooling**, kept in `pyproject.toml` under `[project.optional-dependencies]` and out of the runtime image: `mypy`, `pytest`, `pytest-asyncio`, `pytest-cov`, and `testcontainers[postgresql]` for integration tests against a real database.
 
 ## Frontend
 

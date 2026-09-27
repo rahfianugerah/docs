@@ -11,7 +11,7 @@ Every AI project follows this file, plus the one for its kind: [[ml.rules.md]] f
 
 An AI project fails differently from ordinary software. Ordinary code is broken or working; a model is **quietly wrong**. It returns a number, the number looks plausible, and nothing raises an error. Every rule here exists to make silence impossible.
 
-The general code standard in [[codes.rules.md]] still applies: YAGNI, KISS, DRY, English, Python 3.13, Ruff, pytest. This file adds what is specific to AI and does not repeat what is not.
+The general code standard in [[codes.rules.md]] still applies: YAGNI, KISS, DRY, English, Python 3.13, pytest. This file adds what is specific to AI and does not repeat what is not.
 
 ## Environment: One Per Project, Always Conda
 
