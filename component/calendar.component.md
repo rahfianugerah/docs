@@ -139,7 +139,7 @@ A month view that fills a card, rather than the picker panel above, is a differe
 .cal-grid > .cal-sel:last-child { border-bottom-right-radius: calc(var(--r-sm) - 1px); }
 ```
 
-This is the worked example of the edge-to-edge case in the nested radius rule in [[uix.component.md]], where there is no padding to subtract and the border width is what separates the two curves instead.
+This is the worked example of the edge-to-edge case in the inset rule in [[uix.component.md]], where there is no inset to subtract and the border width is what separates the two curves instead.
 
 - **The selected day uses `--accent-soft` with an inset `--accent` ring**, not the solid fill the picker's selected cell uses. A solid fill on a cell this large would dominate the card, and the cell also has to keep showing its contents.
 - **Today is marked the same way in both calendars**, so the project carries one visual language for the current day rather than two.

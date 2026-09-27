@@ -255,7 +255,7 @@ A proper noun, an acronym, and a product name keep their own casing in both mode
 ## Layout and Spacing
 
 - **Base spacing unit is 4px**, using the fixed scale: 4, 8, 12, 16, 24, 32, 40.
-- **The gap between cards is always 8px**, and so is the inset of a card inside another card. It is the same value as the radius below, so a gap and a corner never have to be reconciled.
+- **The gap between cards is always 8px.** It is the same value as the radius below, so a gap and a corner never have to be reconciled.
 - Maximum content width is 1280px, centered, shared by the page and the primary navigation.
 - Navigation depends on the surface. A public or marketing page uses a horizontal topbar. An internal console may use a sidebar when the section count makes a topbar impractical; the choice is consistent inside one project. Its collapsible groups follow [[dropdown.component.md]].
 - Use a two-column grid for forms and detail views, and a four-column grid for stat cards. Both collapse to a single column below 900px.
@@ -273,8 +273,8 @@ Both tokens are kept so existing CSS keeps working, and both hold that same valu
 | `--r` | `8px` | **A surface.** A card, a stat card, a page panel, a modal, the login card, a popover panel, a table wrapper |
 | `--r-sm` | `8px` | **A nested item.** A button, an input, a select, a textarea, a nav row, a menu item, a calendar cell, a skeleton |
 
-- **Size and nesting no longer change the value.** A single card, an outer card holding a grid of cards, and the buttons inside them all carry `8px`.
-- **Containment is carried by the border, the background, and the shadow, not by the curve.** Until 27 September 2026 the scale was `16px` for a wrapping surface and `8px` for what sat inside it, and that contrast said which box held which. With one radius a card and the button inside it share a corner, and the card still reads as the container through its hairline border, its surface color against the canvas, and its `--shadow` lift. **Do not bring back a larger radius to make a container stand out.**
+- **Size does not change the value.** A full-width card, a stat tile, a modal, and every control inside them all carry `8px`.
+- **Containment is carried by the border, the background, and the shadow, not by the curve.** A card and the button inside it share a corner, and the card still reads as the container through its hairline border, its surface color against the canvas, and its `--shadow` lift. **Do not bring back a larger radius to make a container stand out.**
 - **A project styled with Tailwind maps `rounded-xl` and `rounded-2xl` to `8px` as well**, in its theme, so a utility class lands on the same corner as the tokens.
 - **A mark is not a surface, and neither token reaches it.** A color swatch, a legend key, a chart bar, a progress segment, a status dot: anything under about `12px` whose job is to carry a color rather than to contain something. These take `2px` to `4px`, or a full circle.
 
@@ -283,27 +283,38 @@ Fixed values outside the tokens, used only where listed: a full pill (`999px`) f
 > [!warning]
 > A hard-coded pixel radius in a component stylesheet is a defect, even when it happens to equal a token. It is how a second and third curve arrive: each one looks locally reasonable and nothing compares them.
 
-### Nested Radius
+### A Card Does Not Hold a Card
 
-A rounded box inside another rounded box does not repeat the outer radius. It subtracts the padding between them:
+**The default is one level of card.** A card holds content: a heading, text, a table, a chart, a stat, controls. It does not hold another card.
+
+This follows from the single radius. There is no longer a second curve to say which box contains which, so two borders stacked inside each other read as a rendering fault rather than as a hierarchy. Two borders and two paddings spend a line and 16px of inset to communicate nothing.
+
+What to build instead:
+
+- **A group of things is a grid of cards laid on the page**, not cards inside a wrapper card. The page canvas is the container, and the 8px gap is what groups them.
+- **A section inside a card is a heading and a divider**, not a nested surface. A card that needs three sections needs three headings, or it needs to be three cards.
+- **A modal holds its content directly.** It is already a surface; putting cards inside it stacks two.
+- **A page panel is a card.** Do not wrap a set of cards in a panel to title them; put the title above them on the page.
+
+A genuinely recursive structure, such as a comment thread or a nested board, is the one case that cannot be flattened. Document it in the project README, per "Deviations", and separate the levels with indentation and the `--line2` rail rather than with a second border.
+
+### A Box Inset Inside a Surface
+
+An image, a media block, or a code block set a few pixels inside a card is not a card, so it is allowed. Its corner is read directly against the card's corner, and it does not repeat it. It subtracts the inset:
 
 ```text
-inner radius = outer radius - padding
+inner radius = outer radius - inset
 ```
 
-Two curves separated by a gap are only concentric when the inner one is tighter by exactly that gap. Give the inner box the same radius as the outer and its corner sits inside the outer curve with a widening sliver between them, which reads as a misprint rather than as a design.
-
-| Outer | Padding | Inner |
+| Outer | Inset | Inner |
 | -: | -: | -: |
-| 8px | 8px | 0 |
-| 8px | 4px | 4px |
 | 8px | 2px | 6px |
+| 8px | 4px | 4px |
+| 8px | 8px | 0 |
 
-With one `8px` radius the formula no longer lands on a token: an `8px` surface with `8px` of padding computes to a square inner box. **It governs only a box inset tightly enough that its corner is read against the outer one**, such as an image or a nested panel set a few pixels inside a card. **A control standing in a surface's ordinary content padding keeps the `8px` of the tokens** and does not compute anything.
-
-A grid that fills its container to the edge is the one case the formula does not cover, because there is no padding to subtract. There the cells at the container's corners take the container's radius minus its border width, so the two curves sit concentric; every other cell stays square. A month calendar is the worked example: only the two bottom cells are rounded, and only on their outward corners.
-
-A negative result means the padding is larger than the outer radius, and there the inner box is square rather than rounded by a leftover value.
+- **A control standing in a surface's ordinary content padding keeps the `8px` of the tokens** and computes nothing. The formula is only for a box inset tightly enough that the two corners are seen together.
+- A negative result means the inset is larger than the radius, and there the inner box is square rather than rounded by a leftover value.
+- **A grid that fills its container to the edge is the one case with no inset to subtract.** There the cells at the container's corners take the container's radius minus its border width, so the two curves sit concentric; every other cell stays square. A month calendar is the worked example: only the two bottom cells are rounded, and only on their outward corners.
 
 ### A Mark Is Not a Surface
 
@@ -384,7 +395,7 @@ Each of these is a summary. The companion file is the standard.
 A floating panel is an overlay, and every overlay in a project behaves the same way.
 
 - Render it through a **portal to `document.body`** with `position: fixed`. An absolutely positioned panel cannot escape an ancestor with `overflow: auto`, so it gets clipped or it pushes the container taller.
-- Give it `--shadow-pop`, a `1px solid var(--line)` border, and the one `8px` radius. A panel holding menu items and a modal holding a card grid carry the same corner.
+- Give it `--shadow-pop`, a `1px solid var(--line)` border, and the one `8px` radius. A menu panel and a modal carry the same corner as everything else.
 - Close it on outside click, on `Escape`, and on selection where selection ends the interaction.
 - The outside-click check must test **both** the trigger and the portal, because the panel is not a DOM descendant of the trigger.
 - Position it in the open handler, not in an effect, so it never paints once in the wrong place.
@@ -422,7 +433,7 @@ Do:
 
 - Define every token once at `:root` and read it everywhere.
 - Derive a text color from a brand hue rather than using the bright hex, and keep the bright one for fills.
-- Give a leaf card `8px`, a card that wraps cards `16px`, and every gap `8px`.
+- Give every corner `8px` and every gap `8px`, and lay a group of cards on the page rather than inside a wrapper card.
 - Set Google Sans once on `body`, and set the utility framework's sans stack to Google Sans as well.
 - Load only the four weights, and keep `display=swap` with both `preconnect` links.
 - Keep controls in a row the same height.
@@ -442,6 +453,7 @@ Do not:
 - Use `--accent` as text on `--accent-soft`.
 - Introduce a second typeface, or request a weight the project has not loaded.
 - Introduce an ad hoc font size, or use ALL CAPS as the emphasis mechanism.
+- Put a card inside a card, or wrap a set of cards in a panel to title them.
 - Apply a pill shape to a content container.
 - Position a floating panel with `position: absolute` inside a scrolling container.
 - Remove a focus ring, or rely on color alone for a state.
