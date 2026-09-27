@@ -80,7 +80,7 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 
 | Document | Owns |
 | :- | :- |
-| [[uix.component.md]] | The token contract, the radius rule, Google Sans, and the shared component rules |
+| [[uix.component.md]] | The token contract, the one 8px radius, Google Sans, and the shared component rules |
 | [[layout.component.md]] | The page shell: full width beside the rail, and what may still carry a width limit |
 | [[header.page.component.md]] | The header bar against the page heading, and the five slots the bar carries |
 | [[button.component.md]] | The six variants, the icon before the label, and one primary action per view |

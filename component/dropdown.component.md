@@ -231,7 +231,7 @@ The **one exception** is a navigation group whose collapsed arrow points *right*
 | Border | Default | `1px solid var(--line)` |
 | Border | Hover, focus, open | `var(--accent)` |
 | Size | Trigger and options | `13.5px`; a navigation child is `12.7px` |
-| Radius | Trigger, panel | `var(--r-sm)`; an option row inside the panel takes `4px` |
+| Radius | Trigger, panel | `8px`, from `var(--r-sm)` on the trigger and `var(--r)` on the panel; an option row inside the panel takes `4px` |
 | Focus | `:focus-visible` on the trigger | `outline: 2px solid var(--accent)`, per [[uix.component.md]]. Never a spread shadow |
 | Shadow | Open panel | `var(--shadow-pop)` |
 | Shadow | Navigation group | None |
@@ -242,7 +242,7 @@ The **one exception** is a navigation group whose collapsed arrow points *right*
 
 ## One Token Set
 
-The themed listbox and the navigation group use the same neutral, accent, and shape tokens; only the layout and the trigger markup differ. **Do not invent a second color or radius scale for the sidebar** because it sits in a different part of the page. A dropdown that needs a value not already on the list gets it added to the `:root` block in [[uix.component.md]] first, then used here.
+The themed listbox and the navigation group use the same neutral, accent, and shape tokens; only the layout and the trigger markup differ. **Do not invent a second color scale or a second radius for the sidebar** because it sits in a different part of the page. A dropdown that needs a value not already on the list gets it added to the `:root` block in [[uix.component.md]] first, then used here.
 
 ## Accessibility
 
@@ -277,7 +277,7 @@ Do not:
 
 | Document | Owns | Read it for |
 | :- | :- | :- |
-| [[uix.component.md]] | The tokens, the radius scale, and the overlay rules | Any value this file names but does not define, and why a panel is portalled |
+| [[uix.component.md]] | The tokens, the one 8px radius, and the overlay rules | Any value this file names but does not define, and why a panel is portalled |
 | [[sidebar.component.md]] | The rail the navigation group sits in | The grouping, the markers, and the drawer around it |
 | [[button.component.md]] | The button that opens a menu | The chevron that sits after the label rather than before it |
 | [[calendar.component.md]] | The date panel | The same portal and the same rotation, on a control that looks identical |

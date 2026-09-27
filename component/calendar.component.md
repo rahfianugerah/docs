@@ -92,7 +92,7 @@ An overlay layer, following the overlay rules in [[uix.component.md]]: portalled
 .datepop-cell:disabled { color: var(--ink3); pointer-events: none; }
 ```
 
-The selected cell is the one place a solid `--accent` fill with white text appears inside a panel. A cell sits inside the panel, so its radius is smaller still: `4px` is right, and it is never raised to `--r-sm` or `--r`.
+The selected cell is the one place a solid `--accent` fill with white text appears inside a panel. A cell is a mark rather than a surface, so it takes `4px`, and it is never raised to `--r-sm` or `--r`.
 
 ## Panel Width Matches the Trigger
 
@@ -224,7 +224,7 @@ Do not:
 
 | Document | Owns | Read it for |
 | :- | :- | :- |
-| [[uix.component.md]] | The tokens, the radius scale, and the overlay rules | Why the panel takes the leaf radius, and why a cell is smaller still |
+| [[uix.component.md]] | The tokens, the one 8px radius, and the overlay rules | Why a cell is a mark at `4px` rather than a surface at `8px` |
 | [[dropdown.component.md]] | The themed listbox | The same portal reasoning, and the chevron that rotates on both controls |
 | [[search.component.md]] | Filters and the query underneath them | A date range used as a filter, and why a date is matched exactly |
 | [[refresh.component.md]] | The URL state | Why a chosen date survives a reload |

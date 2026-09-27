@@ -106,7 +106,7 @@ There are exactly three slot types after the spacer, and no fourth. Each is pres
 ```
 
 - **At most one.** A second pill in the bar means one of the two is a page filter and belongs in the page.
-- It is a pill, not a button and not a select. The radius is `999px`, so it stays fully round if the height ever changes. This is the one documented exception to the radius-by-nesting rule in [[uix.component.md]].
+- It is a pill, not a button and not a select. The radius is `999px`, so it stays fully round if the height ever changes. A pill is one of the fixed shapes in [[uix.component.md]] and is exempt from the `8px` maximum, because it is a shape rather than a corner radius.
 - An interactive pill opens a panel governed by [[dropdown.component.md]] and carries the chevron.
 - **A read-only pill sets `cursor: default`, carries no chevron, and keeps the same shape**, so the bar reads as one row of chrome rather than two kinds of thing. A server clock is the usual case.
 - A read-only pill states its meaning in `title`. A clock that explains it is showing server time, and reports the device offset, is what makes a disagreement between the two diagnosable rather than confusing.
