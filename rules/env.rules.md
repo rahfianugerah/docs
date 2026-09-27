@@ -123,6 +123,29 @@ class Settings(BaseSettings):
 settings = Settings()
 ```
 
+## What Belongs in Env, and What Belongs in the Database
+
+**Env holds only what the app needs before it can reach the database.** That is the connection string, a credential, a service address, and the key that decrypts the rest. Everything else an operator changes belongs in a table.
+
+The test is one question: **should a person be able to change this without a redeploy?** If yes, it is a row, not a variable. A feature switch, an audience, a quota, a timeout, a page size, a tax rate, a model identifier, and a third party endpoint all answer yes.
+
+- **Resolve in one fixed order: the database, then env, then a default declared in code.** Env stops being the source and becomes the fallback, which is what lets a value be introduced before anyone has set it.
+- **Every value still reaches the code through the same typed settings object**, so the resolution order is invisible to the caller and no code branches on where a value came from.
+- **Cache the lookup briefly, per process**, and accept that a change takes that long to reach every instance. Reading a table on every access is the other failure.
+- The payoff is that **every environment carries one identical env key list.** A divergence between staging and production is then a diff against one list rather than a guess, and that divergence is the thing that quietly breaks a deploy.
+
+**A secret that an operator edits from a screen is still a secret**, per [[secret.rules.md]]:
+
+- Store it encrypted at rest, under a key that **is** in env. That key is the one thing that cannot itself live in the table it protects.
+- **Never return it to the client.** The screen learns only that a value is set and which source supplied it.
+- Audit every change: who, what key, and when, per [[security.rules.md]]. A value that can be changed from a screen needs a trail more than one that needs a deploy.
+
+**A startup check keyed on an env switch moves to the write path.** Once the switch is a row, nothing validates it at boot, so the endpoint that turns a feature on is what refuses to open it while its required values are empty, and names them.
+
+**Seed a switch closed, never open.** The first deploy of this change turns every switch to its seeded default, including in an environment where the env variable was on, so an operator has to open them again. Closed is the safe direction to be wrong in.
+
+**Content a person edits is not configuration and not code.** Rule text, a template, or a knowledge document belongs in object storage with a screen that edits it, per [[media.rules.md]], with the copy in the repository kept as the bundled seed. Committing it means a release for a wording change; putting it in a table means the file people actually review is no longer the file the app reads.
+
 ## Before Running Any Command
 
 Verify it will not:
@@ -139,6 +162,8 @@ If a task cannot be completed without reading one, stop that part and state whic
 
 ## Applies To
 
+- [[data.rules.md]]
+- [[media.rules.md]]
 - [[secret.rules.md]]
 - [[security.rules.md]]
 - [[commit.rules.md]]

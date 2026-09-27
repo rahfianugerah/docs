@@ -27,7 +27,7 @@ Decide per column, not per screen.
 | Column holds | Technique | Fuzzy allowed |
 | :- | :- | :- |
 | Free text a human wrote: name, title, subject, address, description | Search ladder, below | Yes |
-| An identifier: employee number, contract number, invoice number, plate number | Exact, or prefix for a lookup field | Never |
+| An identifier: customer number, contract number, invoice number, plate number | Exact, or prefix for a lookup field | Never |
 | A number or an amount of money | Equality or a range | Never |
 | A date or a timestamp | A half-open range | Never |
 | An enum, a boolean, or a foreign key | Equality, or `IN` for a multi-select | Never |
@@ -270,7 +270,7 @@ Do not:
 
 ## Deviations
 
-Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.
+Any intentional deviation is recorded in the vault as a `decision` note naming this standard, the reason, and a plan to return to it, per [[memory.rules.md]]. It is never written into the project README, because this vault is private and a list of departures from it discloses the standards themselves.
 
 ## Conflict Resolution
 

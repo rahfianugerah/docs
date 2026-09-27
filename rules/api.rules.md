@@ -50,7 +50,7 @@ This is what lets one proxy rule, one CORS origin, and one auth dependency cover
 - Use JSON for every request and response body, with `Content-Type: application/json`.
 - Name a resource as a plural noun in kebab-case, for example `/api/v1/purchase-orders`.
 - Use HTTP methods for their intended purpose: `GET` to read, `POST` to create, `PUT` or `PATCH` to update, `DELETE` to remove. Never perform a write or a destructive action through `GET`.
-- Reference a person by the one stable identifier the system already uses, and use the same field name in every service. Two services calling it `user_id` and `employee_no` is how a join silently produces nothing.
+- Reference a person by the one stable identifier the system already uses, and use the same field name in every service. Two services calling it `user_id` and `customer_no` is how a join silently produces nothing.
 - Format every timestamp as ISO 8601 with an explicit offset, for example `2026-07-09T14:30:00+07:00`. Never a naive local time.
 - Keep OpenAPI generation enabled at all times, mounted at `api/v1/docs` and `api/v1/openapi.json`. In production both are disabled or authenticated, per [[security.rules.md]].
 
