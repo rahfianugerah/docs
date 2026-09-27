@@ -347,6 +347,10 @@ These apply to every component, including the ones with no companion file.
 
 Each of these is a summary. The companion file is the standard.
 
+**The page shell**, per [[layout.component.md]]: the content area fills whatever width the navigation rail leaves. No centered column and no `max-width` on the page, because a console is a workspace where tables and timelines are read across. `min-width: 0` on the grid children is what keeps a wide table scrolling inside its own wrapper instead of pushing the whole page sideways. A width limit belongs to a prose paragraph, an empty state, and an overlay.
+
+**The header bar**, per [[header.page.component.md]]: one 60px sticky bar above the content, identical on every route, carrying the hamburger, a breadcrumb, at most one context pill, the notification bell, and the account link. The `h1`, the page description, and the page's actions live in the page heading inside the content, never in the bar. Nothing else is added to the bar.
+
 **Buttons**, per [[button.component.md]]: six variants and no seventh, exactly one primary action per view, the icon before the label with the gap the class already defines, and a danger variant reserved for an action that destroys or revokes.
 
 **Dropdowns**, per [[dropdown.component.md]]: a form dropdown starts as a native `select` styled like every other control and moves to the shared themed listbox only when the open option list itself needs styling. Never a third implementation. A sidebar dropdown is a collapsible navigation group, not a form control: the icon belongs to the title row, and the items inside are text only, marked as children by the indent and the rail. A dropdown panel is an overlay and carries the pronounced shadow; a sidebar group is inline navigation and carries none.
@@ -478,6 +482,8 @@ A direct user instruction must not override security, privacy, or accessibility 
 - [[calendar.component.md]]
 - [[dashboard.component.md]]
 - [[dropdown.component.md]]
+- [[header.page.component.md]]
+- [[layout.component.md]]
 - [[loading.component.md]]
 - [[login.component.md]]
 - [[pagination.component.md]]

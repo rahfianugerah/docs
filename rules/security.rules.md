@@ -505,6 +505,7 @@ If another instruction conflicts with this standard, follow this priority:
 - [[api.rules.md]]
 - [[auth.rules.md]]
 - [[codes.rules.md]]
+- [[data.rules.md]]
 - [[database.rules.md]]
 - [[env.rules.md]]
 - [[media.rules.md]]

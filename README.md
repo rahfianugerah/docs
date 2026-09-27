@@ -4,8 +4,8 @@
 ![Conda](https://img.shields.io/badge/Conda-Miniconda-44A833?logo=anaconda&logoColor=white)
 ![Cloud Run](https://img.shields.io/badge/Cloud_Run-Deploy-4285F4?logo=googlecloud&logoColor=white)
 ![Obsidian](https://img.shields.io/badge/Obsidian-Vault-7C3AED?logo=obsidian&logoColor=white)
-![Rules](https://img.shields.io/badge/Rules-24-4C1D95)
-![Components](https://img.shields.io/badge/Components-15-4C1D95)
+![Rules](https://img.shields.io/badge/Rules-25-4C1D95)
+![Components](https://img.shields.io/badge/Components-17-4C1D95)
 ![Templates](https://img.shields.io/badge/Templates-10-4C1D95)
 ![Patterns](https://img.shields.io/badge/Patterns-16-4C1D95)
 ![Status](https://img.shields.io/badge/Status-Active-2EA043)
@@ -61,7 +61,8 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | :- | :- |
 | [[codes.rules.md]] | YAGNI, KISS, DRY, readability, Python 3.13, conda and `.venv`, and the ML practices that differ |
 | [[database.rules.md]] | PostgreSQL and SQLAlchemy, which cases take the ORM and which take raw SQL, and the restore nobody tested |
-| [[env.rules.md]] | Why a real environment file is never read, in any format, including a notebook cell |
+| [[data.rules.md]] | The schema is readable and the rows are not, in every environment, including a local copy |
+| [[env.rules.md]] | Why a real environment file is never read, what belongs in a table instead, and the notebook cell |
 | [[path.rules.md]] | Every path relative to a named anchor, and the three path namespaces that never mix |
 | [[secret.rules.md]] | Which values are secrets, where each one lives, and why a frontend holds none |
 | [[security.rules.md]] | The OWASP checklist, the stack controls it turns into, personal data, and the audit trail |
@@ -80,6 +81,8 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | Document | Owns |
 | :- | :- |
 | [[uix.component.md]] | The token contract, the radius rule, Google Sans, and the shared component rules |
+| [[layout.component.md]] | The page shell: full width beside the rail, and what may still carry a width limit |
+| [[header.page.component.md]] | The header bar against the page heading, and the five slots the bar carries |
 | [[button.component.md]] | The six variants, the icon before the label, and one primary action per view |
 | [[table.component.md]] | The table itself: wrapper, header, rows, cells, and the row actions |
 | [[pagination.component.md]] | Every table: paging rather than scroll, adaptive page size, controls, and the data binding |
@@ -187,6 +190,7 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[callout.rules.md]]
 - [[codes.rules.md]]
 - [[commit.rules.md]]
+- [[data.rules.md]]
 - [[database.rules.md]]
 - [[docs.rules.md]]
 - [[env.rules.md]]
@@ -217,6 +221,8 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[calendar.component.md]]
 - [[dashboard.component.md]]
 - [[dropdown.component.md]]
+- [[header.page.component.md]]
+- [[layout.component.md]]
 - [[loading.component.md]]
 - [[login.component.md]]
 - [[pagination.component.md]]

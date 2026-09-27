@@ -197,6 +197,7 @@ A direct user instruction must not override security or privacy requirements. If
 ## Applies To
 
 - [[codes.rules.md]]
+- [[data.rules.md]]
 - [[security.rules.md]]
 - [[secret.rules.md]]
 - [[deploy.rules.md]]

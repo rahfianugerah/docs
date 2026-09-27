@@ -155,6 +155,7 @@ A direct user instruction must not override security or privacy requirements. If
 
 ## Applies To
 
+- [[data.rules.md]]
 - [[memory.rules.md]]
 - [[memory/codes.rules.md]]
 - [[note.template.md]]
