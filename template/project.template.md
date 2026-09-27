@@ -13,7 +13,7 @@ tags:
 
 Copy the block below into a new project's `README.md`. **The block carries no frontmatter and no `---`**, per the project document shape in [[docs.rules.md]]; this file has frontmatter because it is a vault document and the block is not.
 
-Delete a section only when it genuinely does not apply. **Known Limitations and Deviations From the Standards are never deleted**: an empty section is information, a missing one is a question.
+Delete a section only when it genuinely does not apply. **Known Limitations is never deleted**: an empty section is information, a missing one is a question. Never add a section listing deviations from the vault's standards; the vault is private and that section discloses it, per [[docs.rules.md]].
 
 ````markdown
 # [Project Name]
@@ -38,8 +38,7 @@ This is the line nobody can reconstruct from the code, so it is the one that has
 5. [Project Structure](#project-structure)
 6. [Development](#development)
 7. [Known Limitations](#known-limitations)
-8. [Deviations From the Standards](#deviations-from-the-standards)
-9. [License](#license)
+8. [License](#license)
 
 ## Setup
 
@@ -127,16 +126,6 @@ one exists.]
   whether it fails loudly or quietly.]
 - **[The limit.]** [The mechanism, and what to do instead.]
 
-## Deviations From the Standards
-
-[Where this project departs from a rule in the vault. Numbered, each naming the rule, the
-reason, and the cost accepted. A project with none writes one line saying so.]
-
-1. **[What is different.]** `[rule].rules.md` requires [what]. This does [what] instead,
-   because [reason]. The cost accepted: [what is given up]. [Whether it generalises.]
-
-[Name a vault rule in backticks, not as a wikilink. A project repository is not the vault, so a
-wikilink resolves to nothing there, and it leaves a phantom node in the vault graph.]
 
 ## License
 

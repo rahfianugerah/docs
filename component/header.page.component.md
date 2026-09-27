@@ -235,7 +235,7 @@ Every value is read from here or from [[uix.component.md]]. Do not hardcode a ri
 
 **A portal with no navigation rail is the one shape that does not converge.** It has no rail to carry the brand lockup and no route to name in a breadcrumb, so its bar is the only chrome it has and correctly holds the logo and the sign-out path that every other screen puts in the sidebar footer. It still takes its colours, radii, and type sizes from [[uix.component.md]]. A screen that grows a sidebar loses this exemption.
 
-Any other intentional deviation is documented in the project README, with the reason and a plan to return to the standard.
+Any other intentional deviation is recorded in the vault as a `decision` note naming this standard, the reason, and a plan to return to it, per [[memory.rules.md]]. It is never written into the project README, because this vault is private and a list of departures from it discloses the standards themselves.
 
 **Fix a drifted bar in one change, every slot at once.** A half-migrated bar is worse than a consistently wrong one, because the page then carries its title in two places.
 

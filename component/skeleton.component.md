@@ -135,7 +135,7 @@ When a table changes page, the previous rows stay in place and the loading state
 
 ## Deviations
 
-Any intentional deviation is documented in the project README, with the reason and a plan to return to the standard.
+Any intentional deviation is recorded in the vault as a `decision` note naming this standard, the reason, and a plan to return to it, per [[memory.rules.md]]. It is never written into the project README, because this vault is private and a list of departures from it discloses the standards themselves.
 
 ## Conflict Resolution
 
