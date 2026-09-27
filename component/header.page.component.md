@@ -76,13 +76,13 @@ The breadcrumb names the page the user is on, in one line, at 13px.
 .crumb b { color: var(--ink); font-weight: 600; }
 ```
 
-- **The label comes from a route-to-label map, not from the URL.** Keep one object keyed by path and read through it. Deriving `Leave Requests` from `/leave-requests` by replacing dashes produces a label nobody wrote and nobody reviewed.
+- **The label comes from a route-to-label map, not from the URL.** Keep one object keyed by path and read through it. Deriving `Invoice Lines` from `/invoice-lines` by replacing dashes produces a label nobody wrote and nobody reviewed.
 - **The label matches the sidebar row that leads to the page**, word for word. Two names for one destination make the user check whether they are in the same place.
-- A detail page appends its parent with ` > `, as `People > Detail`. **Two levels, never three.**
+- A detail page appends its parent with ` > `, as `Clients > Detail`. **Two levels, never three.**
 - **The current page is the last segment and is the only bold one.** An ancestor stays in `--ink2`.
-- **The product name is not part of the breadcrumb.** `Attendance`, never `Product > Attendance`. The rail already says which product this is, and [[title.header.component.md]] keeps the same rule for the browser tab.
+- **The product name is not part of the breadcrumb.** `Invoices`, never `Product > Invoices`. The rail already says which product this is, and [[title.header.component.md]] keeps the same rule for the browser tab.
 - An unmapped route falls back to the product name rather than rendering an empty bar.
-- **Never put a record's identifier in the label.** `Leave > Detail`, not `Leave > LV-2026-0912`, which is unbounded in length and truncates on a phone.
+- **Never put a record's identifier in the label.** `Invoices > Detail`, not `Invoices > INV-2026-0912`, which is unbounded in length and truncates on a phone.
 - The breadcrumb truncates with an ellipsis rather than wrapping, at every width. The bar is one row.
 
 ## The Right Cluster

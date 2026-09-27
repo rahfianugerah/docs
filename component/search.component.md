@@ -27,7 +27,7 @@ Decide per column, not per screen.
 | Column holds | Technique | Fuzzy allowed |
 | :- | :- | :- |
 | Free text a human wrote: name, title, subject, address, description | Search ladder, below | Yes |
-| An identifier: employee number, contract number, invoice number, plate number | Exact, or prefix for a lookup field | Never |
+| An identifier: customer number, contract number, invoice number, plate number | Exact, or prefix for a lookup field | Never |
 | A number or an amount of money | Equality or a range | Never |
 | A date or a timestamp | A half-open range | Never |
 | An enum, a boolean, or a foreign key | Equality, or `IN` for a multi-select | Never |
