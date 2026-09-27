@@ -264,7 +264,7 @@ Two alternatives were considered and rejected. A print stylesheet driven by the 
 
 ## Deviations
 
-A deviation is allowed only when it is documented in the project README, names the rule it departs from, and gives the reason. An undocumented deviation is a defect.
+A deviation is allowed only when it is recorded in the vault as a `decision` note naming this standard and the reason, per [[memory.rules.md]]. An unrecorded deviation is a defect. It is never written into the project README, because this vault is private and a list of departures from it discloses the standards themselves.
 
 ## Conflict Resolution
 

@@ -79,6 +79,7 @@ The rules above shape the structure. These shape the surface.
 - **A function name says what it does.** `calculate_total` not `process`. `process` means nothing.
 - **Comments say why, never what.** The code already says what. If a comment explains what, rewrite the code instead.
 - **A comment that explains a non-obvious decision is worth keeping.** A workaround, a chosen trade-off, a reason a naive approach fails; write those down, they are the ones nobody can reconstruct.
+- **One line is the default and three is the ceiling**, per [[docs.rules.md]]. A comment is a label, not a paragraph, and a docstring never repeats the signature.
 - **No commented-out code.** Delete it.
 - **Consistent formatting is not negotiable.** Run the formatter; do not argue with it.
 - **Type hints on every public function.** They are documentation the interpreter checks.

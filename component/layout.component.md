@@ -89,7 +89,7 @@ A width limit belongs to reading and to overlays, never to the page.
 
 ## Deviations
 
-A public or marketing page is not a console and may centre its content, per [[uix.component.md]]. Any other intentional deviation is documented in the project README, with the reason and a plan to return to the standard.
+A public or marketing page is not a console and may centre its content, per [[uix.component.md]]. Any other intentional deviation is recorded in the vault as a `decision` note naming this standard, the reason, and a plan to return to it, per [[memory.rules.md]]. It is never written into the project README, because this vault is private and a list of departures from it discloses the standards themselves.
 
 ## Conflict Resolution
 
