@@ -84,6 +84,19 @@ The rules above shape the structure. These shape the surface.
 - **Consistent formatting is not negotiable.** Match the style of the surrounding code.
 - **Type hints on every public function.** They are documentation the interpreter checks.
 
+### Short Enough to Read in One Go
+
+Length is the symptom the other rules on this page are treating. These are the thresholds at which to stop and look.
+
+- **A function fits on one screen, roughly 40 lines.** Past that it is doing more than one thing, and the second thing has a name worth giving it.
+- **Three levels of nesting is the ceiling.** Return early instead of deepening an `else`, per the flat-sequence rule above.
+- **A file past a few hundred lines has grown a second responsibility.** Split it by what it does, never to hit a number.
+- **A parameter list past four is a signature asking for an object.** Pass a dataclass instead of five positional arguments nobody can order correctly.
+- **Never split a function just to make it short.** Two functions only ever called together, in order, are one function with a confusing seam in the middle. That is KISS losing to a line count.
+- **The comment above it has its own ceiling**: one line by default, three at most, per [[docs.rules.md]].
+
+A long function is not a style complaint. It is where a bug hides, because nobody holds forty lines of branching in their head while reading the forty-first.
+
 ## Python
 
 Python 3.13. Written in **English**: every identifier, every comment, every docstring, every commit, every document.
@@ -179,6 +192,7 @@ Do not:
 - Every identifier is English, and no comment carries a decorative border.
 - No commented-out code, dead branch, or unused parameter remains.
 - No bare `except`, no mutable default, and no `print()` in library code.
+- No function runs past one screen, no comment past three lines, and nothing is nested more than three levels deep.
 - No SQL is built by string formatting, per [[security.rules.md]].
 - No absolute path appears in source, per [[path.rules.md]].
 - The environment file is committed, the environment is named after the project, and nothing was installed into base.
