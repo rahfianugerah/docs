@@ -432,6 +432,7 @@ OLLAMA_MODEL=
 - **No comment on an obvious line.** An assignment, a getter, an import, and a loop over a named collection need none.
 - **Length is earned only by what nobody can reconstruct**: a workaround, a rejected approach, a value that came from measurement. Even then it stays within three lines and names the reason rather than narrating the investigation.
 - **The ceiling counts the comment, not a usage example inside it.** A snippet keeps its own lines, per the exception below.
+- **A file header is not an inline comment.** A template meant to be copied may open with a short header saying what the file is and how to fill it in. Keep it under ten lines; past that it is documentation and belongs in the README that the template's repository carries.
 
 | Do | Do not |
 | :- | :- |
