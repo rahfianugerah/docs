@@ -5,7 +5,7 @@
 ![Cloud Run](https://img.shields.io/badge/Cloud_Run-Deploy-4285F4?logo=googlecloud&logoColor=white)
 ![Obsidian](https://img.shields.io/badge/Obsidian-Vault-7C3AED?logo=obsidian&logoColor=white)
 ![Rules](https://img.shields.io/badge/Rules-26-4C1D95)
-![Components](https://img.shields.io/badge/Components-17-4C1D95)
+![Components](https://img.shields.io/badge/Components-22-4C1D95)
 ![Templates](https://img.shields.io/badge/Templates-10-4C1D95)
 ![Patterns](https://img.shields.io/badge/Patterns-16-4C1D95)
 ![Status](https://img.shields.io/badge/Status-Active-2EA043)
@@ -31,7 +31,7 @@ The whole repository is an Obsidian vault. Open the folder and the graph is alre
 | :- | :- |
 | [rules/](rules/) | How code, commits, documents, and secrets are handled. Every project follows these |
 | [ai/](ai/) | Machine learning and deep learning standards, kept separate because AI projects fail differently |
-| [component/](component/) | Framework-agnostic UI component standards: tokens, buttons, tables, dropdowns, calendars, refresh |
+| [component/](component/) | UI component standards on HeroUI: the theme, light and dark, buttons, cards, tables, dropdowns, notifications |
 | [gcp/](gcp/) | The Cloud Run deploy standard, the runbook, and the build templates |
 | [template/](template/) | Documentation templates: backend, frontend, project README, API, model card, agent entry point |
 | [pattern/](pattern/) | Lessons lifted from real incidents, generalized. A failure and its mechanism, so it is not paid for twice |
@@ -81,17 +81,22 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 
 | Document | Owns |
 | :- | :- |
-| [[uix.component.md]] | The token contract, the one 8px radius, Google Sans, and the shared component rules |
+| [[uix.component.md]] | HeroUI as the base, the theme contract, Google Sans, the one 8px radius, and the component map |
+| [[darkmode.component.md]] | Light and dark, both, in every project, and the one control between them |
 | [[layout.component.md]] | The page shell: full width beside the rail, and what may still carry a width limit |
-| [[header.page.component.md]] | The header bar against the page heading, and the five slots the bar carries |
+| [[header.bar.component.md]] | The full-width bar: the brand, jump-to search, the theme control, and the bell |
+| [[header.page.component.md]] | The page heading: the `h1`, the page's actions, and its description |
+| [[card.component.md]] | The HeroUI card, one level only, and a table that runs flush inside it |
 | [[button.component.md]] | The six variants, the icon before the label, and one primary action per view |
 | [[table.component.md]] | The table itself: wrapper, header, rows, cells, and the row actions |
 | [[pagination.component.md]] | Every table: paging rather than scroll, adaptive page size, controls, and the data binding |
-| [[dropdown.component.md]] | Selects, themed listboxes, and collapsible navigation groups |
+| [[dropdown.component.md]] | HeroUI pickers, smart search past seven options, and a long list that scrolls under it |
 | [[calendar.component.md]] | Date fields: native or custom, the panel, the full-card grid, and the year clamp |
 | [[sidebar.component.md]] | The navigation rail: anatomy, grouping, markers, and the mobile drawer |
 | [[login.component.md]] | The sign-in screen, and why every failure reads the same |
 | [[loading.component.md]] | The four loading surfaces, and which wait each one serves |
+| [[notification.component.md]] | The notification center, and the toast and inline alert for status messages |
+| [[animation.component.md]] | What moves, for how long, and what reduced motion turns off |
 | [[skeleton.component.md]] | The loading state a component shows in its own place, instead of holding the page |
 | [[dashboard.component.md]] | Charts: the form before the color, the validated palette, and the export |
 | [[search.component.md]] | Filter against search, the matching ladder, and normalization |
@@ -164,7 +169,7 @@ Both are built by `plugmybrain`, whose command is `pmb`.
 | :- | :- |
 | Language | Python 3.13, English identifiers and English documentation |
 | Backend | FastAPI with Pydantic v2, `uvicorn`, `psycopg` v3 |
-| Frontend | React 19 on Vite with TypeScript, TanStack Query, Tabler icons, Google Sans |
+| Frontend | React 19 on Vite with TypeScript, HeroUI 3 on Tailwind CSS v4, TanStack Query, Tabler icons, Google Sans, light and dark themes |
 | Environment | Conda (Miniconda) for machine learning, `.venv` for plain Python |
 | Database | PostgreSQL 18 with SQLAlchemy 2.x and Alembic; SQLite for a local single-user tool |
 | Tests | pytest, and Playwright for end-to-end flows |
@@ -218,14 +223,19 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 ### Components
 
 - [[uix.component.md]]
+- [[animation.component.md]]
 - [[button.component.md]]
 - [[calendar.component.md]]
+- [[card.component.md]]
+- [[darkmode.component.md]]
 - [[dashboard.component.md]]
 - [[dropdown.component.md]]
+- [[header.bar.component.md]]
 - [[header.page.component.md]]
 - [[layout.component.md]]
 - [[loading.component.md]]
 - [[login.component.md]]
+- [[notification.component.md]]
 - [[pagination.component.md]]
 - [[refresh.component.md]]
 - [[scrollbar.component.md]]

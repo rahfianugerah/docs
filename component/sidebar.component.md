@@ -10,7 +10,7 @@ tags:
 # Sidebar Standard
 
 > [!note]
-> The whole rail: the brand block, the grouped navigation, the two notification markers, the account footer, and the mobile drawer.
+> The whole rail: the grouped navigation, the two notification markers, the account footer, and the mobile drawer. The brand lives in the header bar, not here.
 
 ## Core Requirement
 
@@ -20,13 +20,18 @@ This standard extends [[uix.component.md]]. It does not redefine the token set; 
 
 [[dropdown.component.md]] owns the collapsible group itself, including the icon placement rule and the chevron. This file owns everything around it. Read both when working on a sidebar.
 
+## Built On HeroUI
+
+HeroUI has no navigation rail, so it is built from HeroUI's `Link`, `Badge`, and `Avatar`, with HeroUI's `Drawer` for the rail below the breakpoint and HeroUI's theme variables, per [[uix.component.md]]. The HTML and CSS below are that build: they read only theme variables, so the result follows the light and dark theme with every HeroUI component around it.
+
 ## Anatomy
 
-The sidebar is a column of exactly three parts, in this order:
+The sidebar is a column of exactly two parts, under the header bar, in this order:
 
-1. `div.brand`, fixed at the same 60px height as the header bar in [[header.page.component.md]], so the two bottom borders line up.
-2. `nav.nav`, which scrolls and takes the remaining height.
-3. `div.navfoot`, pinned at the bottom, holding the account link and the sign-out link.
+1. `nav.nav`, which scrolls and takes the remaining height.
+2. `div.navfoot`, pinned at the bottom, holding the account link and the sign-out link.
+
+**The brand is not in the rail.** It is drawn once, in the header bar across the top of the window, per [[header.bar.component.md]]; repeating it here spends the rail's top on a second logo.
 
 **Nothing else goes in the rail.** No search box, no app switcher, no promotional block, no collapse-to-icons toggle.
 
@@ -111,7 +116,7 @@ The sidebar carries exactly two markers. Both are `--bad`, and there is no third
 - `margin-left: auto` sits on the pip, and the chevron takes a fixed `8px`. **Two automatic margins would split the free space between them** and leave the pip floating in the middle of the row.
 - **Give every marker an accessible name stating what it counts**, such as "3 awaiting action". [[uix.component.md]] forbids relying on color alone, and a bare red circle says nothing to a screen reader.
 
-The notification button in [[header.page.component.md]] uses the same 7px marker with a `1.5px` border in `--surface` so it reads clearly against the icon underneath. Keep the two consistent; this is one marker vocabulary across the project, not two.
+The notification bell in [[header.bar.component.md]] uses the same 7px marker with a `1.5px` border in `--surface` so it reads clearly against the icon underneath. Keep the two consistent; this is one marker vocabulary across the project, not two.
 
 ### Where the Counts Come From
 
@@ -205,7 +210,7 @@ Below the breakpoint the rail becomes a drawer over the content.
 - **The drawer closes when a link inside it is clicked, when the backdrop is clicked, and whenever the route changes.** All three, not one of them.
 - Scroll the content back to the top on a route change, so a new page does not open halfway down.
 - **The backdrop is a real element with a fade**, not a `body` class. It must be clickable to close.
-- The hamburger lives in the header bar, per [[header.page.component.md]], and appears only below the breakpoint.
+- The hamburger lives in the header bar, per [[header.bar.component.md]], and appears only below the breakpoint.
 
 The drawer uses the single 900px breakpoint from [[uix.component.md]]. A project that inherits a different value from an older stylesheet reconciles the two rather than carrying both.
 
@@ -215,10 +220,6 @@ The drawer uses the single 900px breakpoint from [[uix.component.md]]. A project
 | :- | :- | :- |
 | `.app` | Grid | `236px 1fr` |
 | `.sidebar` | Position, height, border | `sticky`, `100vh`, `1px solid var(--line)` on the right |
-| `.brand` | Height, padding, gap | `60px`, `0 18px`, `10px` |
-| `.brand .logo-img` | Size, radius | `30px` by `30px`, `var(--r-sm)` |
-| `.brand .nm` | Font | `600`, `14px`, letter spacing `-.01em` |
-| `.brand .sub` | Font, color | `500`, `11px`, `var(--ink3)` |
 | `.nav` | Padding | `10px 10px`, scrollbar hidden |
 | `.nav a`, `.navparent` | Padding, gap, font, radius | `5px 10px`, `11px`, `500` `13.5px`, `var(--r-sm)` |
 | `.nav a i`, `.navparent i` | Font size, color | `18px`, `var(--ink3)` |
@@ -272,8 +273,8 @@ Do not:
 | [[dropdown.component.md]] | The collapsible group itself | The icon placement rule, the chevron, and why a child carries no icon |
 | [[login.component.md]] | The sign-in screen | The screen before this one, and the identity shown in the footer |
 | [[loading.component.md]] | Loading states | The route gate that runs before the shell is drawn |
-| [[title.header.component.md]] | The product name | What the brand block at the top of the rail shows |
-| [[header.page.component.md]] | The bar beside the brand block | The 60px height the two share, the marker vocabulary, and where the hamburger lives |
+| [[title.header.component.md]] | The product name | Why the brand lives in the bar and never changes with the route |
+| [[header.bar.component.md]] | The bar above the rail | The brand, the marker vocabulary, and where the hamburger lives |
 | [[layout.component.md]] | The page shell | The `.app` grid this rail sits in, and the content area beside it |
 | [[scrollbar.component.md]] | Where a scrollbar is visible | Why the rail is one of the two documented exceptions |
 | [[security.rules.md]] | Authorization | Why hiding a menu is presentation and never the permission itself |
@@ -299,7 +300,7 @@ A direct user instruction must not override security, privacy, or accessibility 
 ## Related
 
 - [[uix.component.md]]
-- [[header.page.component.md]]
+- [[header.bar.component.md]]
 - [[layout.component.md]]
 - [[dropdown.component.md]]
 - [[loading.component.md]]

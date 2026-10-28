@@ -50,7 +50,7 @@ Forbidden, with the reason each one gets tried:
 | Surface | Where | Owned by |
 | :- | :- | :- |
 | Sign-in brand row | The brand block on the login card | [[login.component.md]] |
-| Sidebar brand block | The brand block at the top of the rail | [[sidebar.component.md]] |
+| Header bar brand | The brand at the start of the header bar | [[header.bar.component.md]] |
 | Browser tab | The `<title>` element | This file |
 | PWA manifest | `name` and `short_name` | [[pwa.rules.md]] |
 | Exported document heading | The header of a generated PDF or spreadsheet | This file |
@@ -64,7 +64,7 @@ Forbidden, with the reason each one gets tried:
 
 **The product name in the interface is constant.** A brand block that swaps to the current section's name turns the one fixed landmark on the screen into another moving part. The user then has nothing to confirm which product they are in, which matters most in an ecosystem of products that share a design system.
 
-The page name belongs in the page heading, the breadcrumb, and the active sidebar row. Those three already tell the user where they are.
+The page name belongs in the page heading and the active sidebar row. Those two already tell the user where they are.
 
 ### The Document Title Is a Deliberate Choice
 
@@ -103,7 +103,7 @@ Whichever is chosen, these never change on a route change:
 **A non-production environment is marked with a badge, never with the name.**
 
 - The name stays the same in development, staging, and production.
-- Where telling them apart matters, add a small chip beside the name in the sidebar or the topbar, reading the environment, in the token for a cautionary state, and render it only outside production.
+- Where telling them apart matters, add a small HeroUI `Chip` with `color="warning"` beside the product name in the header bar's brand, reading the environment, and render it only outside production.
 - **Production carries no badge at all.** An absent badge means production, and that is the only signal that cannot be mistaken.
 - A user must be able to tell, at a glance, that they are about to act on real data.
 - Never `Product Staging`, never `[DEV] Product`, and never a different favicon colour standing in for a label nobody can read.
@@ -154,7 +154,7 @@ Do not:
 | :- | :- | :- |
 | [[uix.component.md]] | The token block, typography, and capitalization | The proper noun rule that keeps an acronym uppercase everywhere |
 | [[login.component.md]] | The sign-in screen | The brand row, where the name sits above the organization line |
-| [[sidebar.component.md]] | The navigation rail | The brand block at the top of the rail |
+| [[header.bar.component.md]] | The header bar | The brand at the start of the bar, and the environment chip beside it |
 | [[pwa.rules.md]] | The PWA layer | The manifest `name` and `short_name` |
 | [[secret.rules.md]] | Configuration and secrets | Why the product name is not a deploy-time value |
 | [[docs.rules.md]] | Documentation formatting | The Title Case rule this file applies to a name |
