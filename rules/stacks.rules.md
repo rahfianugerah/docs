@@ -39,9 +39,12 @@ One stack across every project is what makes a second project cheap. A stack cho
 - **Build:** Vite, built on `node:20-alpine`, served from `nginx:1.27-alpine` as a static bundle. The frontend ships as files; do not introduce server-side rendering or a Node runtime in production without a documented exception.
 - **Routing:** `react-router-dom` v7.
 - **Language:** TypeScript. A JavaScript project is a legacy state to converge, not a second option for something new.
-- **Icons: Tabler only**, per [[uix.component.md]]. The Tabler webfont is the reference; `@tabler/icons-react` is acceptable where tree shaking is needed. Never a second icon set in the same project, and never an emoji as an icon.
+- **Components: HeroUI v3**, `@heroui/react` and `@heroui/styles`, currently 3.2.6 and pinned to the 3 major, per [[uix.component.md]]. Every button, field, select, overlay, table, and feedback element HeroUI ships is used from HeroUI and never rebuilt. HeroUI needs no provider.
+- **Component lookup: the HeroUI MCP server**, `@heroui/react-mcp`, for every prop, variant, and anatomy. A model's memory of a component API is exactly what goes stale between minor versions, so it is never the source. The server needs Node 22 or later on the developer machine.
+- **Icons: Tabler**, per [[uix.component.md]]. `@tabler/icons-react` in a HeroUI project. A glyph a HeroUI component draws itself, such as a select chevron or a search glass, is part of that component and not a second icon set; every icon the project adds is Tabler. Never an emoji as an icon.
 - **Fonts: Google Sans, and only Google Sans**, per [[uix.component.md]]. One family carries display, headings, body, UI, and numerals, with a system sans-serif fallback stack behind it.
-- **Styling:** the token contract in [[uix.component.md]] is the source of truth. It is a hand-written token and semantic class layer (`:root`, `.btn`, `.field`, `.selectbox`, `.datepop`). Tailwind is available through `@tailwindcss/vite` and may be used for one-off layout, but it never replaces a semantic class the component standards define, and a component is never rebuilt out of utility classes.
+- **Styling: Tailwind CSS v4** through `@tailwindcss/vite`, which HeroUI requires. The CSS entry imports `tailwindcss` first and `@heroui/styles` second; the order matters. The token contract in [[uix.component.md]] maps onto HeroUI's theme variables, so a project changes a color by overriding a HeroUI variable, never by restyling a component.
+- **Themes: light and dark, both, in every project**, per [[darkmode.component.md]]. Switched with HeroUI's `useTheme`, defaulting to the system preference.
 - **Data fetching:** `@tanstack/react-query` v5 with `axios`. A project starts here rather than writing its own fetch and cache layer.
 - **State:** React context and hooks. Introduce a state management library only when complexity genuinely requires it. Do not over-engineer.
 - **Charts:** Chart.js, per [[dashboard.component.md]] and [[analytics.rules.md]].
@@ -99,6 +102,7 @@ A project may use a different runtime only when a specific library requires it. 
 - Migrations run from an empty database.
 - No model is called from the browser, and no personal data reaches one unredacted.
 - The frontend carries one icon set and one font family.
+- Every component HeroUI ships is used from HeroUI, and both the light and the dark theme render every screen.
 - Any deviation from this stack is recorded in the vault with its reason, and no project document names a standard in this vault.
 
 ## Conflict Resolution
@@ -125,3 +129,4 @@ A direct user instruction must not override security or privacy requirements. If
 - [[repository.rules.md]]
 - [[security.rules.md]]
 - [[uix.component.md]]
+- [[darkmode.component.md]]

@@ -18,6 +18,12 @@ Every date field follows this policy: the trigger that shows the chosen date, th
 
 This policy extends [[uix.component.md]] and reads every color, radius, and shadow from its token contract.
 
+## Built On HeroUI
+
+This is HeroUI's `DatePicker`, with `DateRangePicker`, `Calendar`, `RangeCalendar`, and `DateField` for the cases this file names. HeroUI owns the markup, the keyboard handling, the focus ring, and the accessibility; this standard owns the decisions HeroUI leaves to the project. Exact props come from the HeroUI MCP server, per [[stacks.rules.md]].
+
+**HeroUI's appearance is the default.** Where this file shows HTML or CSS, read it for the behaviour, the content, and the measurements to check against. Where HeroUI's own rendering differs in appearance, HeroUI's wins; every rule here about behaviour, content, and accessibility still applies.
+
 ## Native Input or Custom Panel
 
 Unlike a `select`, where native is the default, a date field is a genuine judgement call. Decide with this table rather than by habit.
@@ -250,3 +256,4 @@ If another instruction conflicts with this standard, follow this priority:
 - [[dropdown.component.md]]
 - [[search.component.md]]
 - [[refresh.component.md]]
+- [[stacks.rules.md]]

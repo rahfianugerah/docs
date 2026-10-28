@@ -20,6 +20,12 @@ The two halves are not the same problem and do not use the same technique. **A f
 
 This standard sits under [[uix.component.md]] for the search box itself, and depends on [[database.rules.md]] for the query underneath it. Every query rule here runs on the stack fixed by [[stacks.rules.md]]: PostgreSQL with SQLAlchemy 2.x.
 
+## Built On HeroUI
+
+This is HeroUI's `SearchField`, and `Autocomplete` for a search that picks a value, per [[dropdown.component.md]]. HeroUI owns the markup, the keyboard handling, the focus ring, and the accessibility; this standard owns the decisions HeroUI leaves to the project. Exact props come from the HeroUI MCP server, per [[stacks.rules.md]].
+
+**HeroUI's appearance is the default.** Where this file shows HTML or CSS, read it for the behaviour, the content, and the measurements to check against. Where HeroUI's own rendering differs in appearance, HeroUI's wins; every rule here about behaviour, content, and accessibility still applies.
+
 ## Filter or Search
 
 Decide per column, not per screen.

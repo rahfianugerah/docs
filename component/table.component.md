@@ -18,6 +18,12 @@ A table is the shape data takes when the reader needs exact values rather than a
 
 Those three files describe one component in practice. **A table without a pager is a table that has silently decided how many rows exist.**
 
+## Built On HeroUI
+
+This is HeroUI's `Table`. HeroUI owns the markup, the keyboard handling, the focus ring, and the accessibility; this standard owns the decisions HeroUI leaves to the project. Exact props come from the HeroUI MCP server, per [[stacks.rules.md]].
+
+**HeroUI's appearance is the default.** Where this file shows HTML or CSS, read it for the behaviour, the content, and the measurements to check against. Where HeroUI's own rendering differs in appearance, HeroUI's wins; every rule here about behaviour, content, and accessibility still applies.
+
 ## Anatomy
 
 A table is always three parts in this order, and the parts are never rearranged:
@@ -186,3 +192,4 @@ If another instruction conflicts with this standard, follow this priority:
 - [[refresh.component.md]]
 - [[analytics.rules.md]]
 - [[api.rules.md]]
+- [[stacks.rules.md]]
