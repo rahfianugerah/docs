@@ -10,137 +10,125 @@ tags:
 
 # Dropdown Standard
 
-> [!note]
-> Every dropdown: the sidebar list, the native select, and the shared themed listbox.
+> [!important]
+> Every form dropdown is a HeroUI picker with HeroUI's layout. Past seven options it carries smart search, and a long list scrolls inside a capped panel while the search field stays put.
 
 ## Core Requirement
 
-Every dropdown follows this policy. It covers two cases that look alike and are not the same thing:
+Every dropdown follows this standard. Three things look alike and are not the same thing:
 
-| Case | What it is | Built from |
+| Case | What it is | Built on |
 | :- | :- | :- |
-| **Form dropdown** | Picks one value from a set of options | A native `select`, or a themed listbox |
-| **Navigation group** | A collapsible group of links in a sidebar | A disclosure button and a nested list |
+| **Form dropdown** | Picks a value from a set of options | HeroUI `Select` or `Autocomplete` |
+| **Action menu** | Runs one of several actions, such as a row's actions or the account menu | HeroUI `Dropdown` |
+| **Navigation group** | A collapsible group of links in the sidebar | A disclosure built from HeroUI parts, per "Navigation Groups" below |
 
-A navigation group is never a `select`, and a form dropdown is never a disclosure. Mixing them produces a control that announces the wrong thing to a screen reader.
+A form dropdown never runs an action, an action menu never holds a value, and a navigation group is never either. Mixing them produces a control that announces the wrong thing to a screen reader.
 
-This policy extends [[uix.component.md]] and reads every color, radius, and shadow from its token contract.
+This extends [[uix.component.md]]. Every color, radius, and shadow comes from HeroUI's theme variables, and exact props come from the HeroUI MCP server, per [[stacks.rules.md]].
 
-## Native Select Is the Default
+## Which Picker
 
-**Start with `<select>`.** It ships keyboard navigation, screen reader support, form integration, and the platform's own picker on mobile, and it needs no JavaScript to work.
+| Options | Component | Why |
+| :- | :- | :- |
+| Seven or fewer, all readable at once | `Select` | Every option is visible without typing, so a search field would be noise |
+| More than seven | `Autocomplete`, with smart search | The trigger looks exactly like a `Select`, and the search sits at the top of the panel |
+| A value the user types more often than picks, or one that may be new | `ComboBox` | The field itself is the input |
+| Thousands, or a set that lives on the server | `Autocomplete`, filtering on the server | The database filters, per [[search.component.md]] |
 
-Style it with the same tokens as a text input, so a select looks identical to every other field:
+**Smart search is the default.** A dropdown omits it only when it holds seven options or fewer, because then every option is already on screen and typing is slower than looking.
 
-```css
-select {
-  width: 100%;
-  padding: 9px 12px;
-  font: inherit;                    /* a select defaults to a browser font */
-  color: var(--ink);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--r-sm);
-  outline: none;
-}
-select:hover { border-color: var(--accent); }
-select:focus-visible { border-color: var(--accent); }   /* border only, no ring */
-select:disabled { background: var(--line2); color: var(--ink3); cursor: default; }
+## The Layout Is HeroUI's
+
+A dropdown keeps HeroUI's anatomy and HeroUI's look. The trigger of an `Autocomplete` is the same as the trigger of a `Select`, so a short dropdown and a long one in the same form read as the same control:
+
+```tsx
+import { Autocomplete, Description, Label, ListBox, SearchField } from "@heroui/react";
+
+<Autocomplete>
+  <Label>Country</Label>
+  <Autocomplete.Trigger>
+    <Autocomplete.Value />
+    <Autocomplete.ClearButton />
+    <Autocomplete.Indicator />
+  </Autocomplete.Trigger>
+  <Description>Where the invoice is sent</Description>
+  <Autocomplete.Popover>
+    <Autocomplete.Filter filter={smartFilter}>
+      <SearchField aria-label="Search countries">
+        <SearchField.Group>
+          <SearchField.SearchIcon />
+          <SearchField.Input />
+        </SearchField.Group>
+      </SearchField>
+      <ListBox className="max-h-80 overflow-y-auto">{/* ListBox.Item per option */}</ListBox>
+    </Autocomplete.Filter>
+  </Autocomplete.Popover>
+</Autocomplete>
 ```
 
-`font: inherit` is the line people forget. Without it the select renders in the browser's UI font and sits visibly apart from the inputs beside it.
+- **The label sits above, the description below**, as HeroUI lays them out. A placeholder is never the label.
+- **An optional field carries the clear button**; a required one does not, so it cannot be emptied by accident.
+- **The trigger, the panel, and the options are never restyled.** A color changes through a HeroUI variable, per [[uix.component.md]]; the layout does not change at all.
+- **Long lists group with `ListBox.Section`**, each with a heading, when the options fall into natural groups.
+- **A disabled option stays visible**, dimmed, so the user can see it exists and is unavailable rather than wonder where it went.
 
-## When a Native Select Is Not Enough
+## Smart Search
 
-A native `select` renders its **open option list** using the operating system's own control. CSS cannot reach inside it: no border, no radius, no hover color, no per-option icon, and the result differs across Windows, macOS, iOS, and Android.
+Search that a person does not have to think about. It finds what they meant, not only what they typed letter for letter.
 
-Do not try to fix that. An `appearance: none` reset with a fake arrow styles the closed control, not the list. A vendor-prefixed pseudo-element does not reach the list either, and support diverges by platform. A browser sniff is not a design system.
+1. **Ignores case and accents.** `jose` finds `José`, and `JAKARTA` finds `Jakarta`. This is HeroUI's `useFilter` with `sensitivity: "base"`.
+2. **Matches every word, in any order.** `west java` finds `Java, West`. Each word of the query has to appear somewhere in the option; their order does not matter.
+3. **Matches what the user can see.** The option's label, and any alias the option declares, such as a code or an abbreviation. Never an internal identifier the user has never seen.
+4. **Ranks the obvious answer first**: an exact match, then a label that starts with the query, then a word that starts with it, then anything that contains it.
+5. **Focuses the search field when the panel opens**, so typing starts at once.
+6. **Says what it searched for when nothing matches**: `No results for "Jakrta"`, never a blank panel.
+7. **Clearing the search restores the full list** and keeps the current selection.
 
-Replace the native select with a **themed listbox** only when the open list itself must be styled:
+The shared filter covers rules 1 and 2, and every dropdown in a project uses this one function:
 
-- Options need their own hover and selected colors
-- An option needs an icon, a description line, or a secondary value
-- The list needs a search box or a trailing action such as "add new"
-- Options are grouped with styled headers
+```tsx
+import { useFilter } from "@heroui/react";
 
-**Plain is correct for most dropdowns.** Reaching for a custom listbox because the native one "looks basic" costs you every accessibility behaviour it gave you for free, and you have to rebuild all of it.
-
-### Proximity Counts as a Reason
-
-**A native select sitting in the same row as a themed control is a stronger mismatch than a plain one standing alone.** The operating system's own highlight colour, its square corners, and its own gap before the arrow appear directly beside the project's rounded panel and accent tokens, and the two read as controls from two different applications.
-
-The page size control in a pager is the worked example, per [[pagination.component.md]]: it sits inside a row of themed buttons, so it earns the themed listbox. **Where a dropdown stands alone in a form, plain remains correct.**
-
-## The Themed Listbox
-
-Build it once per project and reuse it. Never a second implementation.
-
-Required structure and behaviour:
-
-```html
-<button class="selectbox" role="combobox"
-        aria-expanded="false" aria-controls="opt-list" aria-haspopup="listbox">
-  <span class="value">Choose one</span>
-  <span class="chev" aria-hidden="true"></span>
-</button>
-
-<!-- portalled to <body>, position: fixed -->
-<ul class="selectpop" id="opt-list" role="listbox">
-  <li role="option" aria-selected="true">Option A</li>
-  <li role="option" aria-selected="false">Option B</li>
-</ul>
+export function useSmartFilter() {
+  const { contains } = useFilter({ sensitivity: "base" });
+  return (text: string, query: string) =>
+    query.trim().split(/\s+/).every((word) => contains(text, word));
+}
 ```
 
-```css
-.selectbox {
-  display: flex; align-items: center; gap: 8px; width: 100%;
-  min-height: 38px; padding: 9px 12px; box-sizing: border-box;
-  font: inherit; color: var(--ink); background: var(--surface);
-  border: 1px solid var(--line); border-radius: var(--r-sm);
-  cursor: pointer; outline: none;
-}
-.selectbox:hover { border-color: var(--accent); }
-.selectbox:focus-visible,
-.selectbox[aria-expanded="true"] { border-color: var(--accent); }   /* border only, no ring */
-.selectbox:disabled { background: var(--line2); color: var(--ink3); cursor: default; }
+- **Aliases and ranking need the list in the project's hands.** Filter and sort the options yourself and pass the result to the `ListBox`, the same controlled shape HeroUI's asynchronous filtering example uses. A boolean filter can include an option but cannot order it.
+- **A list over about fifty options is ranked**, because past that the first screenful is all anyone reads.
+- **Matching rules beyond these belong to [[search.component.md]]**, which owns normalization and the matching ladder for every search in the project. A dropdown never invents its own.
 
-.selectpop {
-  position: fixed; z-index: 80; overflow-y: auto; padding: 4px;
-  background: var(--surface);
-  border: 1px solid var(--line); border-radius: var(--r);
-  box-shadow: var(--shadow-pop);
-}
-.selectpop li { padding: 9px 11px; border-radius: var(--r-sm); font-size: .875rem; color: var(--ink); cursor: pointer; }
-.selectpop li.active { background: var(--line2); }                        /* keyboard cursor */
-.selectpop li[aria-selected="true"] { color: var(--accent-tua); font-weight: 600; }
-.selectpop li[aria-selected="true"].active { background: var(--accent-soft); }
-```
+## Long Lists Scroll Inside the Panel
 
-Rules:
+**The list scrolls; the panel, the search field, and the page do not.**
 
-1. **The trigger is a real `button`.** A `div` with a click handler is not focusable, not operable by keyboard, and announces nothing.
-2. **The panel is portalled**, `position: fixed`, per the overlay rules in [[uix.component.md]]. A dropdown inside a modal or a scrolling table is the normal case, not the edge case.
-3. **The panel matches the trigger width.** Measure the trigger and set the panel to it, so the two line up on both edges.
-4. **Full keyboard support**, and this is the part that is always half-finished:
+- **Cap the list at about eight visible rows**: `max-h-80`, which is 320px, or half the viewport on a short screen. The panel never grows past the edge of the screen.
+- **Put the cap on the `ListBox`, not on the popover.** The search field sits outside the list, so it stays pinned at the top while the options scroll beneath it.
+- **The scrollbar is visible** while the list overflows, per [[scrollbar.component.md]]. A list with a hidden scrollbar looks complete at eight rows.
+- **Over about a hundred options, virtualize the `ListBox`**, so only the rows on screen are rendered. HeroUI supports it through React Aria's `Virtualizer`.
+- **The selected option is scrolled into view when the panel opens**, and the arrow keys keep the active option in view. HeroUI does both; never break them with a wrapper that scrolls on its own.
+- **A set that lives on the server loads as it scrolls**, with a loading row at the bottom, per [[loading.component.md]]. It never fetches thousands of rows to filter in the browser.
 
-| Key | Does |
-| :- | :- |
-| `Enter`, `Space`, `Alt+Down` | Open, and move the cursor to the selected option |
-| `Up`, `Down` | Move the cursor, without selecting |
-| `Home`, `End` | First and last option |
-| Typing a letter | Jump to the next option starting with it |
-| `Enter` | Select the cursor option and close |
-| `Escape` | Close without selecting, and return focus to the trigger |
-| `Tab` | Close and move on |
+## Multiple Selection
 
-5. **The keyboard cursor is separate from hover.** `.active` follows the arrow keys; hover follows the mouse. One state for both makes the mouse steal the keyboard's place.
-6. **Selection is announced by `aria-selected`, not by color alone.** Add a check icon or a weight change so it survives greyscale and colorblindness.
-7. **The panel is an overlay layer**, so it is one of the few places [[uix.component.md]] allows the pronounced shadow. **Do not flatten it to a hairline border to match a content card**; a panel and a card are different elevation levels by design.
-7. **Focus returns to the trigger on close.** Leaving focus on a removed node drops the user to the top of the page.
+- `selectionMode="multiple"` on the picker and on its `ListBox`.
+- The trigger shows the selected values; **past three, it shows the first three and a count**, so the trigger keeps one line.
+- The panel stays open between selections, and the search field keeps its query, so picking five related options is five clicks, not five searches.
+
+## Action Menus
+
+An action menu is a HeroUI `Dropdown`. It runs something; it holds no value.
+
+- **The trigger says what the menu is for**, with a label or an icon button that carries an accessible name. A bare ellipsis with no name announces nothing.
+- **A destructive action comes last**, after a separator, in the danger color, and asks for confirmation when it cannot be undone, per [[button.component.md]].
+- **A third row action becomes a menu**, per [[table.component.md]].
 
 ## Navigation Groups
 
-A collapsible group in a sidebar: a parent row that expands to reveal nested links. It is navigation, not a form control.
+A collapsible group in a sidebar: a parent row that expands to reveal nested links. It is navigation, not a form control, and HeroUI has no sidebar, so it is built from HeroUI parts and theme variables, per [[sidebar.component.md]].
 
 ```html
 <button class="navparent" aria-expanded="false" aria-controls="grp-reports">
@@ -162,127 +150,70 @@ A collapsible group in a sidebar: a parent row that expands to reveal nested lin
   border-radius: var(--r-sm); cursor: pointer; text-align: left;
 }
 .navparent .icon { color: var(--ink3); }
-.navparent .chev { margin-left: auto; color: var(--ink3); }
+.navparent .chev { margin-left: auto; color: var(--ink3); transition: transform .16s ease; }
 .navparent:hover { background: var(--line2); color: var(--ink); }
 .navparent[aria-expanded="true"] { color: var(--accent-tua); font-weight: 600; }
 .navparent[aria-expanded="true"] .icon { color: var(--accent); }
+.navparent[aria-expanded="true"] .chev { transform: rotate(180deg); }
 
 .subnav { margin: 1px 0 4px 19px; padding-left: 14px; border-left: 1px solid var(--line2); }
 .subnav a { display: block; padding: 7px 10px; font-size: .8rem; color: var(--ink2); }
 .subnav a[aria-current="page"] { background: var(--accent-soft); color: var(--accent-tua); font-weight: 600; }
 ```
 
-### The Icon Belongs to the Title Only
+**The icon belongs to the title only.**
 
-**The parent row carries an icon. The items inside it do not.**
-
-- The parent row has exactly two icons: the group icon at the start, the chevron at the end. Nothing else.
-- Every item inside the expanded list is **text only**. No leading icon, no bullet, no dot, no dash.
-- A flat top-level link that is not a group keeps its own icon. The rule applies to nested items only.
-- **Nesting is what marks a child as a child.** The indent and the rail on `.subnav` already say it; a per-item icon repeats that and competes with the group title for the eye.
+- The parent row carries exactly two icons: the group icon at the start, the chevron at the end.
+- Every item inside the group is **text only**. No leading icon, no bullet, no dot. The indent and the rail already say it is a child.
+- A flat top-level link that is not a group keeps its own icon.
 
 Rules:
 
-- The parent is a `button` with `aria-expanded` and `aria-controls`. Not an `a` with no `href`, which is neither a link nor a button.
+- The parent is a `button` with `aria-expanded` and `aria-controls`, never an `a` with no `href`.
 - The current page carries `aria-current="page"`, not just a class.
 - A group whose child is the current route opens by default, so a reload does not collapse the section being worked in.
 - Two levels only: group and item. A third level means the grouping is wrong.
-- The nested list is indented with a rail. **It never takes the overlay shadow**: it is inline navigation, not a floating panel.
-
-## The Chevron
-
-Every trigger that opens something carries a trailing chevron, and it **rotates 180 degrees** when open.
-
-```css
-.chev { transition: transform .16s ease; }
-[aria-expanded="true"] .chev { transform: rotate(180deg); }
-@media (prefers-reduced-motion: reduce) { .chev { transition: none; } }
-```
-
-- One down-pointing icon, rotated. **Never swap it for an up-pointing icon**: a swap loses the animation, and the two glyphs rarely land on the same pixels.
-- One duration and one curve across the whole project, so two dropdowns opening side by side move together.
-- Animate `transform` only.
-- The chevron stays `--ink3` in every state. It marks *state*, not activity, so it never takes `--accent`.
-- One attribute drives the border and the chevron together, so they cannot disagree about whether the panel is open.
-
-**Every control of this shape rotates the same way**, and the reference implementation applies it identically to all of them:
-
-| Control | Class | Open state |
-| :- | :- | :- |
-| Themed select | `.selectbox .chev` | `.selectbox[aria-expanded="true"]` |
-| Date field trigger | `.datetrig .chev` | `.datetrig[aria-expanded="true"]` |
-| Accordion summary | `details > summary .chev` | `details[open]` |
-
-A date field and a select sitting side by side in one form must move the same way. Where one of them sits still while the other turns, the two controls read as different kinds of thing despite looking identical.
-
-The **one exception** is a navigation group whose collapsed arrow points *right* rather than down. A 180 degree turn cannot produce that, so it swaps `right` for `down`. Pick one convention per project and keep it.
-
-## Reference Table
-
-| Property | State | Value |
-| :- | :- | :- |
-| Font | All | `inherit` |
-| Text | Default | `var(--ink)` |
-| Text | Placeholder, disabled | `var(--ink3)` |
-| Text | Selected option | `var(--accent-tua)` |
-| Background | Trigger, panel | `var(--surface)` |
-| Background | Hover, keyboard cursor | `var(--line2)` |
-| Background | Selected option | `var(--accent-soft)` |
-| Border | Default | `1px solid var(--line)` |
-| Border | Hover, focus, open | `var(--accent)` |
-| Size | Trigger and options | `13.5px`; a navigation child is `12.7px` |
-| Radius | Trigger, panel | `8px`, from `var(--r-sm)` on the trigger and `var(--r)` on the panel; an option row inside the panel takes `4px` |
-| Focus | `:focus-visible` on the trigger | `outline: 2px solid var(--accent)`, per [[uix.component.md]]. Never a spread shadow |
-| Shadow | Open panel | `var(--shadow-pop)` |
-| Shadow | Navigation group | None |
-| Chevron | Regular dropdown | `16px`, `var(--ink3)`, rotate 180 on open, `.16s ease` |
-| Chevron | Navigation group | `15px`, `var(--ink3)` in every state |
-| Icon | Navigation group title | `18px`, `var(--ink3)`, `var(--accent)` when expanded or active |
-| Icon | Navigation group child | None; the child is text only |
-
-## One Token Set
-
-The themed listbox and the navigation group use the same neutral, accent, and shape tokens; only the layout and the trigger markup differ. **Do not invent a second color scale or a second radius for the sidebar** because it sits in a different part of the page. A dropdown that needs a value not already on the list gets it added to the `:root` block in [[uix.component.md]] first, then used here.
+- **The chevron rotates 180 degrees** rather than swapping glyphs, and it stays `--ink3` in every state, because it marks state rather than activity.
+- The nested list is indented with a rail and **never takes the overlay shadow**: it is inline navigation, not a floating panel.
 
 ## Accessibility
 
-- **Prefer the native `select`** whenever the option list does not need custom styling: it carries built-in screen reader and keyboard support that a custom listbox has to reimplement by hand.
-- When the listbox pattern is used, **keep its full ARIA structure and keyboard support**: `combobox`, `listbox`, `option`, arrow keys, Home, End, Enter, Escape. A mouse-only dropdown is not an acceptable substitute.
-- **Never remove the focus ring from a dropdown trigger.**
-- A trigger is at least 44px tall on mobile, the same minimum [[uix.component.md]] sets for a button, a nav link, and a table row.
-- **Never rely on color alone to mark the selected option.** The selected state also carries a check icon or a weight change.
+HeroUI supplies the roles, the keyboard map, and the announcements: the combobox and listbox roles, arrow keys, Home and End, typeahead, Enter, and Escape. Keep them intact.
+
+- **Every picker has a visible label.** A placeholder is not one.
+- **The search field has an accessible name**, such as `Search countries`, because its icon is not a label.
+- **The empty state is text**, so a screen reader hears that nothing matched instead of silence.
+- A trigger is at least 44px tall on a touch screen, per [[uix.component.md]].
+- **Never mark the selected option with color alone.** HeroUI's item indicator shows the check; keep it.
+- **Never wrap a picker in a handler that swallows keys or scrolls on its own.** It breaks the keyboard map HeroUI built.
 
 ## Do and Do Not
 
-Do:
-
-- Start with a native `select` and only replace it when the open list must be styled.
-- Set `font: inherit` on every native control.
-- Build the themed listbox once, with the full ARIA structure and the full keyboard map.
-- Keep the keyboard cursor separate from hover.
-- Put the icon on a navigation group's title only, and keep its items text-only.
-- Rotate one chevron rather than swapping two glyphs.
-
-Do not:
-
-- Build a custom listbox because the native one looks plain.
-- Use a `div` as a trigger, or an `a` without `href` as a disclosure.
-- Style a native select's open option list with an `appearance` hack.
-- Position a panel with `position: absolute` inside a scrolling container.
-- Put an icon or a bullet on an item inside a navigation group.
-- Give a navigation group an overlay shadow, or a form dropdown panel none.
-- Color the chevron with `--accent` when open.
+| Do | Do not |
+| :- | :- |
+| Use `Select` for seven options or fewer | Put a search field on a three-option dropdown |
+| Use `Autocomplete` with smart search past seven | Make the user scroll a long list to find one option |
+| Keep HeroUI's anatomy, label above and description below | Restyle the trigger, the panel, or the option rows |
+| Share one smart filter across the project | Write a new matching rule per dropdown |
+| Ignore case and accents, and match every word in any order | Match only an exact, case-sensitive prefix |
+| Cap the `ListBox` at about eight rows so it scrolls under a pinned search | Cap the popover, so the search field scrolls away |
+| Virtualize past about a hundred options | Render thousands of rows into the panel |
+| Filter a server-sized set on the server | Fetch everything to filter it in the browser |
+| Show `No results for "..."` | Leave an empty panel |
+| Use `Dropdown` for actions and `Select` for values | Run an action from a value picker |
+| Keep a navigation group's items text only | Put an icon or a bullet on a nested item |
 
 ## Related Standards
 
 | Document | Owns | Read it for |
 | :- | :- | :- |
-| [[uix.component.md]] | The tokens, the one 8px radius, and the overlay rules | Any value this file names but does not define, and why a panel is portalled |
-| [[sidebar.component.md]] | The rail the navigation group sits in | The grouping, the markers, and the drawer around it |
-| [[button.component.md]] | The button that opens a menu | The chevron that sits after the label rather than before it |
-| [[calendar.component.md]] | The date panel | The same portal and the same rotation, on a control that looks identical |
-| [[table.component.md]] | The row action menu and the toolbar filters | Where a third row action becomes a dropdown |
-| [[loading.component.md]] | Loading states | What a select shows while its options are being fetched |
+| [[uix.component.md]] | The HeroUI setup, the theme variables, and the overlay rules | Every value this file names but does not define |
+| [[search.component.md]] | Matching and normalization for every search | The rules smart search inherits rather than redefines |
+| [[scrollbar.component.md]] | Where a scrollbar must be visible | Why an overflowing list shows its scrollbar |
+| [[sidebar.component.md]] | The rail a navigation group sits in | The grouping, the markers, and the drawer around it |
+| [[table.component.md]] | The row actions | Where a third row action becomes an action menu |
+| [[loading.component.md]] | Loading states | The loading row at the bottom of a server-fed list |
+| [[button.component.md]] | The button variants | The danger action at the bottom of a menu |
 
 ## Deviations
 
@@ -302,5 +233,9 @@ If another instruction conflicts with this standard, follow this priority:
 ## Related
 
 - [[uix.component.md]]
+- [[search.component.md]]
+- [[scrollbar.component.md]]
+- [[sidebar.component.md]]
+- [[table.component.md]]
 - [[calendar.component.md]]
 - [[refresh.component.md]]

@@ -11,13 +11,15 @@ tags:
 # UI Component Standard
 
 > [!note]
-> The palette, tokens, typography, spacing, shape, and elevation every other component reads from. Read this one first.
+> HeroUI v3 renders every component. This file says how HeroUI is configured, in Google Sans, at 8px, in light and dark, and hands each component area to a companion. Read this one first.
 
 ## Core Requirement
 
 This is the root of the component standard. It owns the **token contract** every component reads from, and it hands each component area to a companion file.
 
-It is deliberately framework-agnostic. The rules are about behaviour, semantics, and CSS, which are the same in React, Vue, Svelte, Angular, or plain HTML. Where markup is shown it is plain HTML; translating a `class` attribute to `className` is not a design decision.
+**HeroUI v3 renders every component**, per [[stacks.rules.md]]. This file and its companions say how HeroUI is configured and used: which component, which variant, which theme variable, and the rules HeroUI does not decide for you, such as one primary action per view or a table that pages instead of scrolling.
+
+Where a companion shows CSS, it records the measurement the HeroUI theme or a `className` override must produce. **It is never a second, hand-built component beside the HeroUI one.**
 
 | Companion | Owns |
 | :- | :- |
@@ -35,105 +37,124 @@ It is deliberately framework-agnostic. The rules are about behaviour, semantics,
 | [[search.component.md]] | Filter against search, and how a query is matched |
 | [[scrollbar.component.md]] | Where a scrollbar must be visible |
 | [[title.header.component.md]] | The product name, in one form everywhere |
+| [[darkmode.component.md]] | Light and dark, both, always, and the one switch between them |
+| [[card.component.md]] | The card: header, content, footer, and one level only |
+| [[layout.component.md]] | The page shell, full width beside the rail |
+| [[header.bar.component.md]] | The sticky bar above every page, and the slots it carries |
+| [[header.page.component.md]] | The page heading: the `h1`, its description, and the page's actions |
+| [[notification.component.md]] | The bell, its panel, and the toast |
+| [[animation.component.md]] | What moves, for how long, and what reduced motion turns off |
 
 Read this file first. Read a companion when the work touches the area it owns.
 
-Every companion reads its values from the `:root` block below and none of them redefines a token. Adding a companion does not move a value out of this file, so a new color, radius, or shadow is still added here first, then used there.
+Every companion reads HeroUI's theme variables, through the names in "The Theme Contract" below, and none of them redefines one. A new color, radius, or shadow is added here first, then used there.
 
-## Black on White Is the Base
+## HeroUI's Theme Is the Base
 
-**The base is black on white, in Google Sans, and every project starts there.**
+**The base is HeroUI's own light and dark themes, set in Google Sans, with every corner at 8px.** Every project starts there, and is already correct before it adds a single color of its own.
 
-Black text, black accent, white background. No brand color, no gradient, no colored surface. A project adds its own palette by overriding the tokens below, and until it does, it is already correct rather than unstyled.
+HeroUI ships a complete light theme and a complete dark theme, each with its canvas, surfaces, text, borders, one accent, and three status colors, all checked for contrast. A project adds its own palette by overriding HeroUI's variables, once per theme, per [[darkmode.component.md]].
 
-This is a starting point, not a ban on color. It exists because a design system that ships with a palette gets copied palette and all, and three projects then wear a fourth project's brand for a year.
+The base changes exactly two things from HeroUI's defaults, and both are deliberate:
+
+- **The font is Google Sans**, everywhere, per "Typography" below.
+- **No corner exceeds 8px.** HeroUI's default radius is larger, and its field radius is 1.5 times the radius, so both are overridden, per "Shape and Elevation" below.
 
 > [!warning]
-> Black on white is the base, not permission to skip contrast checks. A gray you add for a placeholder still has to clear the floor, and a status color still needs a label beside it.
+> A checked base is not permission to skip contrast checks. Every variable a project overrides is checked again, in both themes, and a status color still needs a label beside it.
 
 Minimalism here means the interface carries no mark that does not do work:
 
 - **No decorative border.** A border separates two things, or it is removed.
-- **No shadow except to lift an overlay off the page.** A card sits on a hairline border, not on a shadow.
+- **No shadow beyond HeroUI's two.** A surface keeps HeroUI's faint surface shadow; an overlay keeps its overlay shadow. Never a heavier one, and never one invented per component.
 - **No filled surface for emphasis.** Weight and spacing carry hierarchy before color does.
 - **No icon without a label**, except where the icon is a universally understood control and carries an accessible name.
 - **No second typeface**, and no more than four weights from the one you have.
 
 Readability always wins over decoration. Where a project does add brand color, strong color belongs on fills, gradients, decorative shapes, and small paired status badges, never underneath body text.
 
-## The Token Contract
+## The Theme Contract
 
-**A component never hardcodes a color, a radius, or a shadow.** It reads a custom property, and the project defines that property once at `:root`.
+**A component never hardcodes a color, a radius, or a shadow.** It reads a HeroUI theme variable, and the project overrides that variable in one place.
 
-This file does not pick your palette. It names the **roles** a component expects to find, so a component copied between two projects works in both, and it ships the neutral base as the default value of each role.
+The CSS entry is the whole setup. HeroUI needs no provider:
 
 ```css
+/* src/index.css */
+@import "tailwindcss";
+@import "@heroui/styles";
+
+@theme {
+  --font-sans: "Google Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --radius-xl: 0.5rem;
+  --radius-2xl: 0.5rem;
+  --radius-3xl: 0.5rem;
+  --radius-4xl: 0.5rem;
+}
+
+/* Shape: the same in both themes */
 :root {
-  /* Type: one family, everywhere */
-  --font: "Google Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --radius: 0.5rem;
+  --field-radius: 0.5rem;
+  --gap: 8px;
+}
 
-  /* Surfaces */
-  --surface: #ffffff;        /* a card, a panel, an input background */
-  --bg: #ffffff;             /* the page behind the surfaces */
-
-  /* Text, dark to light */
-  --ink: #000000;            /* body text */
-  --ink2: #4a4a4a;           /* secondary text, labels; 8.9:1 on white */
-  --ink3: #767676;           /* placeholder, disabled, decorative icons; 4.5:1 on white */
-
-  /* Lines */
-  --line: #d4d4d4;           /* a border */
-  --line2: #f0f0f0;          /* a hover fill, a divider, a rail */
-
-  /* One accent, three steps. Black, because the base carries no brand */
-  --accent: #000000;         /* the action color; must reach 4.5:1 on --surface */
-  --accent-soft: #f0f0f0;    /* a tinted background */
-  --accent-tua: #000000;     /* text on --accent-soft, hover on a solid --accent fill */
-
-  /* Status. The only colors in the base, because state cannot be read from black alone */
-  --ok: #1a7f37;   --ok-soft: #e8f5ee;   --ok-tua: #12784a;
-  --warn: #9a6700; --warn-soft: #fbf3e6; --warn-tua: #8a5a10;
-  --bad: #b42318;  --bad-soft: #fcecec;  --bad-tua: #96201a;
-  --info: #1a1a1a; --info-soft: #f0f0f0; --info-tua: #000000;
-
-  /* Shape: two values, and the gap that makes them concentric */
-  --r: 8px;                  /* every surface: card, modal, panel, table wrapper */
-  --r-sm: 8px;               /* every nested item: control, nav row, menu item, cell */
-  --gap: 8px;                /* the gap and the inset, everywhere */
-
-  /* Elevation */
-  --shadow: none;                            /* a card takes a border, not a shadow */
-  --shadow-pop: 0 8px 30px rgb(0 0 0 / .16); /* overlays only */
+/* Project names for HeroUI variables, so every companion reads one vocabulary */
+:root {
+  --font: var(--font-sans);
+  --bg: var(--background);
+  --ink: var(--foreground);
+  --ink2: var(--muted);
+  --ink3: var(--field-placeholder);
+  --line: var(--border);
+  --line2: var(--separator);
+  --accent-soft: color-mix(in oklab, var(--accent) 15%, transparent);
+  --accent-tua: color-mix(in oklab, var(--accent) 90%, var(--accent-foreground) 10%);
+  --ok: var(--success);
+  --warn: var(--warning);
+  --bad: var(--danger);
+  --info: var(--accent);
+  --ok-soft: color-mix(in oklab, var(--success) 15%, transparent);
+  --warn-soft: color-mix(in oklab, var(--warning) 15%, transparent);
+  --bad-soft: color-mix(in oklab, var(--danger) 15%, transparent);
+  --ok-tua: color-mix(in oklab, var(--success) 60%, var(--foreground));
+  --warn-tua: color-mix(in oklab, var(--warning) 60%, var(--foreground));
+  --bad-tua: color-mix(in oklab, var(--danger) 60%, var(--foreground));
+  --r: var(--radius);
+  --r-sm: var(--radius);
+  --shadow: var(--surface-shadow);
+  --shadow-pop: var(--overlay-shadow);
 }
 ```
 
+`--surface` and `--accent` need no alias: HeroUI already uses those names.
+
 Rules:
 
-1. **Every value above is a role, not a preference.** Change the hex to suit the project; do not rename the property or add a fourth ink.
-2. **`--accent` must reach 4.5:1 against `--surface`.** Black clears it by definition. A bright brand color usually does not; darken it for the token and keep the bright original for fills and decoration.
-3. **Text on `--accent-soft` uses `--accent-tua`**, never `--accent`. The base on a tinted background often misses the contrast floor.
-4. **Status colors are the only colors in the base**, and they are reserved for state. A series or a button never wears one because it looked better, and a status color is always paired with a label or an icon.
-5. **One font family, set once.** See "Typography" below.
-6. **Two radii, plus one gap.** See "Shape and Elevation" below.
-7. **One elevation, for overlays only.** `--shadow-pop` belongs to a dropdown panel, a date panel, a modal, or a toast. In the base a card takes a border and no shadow at all.
-8. Add a new token here first, then use it in a component. A component that invents its own value is how two projects drift apart.
+1. **HeroUI's variables are the contract.** `--background`, `--foreground`, `--surface`, `--overlay`, `--muted`, `--accent`, `--success`, `--warning`, `--danger`, `--border`, `--separator`, `--focus`, and their `-foreground` pairs. A project changes a color by overriding one of them, per theme, never by restyling a component.
+2. **The names in the second block never get a value of their own.** They exist so the CSS in every companion reads one vocabulary, and each one resolves through a HeroUI variable so it follows the active theme. Assign one a hex and it stops switching.
+3. **`--field-radius` is overridden with `--radius`, always.** HeroUI derives it as 1.5 times the radius, so a project that sets only `--radius` ships every input, select, and search field at 12px. This is the regression to check for first.
+4. **The Tailwind radius scale is capped at 8px** in `@theme`, so a `rounded-2xl` written in a hurry still lands on the same corner.
+5. **`--accent` reaches 4.5:1 against `--surface` in both themes.** HeroUI's own accent does. An overridden one is checked twice.
+6. **Status colors are reserved for state.** A series or a button never wears one because it looked better, and a status color is always paired with a label or an icon.
+7. **One font family, set once**, as `--font-sans`. See "Typography" below.
+8. **Two shadows, both HeroUI's.** `--surface-shadow` for a surface, `--overlay-shadow` for an overlay.
+9. Add a new variable here first, then use it in a component. A component that invents its own value is how two projects drift apart.
 
 ## Color Rules
 
-### The Three-Step Pattern
+### The Color Pattern
 
-Every hue in the system, including the accent, carries the same three tokens. This is what makes a palette swap mechanical instead of a redesign.
+Every hue in HeroUI, including the accent, follows the same pattern, which is what makes a palette swap mechanical instead of a redesign.
 
-| Step | Role | Contrast requirement |
+| Step | Variable | Role |
 | :- | :- | :- |
-| Base, `--x` | Text and icons on `--surface`; a solid fill under white text | 4.5:1 on `--surface` |
-| `--x-soft` | A tinted background: an active nav row, a chip, a badge, a hero icon | Carries no text of its own |
-| `--x-tua` | Text on `--x-soft`; hover on a solid `--x` fill | 4.5:1 on `--x-soft` |
+| Base | `--x` | A solid fill, and text or an icon on `--surface` |
+| Foreground | `--x-foreground` | Text on a solid `--x` fill |
+| Soft | Derived by HeroUI, 15% of `--x` | A tinted background: an active row, a chip, a badge |
+| Hover | Derived by HeroUI | Hover on a solid `--x` fill |
 
-**A bright brand hex is a fill, not a value for text.** When a project brings a palette, each brand hue produces a darkened derivative that reaches 4.5:1 on white, and that derivative becomes the base token. The pure brand hex stays available for fills, gradients, and decorative shapes.
-
-That single rule is what keeps a colorful brand accessible: the color a user sees on a fill is the bright one, and the color a user reads is its darkened sibling, and both come from the same hue so nobody perceives them as two colors.
+**A bright brand hex is a fill, not a value for text.** When a project brings a palette, each brand hue produces a step that reaches 4.5:1 on the surface, per theme, and that step becomes the base variable. The pure brand hex stays available for fills, gradients, and decorative shapes.
 
 ### Contrast Rules
 
@@ -147,22 +168,20 @@ Most of any bright palette is too light for text on a white background. This is 
 
 ### Status Badges
 
-A status badge is one shared component plus one hue class. Never a hardcoded color per page.
+**A status badge is a HeroUI `Chip`** with `variant="soft"` and the color for the state. Never a hardcoded color per page, and never a badge built by hand.
 
-| Hue | Class | Reads as |
+| State | `color` | Reads as |
 | :- | :- | :- |
-| Green | `.t-ok` | Active, approved, done |
-| Amber | `.t-warn` | Locked, pending, needs attention |
-| Red | `.t-bad` | Voided, rejected, failed |
-| Blue or neutral | `.t-info` | Informational, in progress |
-| Accent | `.t-acc` | Requested, submitted, awaiting this user |
-| Muted | `.t-mut` | Inactive, archived, not applicable |
+| Done | `success` | Active, approved, done |
+| Attention | `warning` | Locked, pending, needs attention |
+| Failed | `danger` | Voided, rejected, failed |
+| Awaiting | `accent` | Requested, submitted, awaiting this user, informational |
+| Neutral | `default` | Inactive, archived, not applicable |
 
-- **Soft is the default:** `--x-soft` background with `--x-tua` text.
-- **Solid is `--x-tua` as the background** with white text, not the base color. White on a mid-tone green or amber typically lands between 3.5:1 and 4.1:1, under the 4.5:1 a small label needs; the `-tua` step carries every hue past it, so one rule holds with no exception.
-- Soft text is `-tua` for the same reason: a base color on its own soft background often falls just short.
-- Reach for solid only where one status must win against a column of soft badges. A table where every row is solid has no emphasis left to give.
-- A `.dot` is the same hue vocabulary at 9px with no label, for a row whose status text already sits in the next column.
+- **Soft is the default.** HeroUI derives the tint and the text from the one color, in both themes.
+- **Solid, `variant="primary"`, only where one status must win** against a column of soft badges. A table where every row is solid has no emphasis left to give.
+- **One color means one state across the whole project.** `danger` is never also "urgent but fine".
+- A dot is the same color vocabulary at 9px with no label, for a row whose status text already sits in the next column.
 
 ### Gradients
 
@@ -174,7 +193,7 @@ A project with a brand may use gradients built from its palette for a hero backg
 
 ### Dark Mode
 
-Dark mode is not part of the base. Adding it is a deliberate project decision that redefines every token under a media query and a `[data-theme]` selector together, not a partial pass over a few surfaces. A half-converted dark mode is worse than none, because the unconverted half is unreadable rather than merely off-brand.
+**Both themes ship, always**, per [[darkmode.component.md]]. Every rule in this file holds in light and in dark, and every value a project overrides is checked in both. A screen that works in one theme only is unfinished.
 
 ## Typography
 
@@ -186,16 +205,14 @@ Set it once, on `body`, and let everything inherit:
 
 ```css
 body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--ink);
+  font-family: var(--font-sans);
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
-
-button, input, select, textarea { font-family: inherit }
 ```
+
+The shell carries `bg-background text-foreground`, so the canvas and the ink follow the theme, per [[darkmode.component.md]]. Tailwind's preflight already sets form controls to inherit the font; never remove the preflight.
 
 The system stack behind Google Sans in `--font` is the fallback for the moment before the webfont loads, not an alternative. Never set it deliberately.
 
@@ -210,7 +227,7 @@ The system stack behind Google Sans in `--font` is the fallback for the moment b
 - **Load exactly the four weights and no others.** Every extra weight is a file the user downloads and never sees.
 - Keep `display=swap`, so text renders in the fallback immediately rather than staying invisible while the webfont downloads.
 - Keep both `preconnect` links. Without them the font request waits on a fresh connection to a second origin.
-- **Set the utility framework's sans stack to Google Sans as well.** A framework's preflight applies its own stack to `html`, and every `sans` utility resolves to it, so a stack that still names something else sends any later use of that utility to the wrong family, silently, while `body` keeps the visible result correct.
+- **Set Tailwind's `--font-sans` to Google Sans in `@theme`**, as in "The Theme Contract" above. HeroUI's components, Tailwind's preflight, and every `font-sans` utility all resolve to it, so one line sets the family everywhere. A stack left at Tailwind's default renders HeroUI in the system font while `body` looks correct.
 - **Self-hosting is preferred** for a project that must work offline or that has a privacy requirement. Keep the same family and the same weights either way.
 - Every component inherits the family. Do not re-declare a family on a component; a control that sets its own is how a button ends up on the browser default.
 
@@ -266,16 +283,18 @@ A proper noun, an acronym, and a product name keep their own casing in both mode
 
 **Every rounded corner is `8px`.** Since 27 September 2026 there is one radius, and `8px` is the maximum any corner takes.
 
-Both tokens are kept so existing CSS keeps working, and both hold that same value. The names still say where a value is used, which is what keeps a stylesheet readable:
+HeroUI carries the radius in two variables, and both are set to the same value:
 
-| Token | Value | Names |
+| Variable | Value | Reaches |
 | :- | :- | :- |
-| `--r` | `8px` | **A surface.** A card, a stat card, a page panel, a modal, the login card, a popover panel, a table wrapper |
-| `--r-sm` | `8px` | **A nested item.** A button, an input, a select, a textarea, a nav row, a menu item, a calendar cell, a skeleton |
+| `--radius` | `0.5rem` | Every surface and overlay: a card, a modal, a drawer, a popover, a table container |
+| `--field-radius` | `0.5rem` | Every field: an input, a select, a search field, a date field. HeroUI would otherwise derive it as 1.5 times `--radius` |
+
+The project names `--r` and `--r-sm` both resolve to `--radius`, so a companion's CSS lands on the same corner.
 
 - **Size does not change the value.** A full-width card, a stat tile, a modal, and every control inside them all carry `8px`.
 - **Containment is carried by the border, the background, and the shadow, not by the curve.** A card and the button inside it share a corner, and the card still reads as the container through its hairline border, its surface color against the canvas, and its `--shadow` lift. **Do not bring back a larger radius to make a container stand out.**
-- **A project styled with Tailwind maps `rounded-xl` and `rounded-2xl` to `8px` as well**, in its theme, so a utility class lands on the same corner as the tokens.
+- **HeroUI's `--radius` and `--field-radius` are both `0.5rem`**, and Tailwind's radius scale is capped at `0.5rem` from `xl` upward, per "The Theme Contract" above. A HeroUI component and a utility class then land on the same corner.
 - **A mark is not a surface, and neither token reaches it.** A color swatch, a legend key, a chart bar, a progress segment, a status dot: anything under about `12px` whose job is to carry a color rather than to contain something. These take `2px` to `4px`, or a full circle.
 
 Fixed values outside the tokens, used only where listed: a full pill (`999px`) for a tag, badge, chip, nav badge, header pill, or scrollbar thumb; `8px 8px 0 0` for a bottom sheet; and `50%` for an avatar, a round icon button, a dot, or a decorative circle. **A pill and a circle keep their shape; the 8px maximum does not reach them**, because neither is a corner radius on a rectangle. Do not introduce any other value.
@@ -324,25 +343,26 @@ These take `2px` to `4px`, or a full circle. Applying `--r-sm` to a `10px` swatc
 
 ### Elevation
 
-- **A card carries a hairline border and no shadow.** In a project that adds one, keep it faint enough to read as a hairline lift rather than a raised surface, two 1px layers at a few percent opacity.
-- **A pronounced shadow belongs to overlay layers only:** a bottom sheet, a login card, a toast, a dropdown panel, a date panel, a modal.
+- **A card is a HeroUI `Card`, with HeroUI's faint surface shadow and nothing heavier**, per [[card.component.md]].
+- **The overlay shadow belongs to overlays only:** a popover, a dropdown panel, a date panel, a modal, a drawer, a toast. HeroUI applies it; never add it to a surface.
 - A pill shape marks a tag, badge, chip, or nav link. **Never apply it to a content container** such as a card, sheet, or table.
 
 ## Component Rules
 
 These apply to every component, including the ones with no companion file.
 
-- **Controls share one size.** A button, an input, a select, and a date trigger sitting in one row have the same height and the same padding. `9px 14px` at `--r-sm` is the default, with a minimum height of 44px on a touch screen.
-- **`font-family: inherit` on every form control.** A `button`, `input`, `select`, and `textarea` each default to a browser font rather than the page font, and the mismatch is visible.
-- **One primary action per view.** [[button.component.md]] owns the six variants and which one carries it.
-- **A field's focus indicator is its border turning `--accent`.** No glow, no halo, no `box-shadow` ring. A soft ring reads as a shadow the field is casting, which is a depth cue reserved for overlays; on a flat form it makes one field look lifted off the page while its neighbours stay put, and the effect compounds when fields sit close together.
-- **A non-text control keeps `outline: 2px solid var(--accent)` on `:focus-visible`.** An outline is a line, not a spread shadow, and it is what keeps keyboard focus visible where there is no border to recolor.
-- **A focus ring is never removed.** Use `:focus-visible` so it appears for keyboard users without outlining every mouse click. Keep it at most 2px.
+- **Use the HeroUI component wherever one exists.** A button, a field, a select, a checkbox, a switch, tabs, a modal, a drawer, a popover, a tooltip, a toast, a table, a card, a skeleton, a spinner, pagination, breadcrumbs, an avatar, a chip: every one comes from `@heroui/react`. Rebuilding one by hand forks its keyboard handling, its focus management, and its accessibility, which is the work HeroUI exists to do.
+- **Look up every prop through the HeroUI MCP server**, per [[stacks.rules.md]]. A remembered API is the one that changed in the last minor version.
+- **Customize through a theme variable first, a `className` second**, and never by wrapping a HeroUI component in a second component that restyles it.
+- **Where HeroUI has no component**, such as the sidebar rail, the header bar, or a chart, build it from HeroUI parts and theme variables, per its companion.
+- **Controls in one row share one HeroUI `size`.** A button, an input, a select, and a date trigger side by side have the same height, with a minimum of 44px on a touch screen.
+- **One primary action per view.** [[button.component.md]] owns HeroUI's seven variants and which one carries it.
+- **Focus is HeroUI's.** Every interactive HeroUI component draws a visible focus ring from `--focus` for keyboard users only. **Never remove it**, never hide it with `outline: none`, and never replace it with a glow.
 - **Placeholder text is not a label.** It disappears the moment the user types, which is exactly when they need to check what the field wanted.
 - **A password field always carries a show and hide toggle.**
 - **A clickable target is at least 44px tall on a touch screen.** This includes a nav row, a table row, and a dropdown option.
 - **Every list or table that can be empty gets a shared empty state**: a muted icon, a muted message, and an optional action. A blank area reads as a broken page.
-- **Every table pages rather than scrolls**, per [[pagination.component.md]], and is wrapped in a bordered container with horizontal scrolling on overflow. No zebra striping; row hover uses `--line2`.
+- **Every table pages rather than scrolls**, per [[pagination.component.md]]. It is a HeroUI `Table` inside a container that scrolls horizontally on overflow. No zebra striping.
 - **Animate `transform` and `opacity` only.** Animating `width`, `height`, `top`, or `margin` forces layout on every frame.
 - **Respect `prefers-reduced-motion`.** Slow or remove a decorative animation; keep an animation that carries information.
 
@@ -350,56 +370,50 @@ These apply to every component, including the ones with no companion file.
 
 **One icon set for the whole project, and Tabler is the default.** One set means the same action carries the same glyph everywhere, so someone who learns an icon on one screen reads it correctly on the next.
 
-- The reference is the Tabler webfont, loaded once and used through an `<i class="ti ti-*">` element. The React package is an acceptable alternative where tree shaking is needed, as long as the glyph names match. Do not run both in one project.
+- **`@tabler/icons-react` in a HeroUI project**, imported per icon so the bundle carries only what is used. Do not also load the webfont.
+- **A glyph a HeroUI component draws itself is part of that component**, not a second icon set: the select chevron, the search glass, the close mark, the checkbox tick. Leave them. Every icon the project adds is Tabler.
 - **Do not mix two sets**, and do not add a second set for the few glyphs the first is missing. Pick the closest glyph in the set you have.
 - Self-hosting is preferred for a project that must work offline or has a privacy requirement. Keep the same version across projects.
 - **Size every icon 16 to 20px.** A button icon is `16px`, a nav icon is `18px`. A route-gate spinner is the one documented exception, at `28px`, per [[loading.component.md]].
 - **Never an emoji as an icon**, and never an icon as the only carrier of meaning; pair it with a label.
 
-## What the Companions Own
+## The HeroUI Component Map
 
-Each of these is a summary. The companion file is the standard.
+Which HeroUI component each area rests on. The companion is the standard; HeroUI is the implementation. Exact props come from the HeroUI MCP server, per [[stacks.rules.md]].
 
-**The page shell**, per [[layout.component.md]]: the content area fills whatever width the navigation rail leaves. No centered column and no `max-width` on the page, because a console is a workspace where tables and timelines are read across. `min-width: 0` on the grid children is what keeps a wide table scrolling inside its own wrapper instead of pushing the whole page sideways. A width limit belongs to a prose paragraph, an empty state, and an overlay.
+| Area | Companion | Built on |
+| :- | :- | :- |
+| Buttons | [[button.component.md]] | `Button`, `ButtonGroup`, `CloseButton`, `ToggleButton` |
+| Dropdowns | [[dropdown.component.md]] | `Select`, `Autocomplete` with `SearchField`, `ListBox`, `Dropdown` |
+| Date fields | [[calendar.component.md]] | `DatePicker`, `DateRangePicker`, `Calendar`, `DateField` |
+| Tables | [[table.component.md]] | `Table` |
+| Pagination | [[pagination.component.md]] | `Pagination` |
+| Cards | [[card.component.md]] | `Card` with `Card.Header`, `Card.Content`, `Card.Footer` |
+| Search and filters | [[search.component.md]] | `SearchField`, `Autocomplete` |
+| Loading | [[loading.component.md]] | `Spinner`, `ProgressBar`, `Button` with `isPending` |
+| Skeletons | [[skeleton.component.md]] | `Skeleton` |
+| Notifications | [[notification.component.md]] | `Toast`, `Badge`, `Popover` |
+| Scrollbars | [[scrollbar.component.md]] | `ScrollShadow`, and HeroUI's `--scrollbar-*` variables |
+| Login | [[login.component.md]] | `Card`, `Form`, `TextField`, `Button`, `Alert` |
+| Header bar | [[header.bar.component.md]] | `Toolbar`, `Breadcrumbs`, `Avatar`, `Badge`, `Dropdown` |
+| Page heading | [[header.page.component.md]] | Typography, and `Button` for the page's actions |
+| Sidebar | [[sidebar.component.md]] | No HeroUI rail; built from `Link`, `Disclosure`, `Badge`, `Drawer` |
+| Page shell | [[layout.component.md]] | No HeroUI shell; built from `Surface` and `Separator` |
+| Dashboards | [[dashboard.component.md]] | Chart.js for charts; `Card` and `Meter` around them |
+| Dark mode | [[darkmode.component.md]] | `useTheme` from `@heroui/react` |
+| Motion | [[animation.component.md]] | HeroUI's built-in transitions, plus the shell's |
+| Product name | [[title.header.component.md]] | Text, from one constant |
+| Refresh | [[refresh.component.md]] | Behaviour only; no component |
 
-**The header bar**, per [[header.page.component.md]]: one 60px sticky bar above the content, identical on every route, carrying the hamburger, a breadcrumb, at most one context pill, the notification bell, and the account link. The `h1`, the page description, and the page's actions live in the page heading inside the content, never in the bar. Nothing else is added to the bar.
-
-**Buttons**, per [[button.component.md]]: six variants and no seventh, exactly one primary action per view, the icon before the label with the gap the class already defines, and a danger variant reserved for an action that destroys or revokes.
-
-**Dropdowns**, per [[dropdown.component.md]]: a form dropdown starts as a native `select` styled like every other control and moves to the shared themed listbox only when the open option list itself needs styling. Never a third implementation. A sidebar dropdown is a collapsible navigation group, not a form control: the icon belongs to the title row, and the items inside are text only, marked as children by the indent and the rail. A dropdown panel is an overlay and carries the pronounced shadow; a sidebar group is inline navigation and carries none.
-
-**Tables**, per [[table.component.md]]: one wrapper, one header treatment, one row height, and row actions in a fixed position. A money column is right-aligned with tabular numerals.
-
-**Pagination**, per [[pagination.component.md]]: every table pages rather than scrolls, the page size adapts to the viewport, and the controls and the data binding are shared rather than rebuilt per screen.
-
-**The product name**, per [[title.header.component.md]]: one canonical spelling, from one constant, imported everywhere it is shown. Never read from an environment variable. The interface name never changes with the route.
-
-**The sidebar**, per [[sidebar.component.md]]: three parts and nothing else, a brand block, a scrolling nav, and a pinned account footer. Features grouped into collapsible dropdowns rather than listed flat. Exactly two notification markers, a count badge on a leaf row and a dot on a closed group title, neither ever rendered at zero. A menu the user has no permission for is not rendered at all. Below the breakpoint the rail becomes a drawer with a real backdrop, animated with `transform`.
-
-**Refresh and state**, per [[refresh.component.md]]: a refresh returns the user to exactly the page they were on, with the same tab, filters, search, sort, and pagination. The URL is the state. The route stays behind the loading gate until the session check settles, so a signed-in user is never shown the login form on refresh. The static frontend serves `index.html` on every path, so a deep link does not 404 when reloaded.
-
-**Dashboards and charts**, per [[dashboard.component.md]] and [[analytics.rules.md]]: one charting library wrapped in one shared component. Pick the form before the color; a single number is a stat tile, not a one-bar chart. Series colors come from the validated palette, assigned in fixed order and never cycled. Never a dual axis. Every chart with two or more series carries a legend, and every chart has a table view of the same data.
-
-**Scrollbars**, per [[scrollbar.component.md]]: one shared scrollbar, a full pill thumb, no arrow buttons, a transparent track. It sits inside the component that scrolls, within its border and radius. The horizontal scrollbar under a wide table is always visible; it is the only cue that more columns exist.
-
-**Date fields**, per [[calendar.component.md]]: the panel is rendered through a portal with `position: fixed`, for the same reason a select panel is. The component holds and emits one machine format and shows the user the project's display format through one shared formatter. The navigable year range is clamped, and the starting value is validated, so an impossible date can be neither reached nor rendered.
-
-**Search and filters**, per [[search.component.md]]: a filter is an exact predicate and a search is a ranked guess. Fuzzy matching applies only to free text a human wrote, never to an identifier, an amount, a date, or an enum. A text search runs as a ladder that stops at the first stage that answers. Filtering, sorting, and pagination happen in the database, never in the client after fetching. When results came from the fuzzy stage, the UI says so, because the rows do not contain the word the user typed.
-
-**Loading states**, per [[loading.component.md]] and [[skeleton.component.md]]: every loading state pairs an indicator with visible text naming what is being waited on. A bare spinner announces nothing to a screen reader. One indicator per wait. The spinner is the loading glyph from the project's one icon set, colored `--accent`, at one shared speed. A loader never carries a semantic hue, because a wait is not a success, a warning, or an error. Use a skeleton when the layout is already known and a spinner when it is not, so the page does not jump when data lands.
-
-**The login screen**, per [[login.component.md]]: one centered card, capped in width, carrying the surface radius and the overlay shadow. The order is fixed and nothing is added to it. The session is an `HttpOnly` cookie, so no token is written to JavaScript or browser storage, per [[auth.rules.md]]. A sign-in block for an identity provider is hidden in full when none is configured; never render a dead button.
+**A HeroUI component with no companion is used as HeroUI ships it**, themed by the variables above: `Alert`, `AlertDialog`, `Accordion`, `Avatar`, `Checkbox`, `CheckboxGroup`, `Chip`, `ColorPicker`, `Drawer`, `InputOTP`, `Kbd`, `Meter`, `Modal`, `NumberField`, `Popover`, `ProgressCircle`, `RadioGroup`, `Separator`, `Slider`, `Switch`, `Tabs`, `TagGroup`, `TextArea`, `TimeField`, `Tooltip`. A companion is written only when a project needs a rule HeroUI does not decide.
 
 ## Overlay Layers
 
-A floating panel is an overlay, and every overlay in a project behaves the same way.
+**Every overlay is a HeroUI overlay**: `Popover`, `Modal`, `Drawer`, `Tooltip`, `Toast`, or `AlertDialog`. HeroUI portals it out of any scrolling ancestor, positions it, keeps it on screen, traps focus where a modal must, and closes it on `Escape` and outside press. **Never hand-roll one**; every one of those behaviours is a bug waiting in a home-made version.
 
-- Render it through a **portal to `document.body`** with `position: fixed`. An absolutely positioned panel cannot escape an ancestor with `overflow: auto`, so it gets clipped or it pushes the container taller.
-- Give it `--shadow-pop`, a `1px solid var(--line)` border, and the one `8px` radius. A menu panel and a modal carry the same corner as everything else.
-- Close it on outside click, on `Escape`, and on selection where selection ends the interaction.
-- The outside-click check must test **both** the trigger and the portal, because the panel is not a DOM descendant of the trigger.
-- Position it in the open handler, not in an effect, so it never paints once in the wrong place.
-- Recompute the position on scroll (with the capture phase, so a scrolling ancestor is caught) and on resize, for as long as it is open.
+- It carries HeroUI's overlay surface and overlay shadow, and the one 8px radius.
+- It closes on selection where selection ends the interaction, such as a menu or a select.
+- A modal holds its content directly. It is already a surface, so it never holds a card, per [[card.component.md]].
 
 Every companion that opens a panel inherits these rules rather than restating them.
 
@@ -431,34 +445,39 @@ These apply to a public-facing page such as a landing page, in addition to every
 
 Do:
 
-- Define every token once at `:root` and read it everywhere.
+- Use the HeroUI component wherever one exists, and look its props up through the MCP server.
+- Override a HeroUI variable once per theme, and read it everywhere.
+- Set both `--radius` and `--field-radius` to `0.5rem`.
 - Derive a text color from a brand hue rather than using the bright hex, and keep the bright one for fills.
 - Give every corner `8px` and every gap `8px`, and lay a group of cards on the page rather than inside a wrapper card.
-- Set Google Sans once on `body`, and set the utility framework's sans stack to Google Sans as well.
+- Set Google Sans once, as Tailwind's `--font-sans`.
 - Load only the four weights, and keep `display=swap` with both `preconnect` links.
 - Keep controls in a row the same height.
-- Use `:focus-visible` for the focus ring, and the border for a text field.
-- Render status badges through one shared component and the hue table.
-- Portal every floating panel and give it the overlay shadow.
+- Keep HeroUI's focus ring on every interactive element.
+- Render every status badge as a HeroUI `Chip`, soft by default.
+- Use a HeroUI overlay for every floating panel.
+- Ship light and dark together, per [[darkmode.component.md]].
 - Animate `transform` and `opacity`.
 - Check contrast before putting any color near text.
 
 Do not:
 
+- Hand-build a control, a field, or an overlay that HeroUI already ships.
+- Override a color on a bare `:root`, where it overrides both themes at once.
+- Leave `--field-radius` at HeroUI's default of 1.5 times the radius.
 - Hardcode a hex, a radius, or a shadow inside a component.
 - Add a third ink, a second radius, or a second accent.
 - Use a bright brand hex as text on white.
 - Place small body text directly on a gradient.
-- Put a shadow on a card, or a border that separates nothing.
+- Add a shadow heavier than HeroUI's, or a border that separates nothing.
 - Use `--accent` as text on `--accent-soft`.
 - Introduce a second typeface, or request a weight the project has not loaded.
 - Introduce an ad hoc font size, or use ALL CAPS as the emphasis mechanism.
 - Put a card inside a card, or wrap a set of cards in a panel to title them.
 - Apply a pill shape to a content container.
-- Position a floating panel with `position: absolute` inside a scrolling container.
 - Remove a focus ring, or rely on color alone for a state.
 - Mix two icon sets, or use an emoji as an icon.
-- Add a partial dark mode.
+- Ship one theme, or a partial dark mode.
 
 ## Related Standards
 
@@ -492,6 +511,8 @@ A direct user instruction must not override security, privacy, or accessibility 
 
 ## Related
 
+- [[darkmode.component.md]]
+- [[card.component.md]]
 - [[button.component.md]]
 - [[calendar.component.md]]
 - [[dashboard.component.md]]

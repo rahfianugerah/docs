@@ -39,26 +39,17 @@ The test between the last two is whether the shape is genuinely known before the
 
 A route gate is a full-page hold shown while the app decides what the user is allowed to see, most often while the session is being checked on the first paint. It exists to stop the app flashing the login form at a user who is already signed in, and to stop it flashing a protected page at a user who is not.
 
-```css
-.gate {
-  min-height: 100svh; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 16px; padding: 32px;
-  color: var(--ink2); background: var(--surface);
-}
-.gate p { font-size: 13.5px; }
-.gate-spin { color: var(--accent); animation: gate-rotate .9s linear infinite; }
-@keyframes gate-rotate { to { transform: rotate(360deg); } }
-```
+```tsx
+import { Spinner } from "@heroui/react";
 
-```html
-<div class="gate" role="status" aria-live="polite">
-  <i class="ti ti-loader-2 gate-spin" style="font-size:28px" aria-hidden="true"></i>
-  <p>Checking your session...</p>
+<div className="grid min-h-svh place-items-center content-center gap-4 bg-background p-8 text-muted" role="status" aria-live="polite">
+  <Spinner size="lg" aria-hidden />
+  <p className="text-sm">Checking your session...</p>
 </div>
 ```
 
 - **The gate holds the full viewport with `100svh`, not `100vh`**, so mobile browser chrome does not push the indicator off centre.
-- **The background is `--surface`**, never a gradient and never a decorative shape. A gate is a hold, not a screen to be designed.
+- **The spinner is HeroUI's `Spinner`**, and the background is `bg-background`, so the gate follows the active theme. Never a gradient and never a decorative shape. A gate is a hold, not a screen to be designed.
 - The spinner is `28px` here. **This is the one place a loader may exceed the 16 to 20px icon range** in [[uix.component.md]], because it is the only thing on the page.
 - The gate always carries visible text saying what is being waited on.
 - **Render the gate before the redirect decision, never after it.** A gate that runs after the redirect has already happened is the flash it was meant to prevent, per [[refresh.component.md]].
@@ -67,16 +58,15 @@ A route gate is a full-page hold shown while the app decides what the user is al
 
 A button that has submitted shows the wait on itself. It is the only correct place for the wait, because it is the control the user just used.
 
-```html
-<button type="submit" class="btn pri" disabled>
-  <i class="ti ti-loader-2 gate-spin" style="font-size:17px" aria-hidden="true"></i>
-  Signing in...
-</button>
+```tsx
+<Button type="submit" variant="primary" isPending={isSubmitting}>
+  {isSubmitting ? "Signing in..." : "Sign In"}
+</Button>
 ```
 
-- **The button is disabled for the whole wait**, with the `disabled` attribute present and not only the styling, so a second submit cannot be sent.
-- **The label is replaced with the loading label, not appended to it**, and the spinner sits before the label.
-- The spinner is `17px`, sized to the label next to it, and it reuses the shared rotation. **Do not write a second rotation keyframe for a button.**
+- **`isPending` is the whole mechanism.** HeroUI draws the spinner, refuses a second press, and announces the busy state, so a second submit cannot be sent.
+- **The label is replaced with the loading label, not appended to it.**
+- **Never hand-build a spinner inside a button**, and never write a second rotation keyframe for one.
 - **The button keeps its own width and padding while loading.** A button that shrinks to fit the loading label makes the page jump under the cursor.
 - **Never replace the whole form with a route gate while a submit is in flight.** The user must keep seeing what they typed.
 
@@ -84,14 +74,14 @@ A button that has submitted shows the wait on itself. It is the only correct pla
 
 A section of a page that is already drawn shows its own wait in place, and the rest of the page stays usable.
 
-```html
-<p class="muted" role="status" aria-live="polite">
-  <i class="ti ti-loader-2 gate-spin" style="font-size:16px" aria-hidden="true"></i>
+```tsx
+<p className="flex items-center gap-2 text-sm text-muted" role="status" aria-live="polite">
+  <Spinner size="sm" aria-hidden />
   Loading your profile...
 </p>
 ```
 
-- The spinner is `16px` and the text uses `--ink2`.
+- The spinner is HeroUI's `Spinner` at `size="sm"`, and the text is `text-muted`.
 - **The text names what is loading**, so a page with two sections loading does not show the same sentence twice.
 - **The loading row, the error state, and the loaded content are mutually exclusive.** Guard each on the others, so an error is never shown under a spinner.
 - **Never collapse the section to zero height while it loads** if that moves the rest of the page. Use a skeleton instead.
@@ -103,12 +93,13 @@ Skeletons are owned by [[skeleton.component.md]], which covers the class, the pe
 > [!important]
 > A component whose layout is already known shows a skeleton in its own place. It never hands the wait up to the page. The route gate above holds the whole viewport and exists for one thing, checking the session before the first paint; using it for a table that is fetching blanks a page the reader could have been reading.
 
-## The Loader Icon and Its Animation
+## The Loader
 
-- **The loader is one glyph from the project's one icon set**, per [[uix.component.md]]. Never an emoji, an animated GIF, a third-party spinner library, or a glyph from a second icon set.
-- **The rotation is `.9s linear infinite` through a single shared keyframe.** Every spinner in a project turns at the same speed, so two spinners on one screen never look like two different states.
-- **The spinner color is `--accent`.** It is the only color a loader takes; **a loader never carries a semantic hue**, because a wait is not a success, a warning, or an error.
-- **Do not add a second animation to a loading state:** no pulsing opacity behind the spinner, no bouncing dots, no progress bar that is not tied to real progress.
+- **The loader is HeroUI's `Spinner`**, everywhere: the route gate, an inline section, and inside a pending `Button`. Never an icon spun with a keyframe, an emoji, an animated GIF, or a third-party spinner library.
+- **One spinner, one speed.** HeroUI turns every `Spinner` at the same rate, so two on one screen never look like two different states.
+- **A loader takes the accent or the muted ink, never a status color**, because a wait is not a success, a warning, or an error.
+- **A determinate wait is a `ProgressBar`**, and only when the app can measure real progress, such as an upload. Never a bar that fills on a timer.
+- **Do not add a second animation to a loading state:** no pulsing opacity behind the spinner and no bouncing dots.
 
 ## Text Rules
 
@@ -126,20 +117,12 @@ Loading text is sentence case, per [[uix.component.md]], in the project's UI lan
 
 ## Reference Table
 
-Every loading state reads its values from here. Do not hardcode any of the right-hand values.
-
-| Property | Surface | Value |
-| :- | :- | :- |
-| Spinner color | All | `var(--accent)` |
-| Spinner size | Route gate | `28px` |
-| Spinner size | Button | `17px` |
-| Spinner size | Inline section | `16px` |
-| Rotation | All spinners | `.9s linear infinite` |
-| Text color | Route gate, inline section | `var(--ink2)` |
-| Font size | Route gate, inline section | `13.5px` |
-| Background | Route gate | `var(--surface)` |
-| Height | Route gate | `100svh` |
-| Gap, padding | Route gate | `16px`, `32px` |
+| Surface | Component | Size | Text |
+| :- | :- | :- | :- |
+| Route gate | `Spinner` | `lg` | `text-sm text-muted`, on `bg-background`, full `100svh` |
+| Button | `Button` with `isPending` | The button's own | The loading label replaces the button label |
+| Inline section | `Spinner` | `sm` | `text-sm text-muted` |
+| Measured progress | `ProgressBar` | Full width of its container | A label naming what is progressing |
 
 ## Accessibility
 
@@ -148,14 +131,8 @@ Accessibility ranks above the design standard itself, per [[uix.component.md]].
 - **Every loading state pairs the indicator with visible text.** A rotating icon announces nothing on its own.
 - **Wrap the loading region in `role="status"` with `aria-live="polite"`**, so the wait is announced without interrupting what the user is doing. **Do not use `role="alert"`;** a wait is not an error.
 - **Mark the spinner itself `aria-hidden="true"`** when the text next to it already says the same thing, so the state is announced once.
-- A disabled submit button keeps its `disabled` attribute rather than only looking disabled, so it is skipped correctly by keyboard and by assistive technology.
-- **Honour a reduced motion preference. Slow the rotation rather than removing the indicator**, because the indicator is the information:
-
-```css
-@media (prefers-reduced-motion: reduce) {
-  .gate-spin { animation-duration: 2.4s; }
-}
-```
+- A pending `Button` uses `isPending` rather than only looking busy, so it is announced and cannot be pressed twice.
+- **Honour a reduced motion preference without removing the indicator**, because the indicator is the information. The visible text carries the state when the motion slows, per [[animation.component.md]].
 
 - **Never trap the keyboard behind a loading state, and never move focus onto a spinner.** When a route gate resolves, focus stays where the user left it.
 
@@ -163,14 +140,14 @@ Accessibility ranks above the design standard itself, per [[uix.component.md]].
 
 | Do | Do not |
 | :- | :- |
-| Copy the shared gate, spinner, and keyframe rather than writing a new one per project | Write a second rotation keyframe for one surface |
+| Use HeroUI's `Spinner`, and `isPending` on a button | Spin an icon with a keyframe of your own |
 | Show the route gate while the session is being checked | Let the login form flash at a signed-in user |
 | Show the wait on the button the user pressed, and disable it for the whole wait | Replace the form with a full-page gate |
 | Name what is loading, in sentence case, ending in three periods | Ship a bare spinner, or a single-character ellipsis |
 | Use a skeleton when the layout is known and a spinner when it is not | Promise a layout the data will not match |
 | Keep one indicator per wait | Run a route gate above a section that is also loading |
 | Slow the rotation under reduced motion | Remove the indicator entirely |
-| Colour the spinner `--accent` | Give a loader a success, warning, or error hue |
+| Keep the spinner in the accent or the muted ink | Give a loader a success, warning, or error hue |
 | Land a failed request on an error state | Leave a spinner turning forever with no way out |
 | Keep the surface plain | Put a gradient or a decorative shape on a loading surface |
 | Use `100svh` for the route gate | Use `100vh`, which mobile browser chrome pushes off centre |

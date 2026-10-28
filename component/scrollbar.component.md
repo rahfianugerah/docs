@@ -21,6 +21,12 @@ This is the rule everything else here serves, and it is the one most often broke
 
 This extends [[uix.component.md]] and uses its tokens.
 
+## Built On HeroUI
+
+This is HeroUI's scrollbar styling, set through its `--scrollbar-*` theme variables, with `ScrollShadow` where an edge fade helps. HeroUI owns the markup, the keyboard handling, the focus ring, and the accessibility; this standard owns the decisions HeroUI leaves to the project. Exact props come from the HeroUI MCP server, per [[stacks.rules.md]].
+
+**HeroUI's appearance is the default.** Where this file shows HTML or CSS, read it for the behaviour, the content, and the measurements to check against. Where HeroUI's own rendering differs in appearance, HeroUI's wins; every rule here about behaviour, content, and accessibility still applies.
+
 ## A Scrollbar Is an Affordance, Not Decoration
 
 Hiding a scrollbar is styling that removes information. The scrollbar answers two questions nothing else on the screen answers: is there more, and how much more.
@@ -177,3 +183,4 @@ If another instruction conflicts with this standard, follow this priority:
 - [[refresh.component.md]]
 - [[dashboard.component.md]]
 - [[sidebar.component.md]]
+- [[stacks.rules.md]]

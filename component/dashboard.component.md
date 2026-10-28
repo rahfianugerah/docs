@@ -16,6 +16,10 @@ tags:
 
 A dashboard renders what [[analytics.rules.md]] sanctions, and renders it without losing anything on the way to the screen. The guardrails in that document are not advice to keep in mind here; they are configuration this file has to set explicitly, because several of them are things a charting library will otherwise do by default.
 
+## Built On HeroUI
+
+HeroUI has no charting component, so it is built from Chart.js for the charts, inside HeroUI `Card`s, with HeroUI's `Meter` for a single bounded value and HeroUI's theme variables, per [[uix.component.md]]. The HTML and CSS below are that build: they read only theme variables, so the result follows the light and dark theme with every HeroUI component around it.
+
 ## The Library
 
 **Chart.js, one library, wrapped once.**

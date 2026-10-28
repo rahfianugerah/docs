@@ -19,6 +19,12 @@ tags:
 
 A table shows a bounded number of rows at a time, and the reader moves between those bounds by an explicit control that names where they are. This is not a performance technique that happens to be visible; it is the interaction model, and it is chosen over scrolling on purpose.
 
+## Built On HeroUI
+
+This is HeroUI's `Pagination`. HeroUI owns the markup, the keyboard handling, the focus ring, and the accessibility; this standard owns the decisions HeroUI leaves to the project. Exact props come from the HeroUI MCP server, per [[stacks.rules.md]].
+
+**HeroUI's appearance is the default.** Where this file shows HTML or CSS, read it for the behaviour, the content, and the measurements to check against. Where HeroUI's own rendering differs in appearance, HeroUI's wins; every rule here about behaviour, content, and accessibility still applies.
+
 ## Pagination, Never Scroll
 
 Infinite scroll, endless scroll, and load-on-scroll virtualization are prohibited for tabular data. Four properties are lost the moment a table scrolls instead of paging, and each of them is something a user of an internal business app relies on:
@@ -200,3 +206,4 @@ If another instruction conflicts with this standard, follow this priority:
 - [[refresh.component.md]] owns the URL state that makes a page addressable
 - [[scrollbar.component.md]] owns the scroll region a wide table uses rather than cropping
 - [[uix.component.md]] owns the control sizing and the empty state
+- [[stacks.rules.md]]
