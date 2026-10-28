@@ -20,26 +20,33 @@ People compare rows, scan a timeline across months, and keep a board of several 
 
 This extends [[uix.component.md]] and takes every spacing value from the scale defined there. A public or marketing page is a different surface and may centre its content, per the navigation rule in that file.
 
+## Built On HeroUI
+
+HeroUI has no page shell, so it is built from plain layout around HeroUI's `Surface` and `Separator` and HeroUI's theme variables, per [[uix.component.md]]. The HTML and CSS below are that build: they read only theme variables, so the result follows the light and dark theme with every HeroUI component around it.
+
 ## The Page Shell
 
-The shell has two parts and no third: the navigation rail, owned by [[sidebar.component.md]], and the content area beside it.
+The shell has three parts and no fourth: **the header bar across the full width**, then under it **the navigation rail** on the left and **the content pane** on the right. [[header.bar.component.md]] owns the bar, [[sidebar.component.md]] owns the rail, and the page heading is not part of the shell: it is the first block inside the content pane, per [[header.page.component.md]].
 
-```css
-.app { display: grid; grid-template-columns: 236px 1fr; min-height: 100vh; }
-.main { display: flex; flex-direction: column; min-width: 0; }
-.content { padding: 22px 24px 60px; width: 100%; min-width: 0; }
-
-@media (max-width: 900px) {
-  .app { grid-template-columns: 1fr; }
-  .content { padding: 16px 14px 48px; }
-}
+```tsx
+<div className="flex h-dvh flex-col bg-background text-foreground">
+  <HeaderBar />
+  <div className="flex min-h-0 flex-1">
+    <Sidebar />
+    <main ref={paneRef} className="min-w-0 flex-1 overflow-y-auto px-6 pb-15 pt-5">
+      {children}
+    </main>
+  </div>
+</div>
 ```
 
-- **`.content` never carries `max-width` or `margin-inline: auto`.** Its width is whatever the rail leaves.
-- **`min-width: 0` on both `.main` and `.content` is required.** Without it a wide table or timeline stretches the grid track instead of scrolling inside its own wrapper, and the whole page scrolls sideways. This is the single most common layout bug in a sidebar shell, and it is invisible until the first wide table lands.
-- **The padding is the only gutter.** A page component never adds its own horizontal padding on top of it, because two gutters stacked read as a misaligned page.
-- The `.app` grid and the 900px breakpoint are the same values [[sidebar.component.md]] declares. They are one shell, so the two files must never carry different numbers.
-- Below the breakpoint the rail becomes a drawer, per [[sidebar.component.md]], and the content takes the full screen width.
+- **The shell fills the viewport and only the content pane scrolls.** The bar and the rail stay where they are, so the brand, the tools, and the navigation never scroll out of reach.
+- **The content pane never carries `max-width` or `margin-inline: auto`.** Its width is whatever the rail leaves.
+- **`min-w-0` on the content pane is required.** Without it a wide table or timeline stretches the flex track instead of scrolling inside its own container, and the whole page scrolls sideways. This is the single most common layout bug in a sidebar shell, and it is invisible until the first wide table lands.
+- **The pane's padding is the only gutter.** A page component never adds its own horizontal padding on top of it, because two gutters stacked read as a misaligned page.
+- **The rail width and the breakpoint are the values [[sidebar.component.md]] declares.** They are one shell, so the two files never carry different numbers.
+- **Below the breakpoint the rail becomes a drawer**, per [[sidebar.component.md]], the hamburger appears in the bar, and the content pane takes the full width.
+- **The canvas is HeroUI's `--background`** and every surface on it is HeroUI's `--surface`, so the shell follows the light and dark theme with everything inside it, per [[darkmode.component.md]].
 
 ## What Fills the Width
 
@@ -82,7 +89,8 @@ A width limit belongs to reading and to overlays, never to the page.
 | :- | :- | :- |
 | [[uix.component.md]] | The tokens, the spacing scale, the grids, and the single breakpoint | Every value this file names but does not define, and the overlay rules |
 | [[sidebar.component.md]] | The navigation rail | The `.app` grid this file shares with it, and the drawer below the breakpoint |
-| [[header.page.component.md]] | The header bar and the page heading | Where a page title, a page action, and a page filter belong |
+| [[header.bar.component.md]] | The header bar | The strip across the top of the shell |
+| [[header.page.component.md]] | The page heading | Where a page title, a page action, and a page filter belong |
 | [[table.component.md]] | The table itself | Why a wide table scrolls inside its wrapper rather than widening the page |
 | [[pagination.component.md]] | Paging | Why a long list pages instead of growing the page |
 | [[login.component.md]] | The sign-in screen | The one centred, width-capped card in the project |
