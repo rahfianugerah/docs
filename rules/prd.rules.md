@@ -14,7 +14,7 @@ tags:
 
 ## Core Requirement
 
-**Every project has a `PRD.md`, and it is written before the code.** No feature is built without one, and no repository exists without one.
+**Every project has a `docs/PRD.md`, and it is written before the code.** No feature is built without one, and no repository exists without one.
 
 A PRD says what is being built, for whom, and why. It does not say how; that is the technical decision, and it belongs in the code, the API document, and the runbook.
 
@@ -22,7 +22,7 @@ The point is not process. It is that the most expensive mistake is not a bug, it
 
 ## Where It Lives
 
-- One `PRD.md` in the repository root, beside the `README.md`.
+- One `docs/PRD.md` in the repository, beside `docs/SRS.md` from [[srs.rules.md]] and any technical plan in `docs/PLAN.md`. The PRD and SRS describe the whole project; a plan describes the work being built now, links to both, and never repeats them.
 - Written in the language its readers use, because its readers are whoever asked for the project. The eight sections and their order do not change with the language; only the headings are translated.
 - Committed and versioned like any other document. It is not a chat message, not a spreadsheet, not a screenshot of a chat thread.
 - A frontend and a backend that serve one app share the app's PRD. Put it in the backend repository and link to it from the frontend README, so the product intent is not split in half by a repository boundary, per [[repository.rules.md]].
@@ -31,8 +31,8 @@ The point is not process. It is that the most expensive mistake is not a bug, it
 
 | Situation | What is required |
 | :- | :- |
-| A new project | A full `PRD.md` before the first feature commit |
-| A significant feature in an existing project | A new section in that project's `PRD.md`, before the branch is cut |
+| A new project | A full `docs/PRD.md` before the first feature commit |
+| A significant feature in an existing project | A new section in that project's `docs/PRD.md`, before the branch is cut |
 | A bug fix, a refactor, a dependency bump | Nothing. A PRD describes intent, and these change none |
 | A change the owner asked for verbally | The PRD section first, then the code. The verbal ask is the input, not the record |
 
@@ -70,7 +70,15 @@ Eight sections, in this order. Every one is required, and the shortest useful an
 [What is undecided, and who has to decide it.]
 ```
 
-Header fields sit above the first section: the owner as a named person, the date, and a status of `Draft`, `Approved`, or `Done`.
+Header fields sit above the first section: the owner as a named person, the date, a status of `Draft`, `Approved`, or `Done`, and **one sentence naming the goal**: the outcome the whole product serves, which every section below has to move toward.
+
+When the PRD is the first part of `docs/PLAN.md`, every heading moves one level down and takes the part number as its prefix: `## 1. PRD`, `### 1.1 Problem`.
+
+## From PRD to SRS
+
+**The PRD says what is built and why; the SRS from [[srs.rules.md]] turns it into numbered requirements a tester can check.** Every capability in What Is Built becomes one or more requirements in the SRS, and every requirement traces back to one. Requirement codes, priorities, and interfaces live in the SRS, never in the PRD.
+
+The PRD is written and agreed first. An SRS written before its PRD specifies a product nobody has decided to want.
 
 ## The Sections That Do the Work
 
@@ -106,14 +114,14 @@ Four of the eight carry almost all the value, and they are the four most often l
 
 An agentic coding tool reads the PRD before it writes code, and this is where it matters most: a model given a task with no PRD will infer the intent, build something coherent, and be confidently wrong about why.
 
-- Read `PRD.md` before starting a feature. If the repository has none, say so and offer to draft one rather than inferring the intent from the code.
+- Read `docs/PRD.md` and `docs/SRS.md` before starting a feature. If the repository has none, say so and offer to draft one rather than inferring the intent from the code.
 - Where the ask exceeds the PRD, name the gap before building. The PRD section comes first.
 - A PRD drafted by an agent is a draft. It is not approved until the named owner says so, and `Draft` stays in the status field until then.
 - A durable decision from a PRD conversation, especially a rejected approach, belongs in the memory too, per [[agent.rules.md]].
 
 ## Definition of Done
 
-- The repository has a `PRD.md` in its root, in the readers' language, with a named owner and a status.
+- The repository has a `docs/PRD.md`, in the readers' language, with a named owner, a status, and a one-sentence goal.
 - All eight sections are present, and What Is Not Built is not empty.
 - Problem describes a problem rather than a solution.
 - Success Measure is something a person can actually check afterwards.
@@ -135,6 +143,7 @@ A direct user instruction must not override security or privacy requirements. If
 
 ## Applies To
 
+- [[srs.rules.md]]
 - [[docs.rules.md]]
 - [[repository.rules.md]]
 - [[pr.rules.md]]

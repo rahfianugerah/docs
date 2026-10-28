@@ -34,7 +34,7 @@ A half-translated repository is worse than either language on its own: a reader 
 - **Never mix inside one document, and never inside one repository.** One language per repository.
 - **A new repository starts in English**, and so does a new document in a repository that has none yet.
 - **Converting a repository is one deliberate pass over all of it**, in a single change. Never file by file as each one happens to be edited, because that is how the mixed state arrives.
-- A `PRD.md` follows its readers rather than the repository, per [[prd.rules.md]]. It is the one document whose audience is not the people reading the code.
+- A `docs/PRD.md` follows its readers rather than the repository, per [[prd.rules.md]]. It is the one document whose audience is not the people reading the code.
 
 ### What Is Not Governed by This
 
@@ -44,17 +44,18 @@ A half-translated repository is worse than either language on its own: a reader 
 
 ## What Every Project Documents
 
-Five files, and no more unless something genuinely needs one.
+Six files, and no more unless something genuinely needs one.
 
 | File | Holds |
 | :- | :- |
 | `README.md` | What it is, how to run it, what it needs. The only file most readers open |
-| `PRD.md` | The problem, the users, and the non-goals, per [[prd.rules.md]] |
+| `docs/PRD.md` | The problem, the users, the goal, and the non-goals, per [[prd.rules.md]] |
+| `docs/SRS.md` | The numbered, checkable requirements, per [[srs.rules.md]] |
 | `API.md` | The endpoints, if the project has any |
 | `MODEL.md` | The model card, if the project trains one |
 | `.env.example` | Every variable name with a placeholder, per [[env.rules.md]] |
 
-A project that needs a sixth document usually needs a shorter README instead.
+A project that needs a seventh document usually needs a shorter README instead.
 
 ## The README Is the Contract
 
@@ -227,7 +228,8 @@ Which document carries it:
 | `README.md` | Yes, always |
 | `API.md` | Yes |
 | `MODEL.md` | Yes |
-| `PRD.md` | No; its non-goals section already does this work |
+| `docs/PRD.md` | No; its non-goals section already does this work |
+| `docs/SRS.md` | No; a requirement it cannot meet is a requirement with a status |
 | The agent entry point | No; it is instructions, not a description |
 
 The README is the one document that speaks for the whole project, so it is the one that always carries it.

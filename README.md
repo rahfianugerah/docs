@@ -4,7 +4,7 @@
 ![Conda](https://img.shields.io/badge/Conda-Miniconda-44A833?logo=anaconda&logoColor=white)
 ![Cloud Run](https://img.shields.io/badge/Cloud_Run-Deploy-4285F4?logo=googlecloud&logoColor=white)
 ![Obsidian](https://img.shields.io/badge/Obsidian-Vault-7C3AED?logo=obsidian&logoColor=white)
-![Rules](https://img.shields.io/badge/Rules-25-4C1D95)
+![Rules](https://img.shields.io/badge/Rules-26-4C1D95)
 ![Components](https://img.shields.io/badge/Components-17-4C1D95)
 ![Templates](https://img.shields.io/badge/Templates-10-4C1D95)
 ![Patterns](https://img.shields.io/badge/Patterns-16-4C1D95)
@@ -73,6 +73,7 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | [[agent.rules.md]] | When an agent writes a memory note, and how many |
 | [[analytics.rules.md]] | Which chart a shape of data earns, the guardrails against distortion, and the no-3D gate |
 | [[prd.rules.md]] | The PRD every project carries, written before the code, and the non-goals that bound it |
+| [[srs.rules.md]] | The numbered, checkable requirements that follow the PRD and precede the code |
 | [[media.rules.md]] | Document and media upload, covering PDF and photo |
 | [[pwa.rules.md]] | The PWA layer of a frontend: manifest, icons, and offline behavior |
 
@@ -199,6 +200,7 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[pr.rules.md]]
 - [[prd.rules.md]]
 - [[pwa.rules.md]]
+- [[srs.rules.md]]
 - [[repository.rules.md]]
 - [[secret.rules.md]]
 - [[security.rules.md]]
