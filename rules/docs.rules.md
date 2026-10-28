@@ -345,6 +345,32 @@ Never place a `---` horizontal rule in a document body. Headings already mark wh
 - YAML frontmatter on a **vault** document, where the opening and closing `---` are what make a rule, a component standard, a pattern, or a memory note readable by Obsidian and by the memory indexer. Removing those breaks the file rather than tidying it, and they are the only `---` permitted anywhere in this vault.
 - A `---` inside a fenced code block, which is sample content being shown, not formatting being applied.
 
+### Diagrams Are Mermaid
+
+**When a document needs a diagram, it is a fenced `mermaid` code block, always.** Never an image, never ASCII art built from boxes and lines, and never a diagram exported from another tool. GitHub, Obsidian, and most Markdown viewers render Mermaid natively, so the diagram stays text in the same file: diffable, reviewable, and updated in the same commit as the change it describes.
+
+````markdown
+```mermaid
+flowchart LR
+  Browser --> Frontend --> API[api-service] --> DB[(PostgreSQL)]
+```
+````
+
+Pick the diagram type the content already has:
+
+| Content | Mermaid type |
+| :- | :- |
+| A flow with branches, or an architecture | `flowchart` |
+| A request crossing three or more services | `sequenceDiagram` |
+| Tables and their relations | `erDiagram` |
+| A record's lifecycle, such as a document's statuses | `stateDiagram-v2` |
+| A timeline or a rollout plan | `gantt` |
+
+- **A diagram earns its place.** A flow with a branch, a sequence across three or more parties, or a schema with relations gets one. A straight line of two or three steps stays a sentence or a text flow, per "Flow Examples" above.
+- **Labels name the real thing**, such as the service name or the table name, the same way a code example shows the real identifiers.
+- **Mermaid's connectors are syntax, not formatting.** `-->`, `---`, and `->>` inside the `mermaid` block are allowed, the same exception a `---` inside any fenced block already has under "No Horizontal Rules". A Unicode arrow or an em dash inside a label is still banned.
+- **Never paste a rendered image of a diagram in place of its code.** An image cannot be diffed, goes stale without anyone noticing, and needs the tool that drew it before anyone can change it.
+
 ## Tags
 
 Every rule and every component standard opens with YAML frontmatter carrying its tags. Tags connect two documents that never link to each other: a wikilink says "read that one next", a tag says "these belong to the same concern", and only the second one surfaces the file you did not know to look for.
@@ -631,6 +657,7 @@ An experiment's result belongs in the pull request that carried it, per [[pr.rul
 - Written in English, from the right template, with the template's section order.
 - A project document opens with the title, the badge row, the lead paragraph, and the Table of Contents, and carries no frontmatter and no `---`.
 - The Table of Contents lists every `##` heading and every entry resolves.
+- Every diagram is a fenced `mermaid` block, and no diagram is an image or ASCII art.
 - Every heading names the question it answers, not the category it belongs to.
 - Known Limitations is present and says what the thing is bad at.
 - No section enumerates deviations from this vault, and no standard in it is named or quoted anywhere in the document.
