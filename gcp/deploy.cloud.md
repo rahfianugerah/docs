@@ -129,6 +129,10 @@ Use `--env-vars-file` when any value contains a comma, for example a CORS origin
 
 A secret goes through Secret Manager and `--set-secrets`. **A secret whose key contains a `/` is mounted as a file at that path**, not as an environment variable.
 
+**Every connection string is a secret**, whole and unsplit: `DATABASE_URL` and any SMTP, cache, or broker URL, per [[secret.rules.md]]. None belongs in `--set-env-vars` or in the env-vars file. The Cloud SQL instance connection name carries no credential and stays an ordinary argument.
+
+**Every secret goes in one `--set-secrets` flag, comma-separated.** A second `--set-secrets` on the same command replaces the first rather than adding to it.
+
 **The `cloudbuild.yaml` deploy step deliberately carries none of these flags.** `gcloud run deploy` preserves whatever the service already has, and that is what makes "the trigger owns the image" safe.
 
 ### Frontend, Config at Build Time
@@ -310,13 +314,21 @@ gcloud storage buckets add-iam-policy-binding gs://$BUCKET \
 
 ### 6.7 Secret Manager
 
-Optional. One entry per secret. **Create the secret before deploying**; a revision referencing a missing secret fails to start.
+**Mandatory for any project with a database**, because the connection string is a secret. One entry per secret. **Create the secret before deploying**; a revision referencing a missing secret fails to start.
 
 ```bash
 echo -n "[VALUE]" | gcloud secrets create [SECRET_NAME] --data-file=- --replication-policy=automatic
 ```
 
 **`echo -n` matters.** Without it the secret carries a trailing newline, and the failure appears far away as an authentication rejection nobody can explain. On PowerShell see the byte order mark warning in section 3.
+
+The connection string is one secret holding the whole URL:
+
+```bash
+echo -n 'postgresql+psycopg://[USER]:[PASSWORD]@/[DB]?host=/cloudsql/[CONNECTION_NAME]' | gcloud secrets create [SERVICE]-database-url --data-file=- --replication-policy=automatic
+```
+
+One secret per environment. `[SERVICE]-database-url` and `[SERVICE]-database-url-staging` are two secrets, not two versions of one, so a staging rotation cannot reach production.
 
 Rotate by adding a version, then redeploying with the same image:
 
@@ -349,7 +361,9 @@ Backend only. Copy the committed example, fill in the real values, and **delete 
 cp env-vars.example.yaml env-vars.yaml
 ```
 
-The example file is committed and holds placeholders only. The filled copy is git-ignored, holds real values including database passwords, and exists only for the length of a deploy, per [[env.rules.md]].
+The example file is committed and holds placeholders only. The filled copy is git-ignored and exists only for the length of a deploy, per [[env.rules.md]].
+
+**No connection string goes in this file.** `DATABASE_URL` and every other URL carrying credentials is a Secret Manager secret mounted with `--set-secrets`, per [[secret.rules.md]]. This file holds configuration only: the issuer, the audience, the CORS origin list, a bucket name, a log level.
 
 ### 6.10 Build, Push, and Deploy
 
@@ -383,7 +397,7 @@ echo $TAG > .last-tag
 gcloud run deploy [SERVICE] --image "$IMAGE_TAG" --platform managed --region asia-southeast1 \
   --cpu 1 --memory 1Gi --min-instances 0 --max-instances 4 --concurrency 30 \
   --port 8080 --timeout 60 --add-cloudsql-instances $CLOUDSQL_INSTANCE \
-  --env-vars-file env-vars.yaml --set-secrets "[ENV_OR_PATH]=[SECRET_NAME]:latest" \
+  --env-vars-file env-vars.yaml --set-secrets "DATABASE_URL=[SERVICE]-database-url:latest,[ENV_OR_PATH]=[SECRET_NAME]:latest" \
   --allow-unauthenticated
 ```
 
@@ -463,7 +477,7 @@ gcloud run jobs execute [SERVICE]-migrate --region asia-southeast1 --wait
 ```bash
 gcloud run jobs create [SERVICE]-[JOB] --image "$IMAGE_TAG" --region asia-southeast1 \
   --service-account $SA --set-cloudsql-instances $CLOUDSQL_INSTANCE \
-  --env-vars-file env-vars.yaml --set-secrets "[ENV_OR_PATH]=[SECRET_NAME]:latest" \
+  --env-vars-file env-vars.yaml --set-secrets "DATABASE_URL=[SERVICE]-database-url:latest,[ENV_OR_PATH]=[SECRET_NAME]:latest" \
   --command python --args "-m,app.jobs.[JOB]" \
   --cpu 1 --memory 1Gi --task-timeout 900s --max-retries 3 --tasks 1 --parallelism 1
 gcloud run jobs execute [SERVICE]-[JOB] --region asia-southeast1 --wait
@@ -752,6 +766,7 @@ Common causes: a missing `cloudsql.client` binding, so the app blocks on a datab
 - **Every job is listed in the section 1 table**, and every job is moved to the new image on a release that changes its code. The trigger does not update a job.
 - **A budget alert exists before the first deploy.**
 - **Never save or commit a filled-in copy of this runbook**, or the `env-vars.yaml` it creates, containing a real value.
+- Every connection string, including `DATABASE_URL`, is a Secret Manager secret mounted with `--set-secrets`, and none appears in `--set-env-vars`, in `env-vars.yaml`, or in `cloudbuild.yaml`.
 
 Each project copy ends this section with its own documented deviations from the rules above, and the reason for each.
 

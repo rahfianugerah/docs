@@ -128,7 +128,7 @@ PostgreSQL runs on Cloud SQL, attached through the Cloud SQL Auth Proxy rather t
 - The runtime service account needs **`roles/cloudsql.client`**. Without it the proxy cannot authenticate, the app blocks on a database it cannot reach, and the container never listens on `PORT`. Cloud Run reports that as a plain startup timeout with no permission error, which is why it is usually mistaken for a port problem.
 - Connect over the unix socket the proxy mounts at `/cloudsql/<connection-name>`, not over an IP.
 - **Give the instance no public IP.** A public Cloud SQL instance with a weak password is found by scanners within hours.
-- The database password is a secret, per [[secret.rules.md]]. Keep the host, port, and database name in environment variables and the password in Secret Manager, or use IAM database authentication and have no password at all.
+- **The whole connection string is a secret, not just the password**, per [[secret.rules.md]]. `DATABASE_URL` goes to Secret Manager as one value and is mounted with `--set-secrets`. Better still, use IAM database authentication and have no password at all.
 - Cloud SQL **does not scale to zero**. It bills while it exists, which makes it the single largest cost on an idle project. Stop the instance when a project goes dormant, and delete it when the project is done.
 
 ```bash
@@ -143,10 +143,12 @@ Follows [[secret.rules.md]]. The GCP mechanics:
 | :- | :- |
 | Configuration | `--set-env-vars`, or `--env-vars-file` when a value contains a comma |
 | Secret | `--set-secrets`, backed by Secret Manager |
+| Every connection string | `--set-secrets`, whole and unsplit. Never `--set-env-vars`, never an env-vars file |
 
 - Never in the `Dockerfile`, never in a committed `.env`, never baked into the image.
 - The runtime service account needs `roles/secretmanager.secretAccessor` on each secret it reads. Without it the revision fails to start with a permission error naming the secret.
 - A secret whose `--set-secrets` key contains a `/` mounts as a file at that path rather than an environment variable.
+- **Every secret goes in one `--set-secrets` flag, comma-separated.** A second `--set-secrets` on the same command replaces the first rather than adding to it, so the service starts missing the one that was dropped.
 - **Cloud Build substitutions are visible in the build log and the trigger config.** A secret never travels as a substitution.
 
 ## Build Rules
@@ -283,6 +285,7 @@ Connecting the trigger, converting an inline one, and verifying it are section 7
 - The image builds from a pinned base, runs as non-root, and listens on `PORT`.
 - `.dockerignore` excludes data, weights, notebooks, and `.venv`.
 - No secret or configuration value is baked into the image.
+- Every connection string, including `DATABASE_URL`, is mounted with `--set-secrets`, and none is passed through `--set-env-vars` or an env-vars file.
 - `--min-instances 0` and `--max-instances 5`, with the CPU, memory, and concurrency from the allocation table.
 - No GPU flag anywhere.
 - Cloud SQL is attached through the proxy, the runtime account holds `roles/cloudsql.client`, and the instance has no public IP.
