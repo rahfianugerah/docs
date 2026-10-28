@@ -87,7 +87,6 @@ Never a fourth option. Not a config file "outside the repo but next to it", not 
 
 Everything that is not key material. It is supplied directly on the deploy command and does not need a secret manager.
 
-- A database connection string and its parameters: host, port, database name, user.
 - A service URL or hostname, such as an identity provider base URL or a key set URL.
 - A CORS origin list.
 - A token issuer and audience string. These are identity strings, not credentials, per [[auth.rules.md]].
@@ -96,6 +95,8 @@ Everything that is not key material. It is supplied directly on the deploy comma
 - A model name, a batch size, a learning rate, a seed.
 - A feature flag, a timeout, a page size, a log level.
 - A session cookie name or lifetime. The cookie's **signing secret** is a secret; its name and lifetime are not.
+
+A connection string is **not** on this list. It is key material, per "Every Connection String Is a Secret" below.
 
 Rules:
 
@@ -106,19 +107,25 @@ Rules:
 5. List every variable name in `.env.example` with a placeholder value, per [[env.rules.md]].
 6. **Do not promote a configuration value into a secret manager because it looks sensitive.** A URL in a secret manager costs a rotation procedure and an access binding and buys nothing.
 
-## Where a Value Is Both
+## Every Connection String Is a Secret
 
-A database connection string is configuration, but a password embedded in it is key material. The two halves of that sentence pull in different directions, so decide it deliberately rather than by habit.
+**A connection string goes to the secret manager whole, as one value, and is mounted as a secret.** Not split, not partly as configuration, and never reassembled in the settings object from pieces held in two places.
 
-Order of preference:
+Three things decide it:
 
-1. **No password at all.** Where the database supports identity-based authentication, use it. That removes the password from the connection string entirely, which is the only option that makes the question go away.
-2. **Split the value.** Keep host, port, database name, and user as configuration, put the password alone in the secret manager, and assemble the URL in the settings object.
-3. **The whole string as one environment variable.** Simplest, and the default this standard allows for a database connection. Accept that the password is then visible to anyone who can read the service configuration.
+- **An environment variable on a managed runtime is readable by anyone who can describe the service.** The console shows it, a describe command prints it, and a support screenshot leaks it. A connection string is a credential even when the password is the only secret part, because the rest of it is what makes that password usable.
+- **Splitting the value doubles the places a rotation has to touch**, and leaves a half credential in plain view. The host and the database name tell an attacker exactly what the password opens.
+- **A secret manager costs almost nothing here.** One secret, one access binding the service already needs for its other secrets, and one more entry in the secret flag.
 
-Choose the first where the database supports it. Where the third is used, record that choice in the project README, because it is the one place this standard knowingly leaves a credential in an environment variable.
+Rules:
 
-The same reasoning applies to any other connection string that embeds a password, such as an SMTP URL.
+1. **One secret holds the entire URL**, including the scheme, the user, the password, the host, the port, and the database name.
+2. **Mount it as a secret**, never as a plain environment variable and never through an env-vars file.
+3. **This covers every connection string**, not only the database one: an SMTP URL, a cache URL, a broker URL, and any third-party service URL that carries credentials.
+4. **A connection name is not a connection string.** A Cloud SQL instance connection name carries no credential and stays an ordinary deploy argument.
+5. **Rotate by adding a new secret version and redeploying.** That is a config-only change, so it reuses the deployed image.
+
+**Identity-based database authentication is still better where the database supports it.** It removes the password from the string entirely, so there is nothing to rotate and nothing to leak. Prefer it. This rule governs every connection that still carries a password, which today is most of them.
 
 ## A Frontend Holds No Secrets
 
