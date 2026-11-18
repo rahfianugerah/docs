@@ -27,6 +27,23 @@ A notification is a short, actionable pointer to something that changed. It is n
 
 A notification that can only be dealt with by opening another page and searching for the record has failed at its one job.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Something happened"] --> B{"What kind of news?"}
+  B -->|While the user was away| N["Notification center item"]
+  B -->|Result of an action now| T["Toast"]
+  B -->|State of a page| L["Inline Alert"]
+  N --> DT["Bell dot above zero"]
+  N --> AP{"Needs a decision?"}
+  AP -->|Yes| AT["Needs Approval, decided through the owning endpoint"]
+  AP -->|No| GN["General"]
+  T --> V{"An error?"}
+  V -->|Yes| K["Stays until closed"]
+  V -->|No| TO["Closes after 4 to 6 seconds"]
+```
+
 ## Built On HeroUI
 
 | Part | HeroUI component |

@@ -13,6 +13,16 @@
 
 This is a deliberate departure from [[memory.rules.md]], which allows only the four type folders and forbids a per-project subfolder. The reason is written in Why This Breaks the Four-Folder Rule below, so it is a decision rather than an oversight.
 
+## Workflow
+
+```mermaid
+flowchart LR
+  A["Working code worth keeping"] --> B["memory/codes/project/date-name with a header"]
+  B --> C["A note of the same name: what it does and why it was kept"]
+  C --> D["The pair listed in the memory index"]
+  D --> E["recall finds the note, the code opens only when needed"]
+```
+
 ## Layout
 
 ```text

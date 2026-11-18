@@ -28,6 +28,19 @@ It answers four questions in order, and a journal missing any of them is incompl
 > [!warning]
 > A journal is not a commit log. `git log` already lists every change and does it better. A journal exists for the part git cannot hold: why the obvious explanation was wrong, what the error message pointed at versus what actually broke, and what the fix cost.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A piece of work finishes"] --> B{"Today's journal for this project exists?"}
+  B -->|Yes| S["Add a section to it"]
+  B -->|No| C["Create today's journal for the project"]
+  S --> Q["What was wrong, what was found, what was done, what changed"]
+  C --> Q
+  Q --> N["Numbers before and beside after, and the wrong turn"]
+  N --> I["Listed in the journal index"]
+```
+
 ## Three Kinds of Record, and Which One This Is
 
 The vault holds three ways of writing down what was learned, and they are not interchangeable.

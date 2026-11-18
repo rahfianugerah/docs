@@ -14,6 +14,16 @@ tags:
 
 Copy everything from the `# Title` line down into the frontend repository's `README.md`.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  O["1. Project Overview"] --> S["2. Technology Stack"] --> A["3. Frontend Architecture"]
+  A --> P["4. Project Structure"] --> C["5. Configuration"] --> R["6. Routing, Pages, and Components"]
+  R --> SD["7. State and Data Management"] --> AU["8. Authentication, Styling, and Accessibility"]
+  AU --> T["9. Testing, Errors, and Performance"] --> DV["10. Development and Deployment"]
+```
+
 ```markdown
 # [Project Name]
 

@@ -23,6 +23,21 @@ This applies to you and to any AI assistant working in the project. A model that
 
 The format does not change the rule. A secret in YAML is the same secret as one in `.env`.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Configuration needed"] --> B{"Where does it live?"}
+  B -->|Real environment file| N["Never read, print, or commit it"]
+  B -->|Secret manager| U["Name it and hand the user the command"]
+  B -->|Example file| R["Read the variable names"]
+  R --> C{"Name present?"}
+  C -->|No| P["Add it with a placeholder"]
+  C -->|Yes| L["Load once into a typed settings object"]
+  P --> L
+  L --> FF["Fail fast on a missing value"]
+```
+
 ## Never Read
 
 | Format | Files |

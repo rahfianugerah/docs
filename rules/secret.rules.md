@@ -31,6 +31,20 @@ This standard owns the classification. The surrounding standards own the rest, a
 | [[deploy.rules.md]], [[deploy.cloud.md]] | The deploy mechanics: setting environment variables, mounting secrets, and the IAM bindings |
 | [[stacks.rules.md]] | That configuration is read once into a typed settings object |
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A value to configure"] --> CS{"A connection string?"}
+  CS -->|Yes| S["Secret: secret manager, mounted as a secret"]
+  CS -->|No| B{"Does possessing it allow an action?"}
+  B -->|No| C["Configuration: deploy flag or env-vars file"]
+  B -->|Yes| S
+  S --> F{"Needed by the frontend?"}
+  F -->|Yes| BE["Move the call to the backend"]
+  F -->|No| R["One secret per value, per service, per environment"]
+```
+
 ## The Test
 
 **Is the value a key?**

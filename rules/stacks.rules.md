@@ -20,6 +20,18 @@ One stack across every project is what makes a second project cheap. A stack cho
 > [!warning]
 > **Where this text and a real manifest disagree, the manifest is correct and this file gets updated to match it.** A standard describing what was true a year ago is worse than none, because it is believed.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A layer to choose"] --> B{"In the approved stack?"}
+  B -->|Yes| P["Use it: pin the major version, commit the lockfile"]
+  B -->|No| C{"Required by a specific library?"}
+  C -->|No| AP["Use the approved choice"]
+  C -->|Yes| D["Written decision with the reason"]
+  D --> P
+```
+
 ## Backend
 
 - **Language:** Python 3.13, per [[codes.rules.md]]. Declare `requires-python = ">=3.13"` in the manifest and build on `python:3.13-slim`.

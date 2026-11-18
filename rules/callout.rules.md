@@ -22,6 +22,19 @@ The type is what does the work. It tells the reader whether a passage is a fact 
 > [!warning]
 > A callout is Obsidian syntax. Outside Obsidian it renders as a plain blockquote whose first line reads `[!warning]`, and its text is digested into the memory index exactly as written. Use it where the emphasis earns that cost, and nowhere else.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A passage to emphasise"] --> B{"Does it change what the reader does?"}
+  B -->|No| P["Bold or plain prose"]
+  B -->|Yes| T["Pick its type from the callout table"]
+  T --> C{"Already three callouts in the document?"}
+  C -->|Yes| DM["Demote the weakest to bold prose"]
+  C -->|No| W["Write the callout"]
+  DM --> W
+```
+
 ## The Types
 
 Use the first name in each row. The aliases exist in Obsidian and render identically, but one name per meaning keeps the vault searchable.

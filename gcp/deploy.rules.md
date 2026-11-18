@@ -22,6 +22,20 @@ Every deployed project ships as a container image to **Cloud Run**, built by **C
 
 The runbook with the actual commands is [[deploy.cloud.md]]. This file decides the rules; that one is copy and paste.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Something to run"] --> B{"Answers a request?"}
+  B -->|Yes| S["Cloud Run service: request-based CPU, scales to zero"]
+  B -->|No| J["Cloud Run job, idempotent and bounded"]
+  S --> I["Image from cloudbuild.yaml, non-root, listens on PORT"]
+  J --> I
+  I --> C["Config and secrets on the deploy command, never in the image"]
+  C --> T["tag-active marks the running image"]
+  T --> R["Cleanup policy keeps it and deletes what is unused"]
+```
+
 ## What Runs Where
 
 Cloud Run is not the answer to everything, and picking wrong is expensive.

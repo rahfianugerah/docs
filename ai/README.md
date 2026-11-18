@@ -20,6 +20,16 @@ The second difference is the environment. An AI dependency tree, with NumPy, BLA
 
 That is why every AI project gets **its own conda environment, from conda-forge, every time**.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["An AI project"] --> B["ai.rules.md first, always"]
+  B --> C{"What is the data?"}
+  C -->|A table| M["ml.rules.md, starting with gradient boosting"]
+  C -->|Images, audio, or long text| D["dl.rules.md"]
+```
+
 ## Read in This Order
 
 | Document | Covers |

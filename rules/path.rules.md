@@ -27,6 +27,21 @@ This standard owns the **shape** of a path. Three neighbours own the rest and ar
 | [[security.rules.md]] | A path built from user input: traversal, null bytes, and resolving inside the intended directory |
 | [[env.rules.md]] | Where a configured path comes from, and why a real environment file is never read |
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A path in source"] --> B{"Which namespace?"}
+  B -->|Filesystem| F["Relative to a declared anchor such as ROOT"]
+  B -->|URL| U["Relative to the base URL or origin"]
+  B -->|Import| I["Module path from the package root"]
+  F --> C{"Absolute, or mixed with another namespace?"}
+  U --> C
+  I --> C
+  C -->|Yes| RW["Rewrite it"]
+  C -->|No| KP["Keep it"]
+```
+
 ## The Three Namespaces
 
 **A project carries three kinds of path, and they never mix.** Each has its own anchor, its own separator, and its own way of being joined. Mixing them is the single most common path bug, and it is invisible until runtime because both halves are strings.

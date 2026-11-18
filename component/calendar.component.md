@@ -18,6 +18,20 @@ Every date field follows this policy: the trigger that shows the chosen date, th
 
 This policy extends [[uix.component.md]] and reads every color, radius, and shadow from its token contract.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A date or a time to enter"] --> B{"A time of day?"}
+  B -->|Yes| T["TimeField with hourCycle 24"]
+  B -->|No| R{"A range?"}
+  R -->|Yes| DR["DateRangePicker"]
+  R -->|No| DP["DatePicker"]
+  DP --> V["Machine value out, display format shown"]
+  DR --> V
+  V --> Y["Year range clamped, impossible dates unreachable"]
+```
+
 ## Built On HeroUI
 
 This is HeroUI's `DatePicker`, with `DateRangePicker`, `Calendar`, `RangeCalendar`, and `DateField` for the cases this file names. HeroUI owns the markup, the keyboard handling, the focus ring, and the accessibility; this standard owns the decisions HeroUI leaves to the project. Exact props come from the HeroUI MCP server, per [[stacks.rules.md]].

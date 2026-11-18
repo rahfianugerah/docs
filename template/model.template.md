@@ -16,6 +16,15 @@ Copy the block below into `MODEL.md` for any project that trains a model. **The 
 
 **Every section exists because leaving it out has cost somebody a rerun.** Intended Use and Failure Modes are the two that make this a model card rather than a changelog, and they are the two that get left thin.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Title and lead paragraph"] --> T["Table of Contents"]
+  T --> I["Intended Use"] --> D["Data"] --> P["Preprocessing"] --> TR["Training"]
+  TR --> R["Results"] --> F["Failure Modes"] --> RP["Reproducing"] --> AR["Artifacts"] --> K["Known Limitations"]
+```
+
 ````markdown
 # [Model Name]
 

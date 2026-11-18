@@ -20,6 +20,23 @@ This standard makes a project ready to join a shared identity provider before on
 
 Where a reference implementation exists, follow it. Where it does not decide a matter, follow the rules below.
 
+## Workflow
+
+```mermaid
+sequenceDiagram
+  participant B as Browser
+  participant I as Identity provider
+  participant D as Identity source
+  participant S as Service
+  B->>I: Sign in with the identity key and password
+  I->>D: Verify read-only, active accounts only
+  D-->>I: Valid
+  I-->>B: HttpOnly cookie carrying an RS256 token
+  B->>S: Request with the cookie
+  S->>S: Verify the token offline against the key set
+  S-->>B: Response, scoped by role
+```
+
 ## Mandatory Principles
 
 1. **One identity key.** Pick one stable identifier and carry it in the token as the subject claim. Do not use a username or an email address as the primary identity key: both change, and a person who changes theirs becomes a different person to every system that keyed on it.

@@ -27,6 +27,21 @@ A form dropdown never runs an action, an action menu never holds a value, and a 
 
 This extends [[uix.component.md]]. Every color, radius, and shadow comes from HeroUI's theme variables, and exact props come from the HeroUI MCP server, per [[stacks.rules.md]].
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A value to pick"] --> B{"How many options?"}
+  B -->|7 or fewer| S["HeroUI Select"]
+  B -->|More than 7| AC["HeroUI Autocomplete with smart search"]
+  B -->|A server-sized set| SV["Autocomplete filtering on the server"]
+  AC --> L{"More than about 100?"}
+  L -->|Yes| V["Virtualized ListBox"]
+  L -->|No| C["ListBox capped near 8 rows, scrolling under the search"]
+  V --> C
+  ACT["An action to run"] --> DD["HeroUI Dropdown menu"]
+```
+
 ## Which Picker
 
 | Options | Component | Why |

@@ -18,6 +18,19 @@ A table is the shape data takes when the reader needs exact values rather than a
 
 Those three files describe one component in practice. **A table without a pager is a table that has silently decided how many rows exist.**
 
+## Workflow
+
+```mermaid
+flowchart TD
+  Q["Query in the database: filter, sort, page"] --> S{"State?"}
+  S -->|Loading| K["Skeleton rows"]
+  S -->|Error| E["Error state with a retry"]
+  S -->|Empty| M["Empty state, header still visible"]
+  S -->|Rows| T["HeroUI Table in a horizontal-scroll container"]
+  T --> A["Row actions in a fixed place, a third becomes a menu"]
+  T --> P["Pagination under the table"]
+```
+
 ## Built On HeroUI
 
 This is HeroUI's `Table`. HeroUI owns the markup, the keyboard handling, the focus ring, and the accessibility; this standard owns the decisions HeroUI leaves to the project. Exact props come from the HeroUI MCP server, per [[stacks.rules.md]].

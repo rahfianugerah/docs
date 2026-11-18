@@ -18,6 +18,23 @@ When building, modifying, or reviewing a document or media upload feature (PDF o
 
 Every upload is compressed while keeping usable quality. Disk and egress are both metered on any host worth deploying to, so an uncompressed upload path is a cost that grows with use and is never noticed until the bill. Compression must not come at the cost of security or of consistency between projects.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  U["Authenticated upload"] --> T{"Allowed type by magic bytes, under the size limit?"}
+  T -->|No| REJ["Reject"]
+  T -->|Yes| K{"Photo or PDF?"}
+  K -->|Photo| P["Re-encode to WebP or JPEG, 2000 px max, strip EXIF, thumbnail"]
+  K -->|PDF| D["Scanned: downsample to 150 dpi. Digital: compress the structure"]
+  D --> S{"Smaller than the original?"}
+  S -->|No| KO["Keep the original"]
+  S -->|Yes| KC["Keep the compressed file"]
+  P --> M["Server-generated name, metadata, SHA-256, stored outside the image"]
+  KO --> M
+  KC --> M
+```
+
 ## Security Prerequisites
 
 These are not negotiable and apply before any compression logic.

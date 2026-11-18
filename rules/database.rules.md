@@ -18,6 +18,21 @@ PostgreSQL, accessed through **SQLAlchemy 2.x**, migrated through **Alembic**.
 
 Two query methods are sanctioned, and each has cases it owns. The ORM is the default; raw SQL is the deliberate exception, chosen for a reason you can name. **Neither method ever builds SQL by string formatting.**
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A data access need"] --> B{"An ordinary read or write?"}
+  B -->|Yes| ORM["SQLAlchemy expression with bound parameters"]
+  B -->|No, a report or bulk work| RAW["Raw SQL through text with bound parameters"]
+  RAW --> T["Give the raw query its own test"]
+  ORM --> C{"Schema change?"}
+  T --> C
+  C -->|Yes| M["Alembic migration, run as a job before the code"]
+  C -->|No| SH["Ship"]
+  M --> SH
+```
+
 ## Engine
 
 - **PostgreSQL** for anything deployed, anything with concurrent writers, and anything with a real schema.

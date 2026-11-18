@@ -9,6 +9,21 @@ Every memory note uses this shape. Copy the block for the type you need into the
 
 The protocol is [[memory.rules.md]].
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Something to remember"] --> B{"What kind?"}
+  B -->|What is true| F["fact"]
+  B -->|Why it is this way| D["decision"]
+  B -->|What happened| S["session"]
+  B -->|Where to look| R["reference"]
+  F --> N["slug.type.memory.md in its folder, listed in the index"]
+  D --> N
+  S --> N
+  R --> N
+```
+
 ## Fact
 
 `memory/fact/<slug>.md`

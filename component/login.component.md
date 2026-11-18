@@ -20,6 +20,26 @@ Every project uses the same login form. Signing in is the one screen every user 
 
 This extends [[uix.component.md]]. Nothing on this screen has its own color, radius, or shadow; it reads HeroUI's theme variables and so follows the light and dark theme like every other screen, per [[darkmode.component.md]].
 
+## Workflow
+
+```mermaid
+sequenceDiagram
+  participant U as User
+  participant F as Login screen
+  participant A as Backend
+  F->>A: Session check before the form shows
+  A-->>F: No session
+  U->>F: Identity key and password
+  F->>A: Submit, button pending
+  alt Wrong credentials
+    A-->>F: Error code
+    F-->>U: One message for either half, password cleared
+  else Success
+    A-->>F: HttpOnly session cookie
+    F-->>U: Go to the page first attempted
+  end
+```
+
 ## Required Structure
 
 The form is a single centered card on the page canvas. Build it in this order:

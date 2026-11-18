@@ -16,6 +16,20 @@ tags:
 
 A dashboard renders what [[analytics.rules.md]] sanctions, and renders it without losing anything on the way to the screen. The guardrails in that document are not advice to keep in mind here; they are configuration this file has to set explicitly, because several of them are things a charting library will otherwise do by default.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Data to show"] --> B["analytics.rules decides the form"]
+  B --> C{"A single number?"}
+  C -->|Yes| T["Stat tile in a Card"]
+  C -->|No| CH["Chart.js through one shared component"]
+  CH --> P["Validated palette in fixed order, no dual axis"]
+  P --> L["A legend for two or more series"]
+  L --> TV["A table view of the same data"]
+  TV --> X["PDF export"]
+```
+
 ## Built On HeroUI
 
 HeroUI has no charting component, so it is built from Chart.js for the charts, inside HeroUI `Card`s, with HeroUI's `Meter` for a single bounded value and HeroUI's theme variables, per [[uix.component.md]]. The HTML and CSS below are that build: they read only theme variables, so the result follows the light and dark theme with every HeroUI component around it.

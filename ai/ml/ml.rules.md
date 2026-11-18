@@ -11,6 +11,21 @@ For tabular and classical machine learning: scikit-learn, gradient boosting, and
 
 Read [[ai.rules.md]] first. It owns the environment, reproducibility, data handling, and experiment tracking rules that apply to every AI project. This file adds what is specific to classical ML.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A tabular problem"] --> B["A baseline first, not deep learning"]
+  B --> S["Split before any fitting"]
+  S --> P["Pipeline: preprocessing fitted on train only"]
+  P --> C["Cross-validate on train"]
+  C --> I{"Imbalanced classes?"}
+  I -->|Yes| W["Weights or resampling inside the pipeline"]
+  I -->|No| T["Score once on the test set"]
+  W --> T
+  T --> SV["Persist the whole pipeline"]
+```
+
 ## Start Here, Not With Deep Learning
 
 **On tabular data, gradient boosting beats a neural network almost every time**, trains in seconds instead of hours, needs no GPU, and explains itself. Reach for deep learning when the data is genuinely unstructured: images, audio, long text.

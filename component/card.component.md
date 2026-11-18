@@ -18,6 +18,22 @@ tags:
 
 It owns the surface, its heading, and how its content meets its edge. It does **not** own the width it takes, which is [[layout.component.md]], the table inside it, which is [[table.component.md]], or the theme variables it reads, which are [[uix.component.md]].
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Content to group"] --> B{"Several related things?"}
+  B -->|Yes| G["A grid of cards on the page, 8px gap"]
+  B -->|No| C["One HeroUI Card"]
+  G --> C
+  C --> H["Header: a title and one companion"]
+  H --> K["Content"]
+  K --> T{"A table inside?"}
+  T -->|Yes| F["Flush to the edges, the card clips its corners"]
+  T -->|No| S{"Needs sections?"}
+  S -->|Yes| SEP["Headings and a Separator, never a nested card"]
+```
+
 ## Built On HeroUI
 
 This is HeroUI's `Card`, with `Card.Header`, `Card.Title`, `Card.Description`, `Card.Content`, and `Card.Footer`. HeroUI draws the surface, the border, the 8px corner, and the faint surface shadow, and switches all of them with the theme. Exact props come from the HeroUI MCP server, per [[stacks.rules.md]].

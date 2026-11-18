@@ -20,6 +20,19 @@ A name that reads three ways across a product is three products to a user who is
 
 This extends [[uix.component.md]] and uses its tokens.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  C["One constant in the source"] --> L["Login brand row"]
+  C --> B["Header bar brand"]
+  C --> T["Browser tab title"]
+  C --> M["PWA manifest name"]
+  C --> X["Exported document heading"]
+  E{"Which environment?"} -->|Not production| CH["Warning chip beside the name"]
+  E -->|Production| NC["No chip"]
+```
+
 ## The Form
 
 - **One canonical spelling**, including its capitalization, decided once and used verbatim.

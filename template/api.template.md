@@ -12,9 +12,19 @@ tags:
 > [!example]
 > Every `[bracketed]` passage below is guidance to be replaced, not structure to be kept. Remove each one once the real content is in place, and keep the headings and their order exactly as they are.
 
-Copy this into `API.md` for any project that exposes endpoints. **Endpoint documentation lives only here**, never in the project README, per [[docs.rules.md]].
+Copy everything from `## Table of Contents` down into `API.md` for any project that exposes endpoints. **Endpoint documentation lives only here**, never in the project README, per [[docs.rules.md]].
 
 Every shape below is fixed by [[api.rules.md]]. Where this template and that standard disagree, the standard wins and this template is corrected.
+
+## Workflow
+
+```mermaid
+flowchart TD
+  O["1. API Overview"] --> B["2. Base Configuration"] --> AU["3. Authentication and Authorization"]
+  AU --> RQ["4. Request Standards"] --> RS["5. Response Standards"] --> E["6. Endpoint Reference"]
+  E --> ER["7. Error Handling"] --> P["8. Pagination, Filtering, and Sorting"]
+  P --> RL["9. Rate Limiting and Security"] --> TV["10. Testing and Versioning"] --> K["Known Limitations"]
+```
 
 ## Table of Contents
 

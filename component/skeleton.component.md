@@ -20,6 +20,17 @@ A skeleton is the loading state for **a component whose layout is already known*
 
 This standard extends [[uix.component.md]] and does not redefine a token.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A component fetching"] --> B{"Layout known before the data?"}
+  B -->|No| SP["Spinner with text"]
+  B -->|Yes| C{"First load?"}
+  C -->|Yes| SK["HeroUI Skeleton shaped like the content"]
+  C -->|No, a refetch or page change| K["Keep the rows on screen, loading drawn over them"]
+```
+
 ## Built On HeroUI
 
 This is HeroUI's `Skeleton`, whose shimmer HeroUI sets through `--skeleton-animation`. HeroUI owns the markup, the keyboard handling, the focus ring, and the accessibility; this standard owns the decisions HeroUI leaves to the project. Exact props come from the HeroUI MCP server, per [[stacks.rules.md]].

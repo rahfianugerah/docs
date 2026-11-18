@@ -21,6 +21,21 @@ HeroUI owns the markup, the press handling, the focus ring, and the pending stat
 
 This extends [[uix.component.md]]. A button never gets its own color, padding, or radius; it changes only through HeroUI's theme variables.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["An action"] --> B{"The main action of the view?"}
+  B -->|Yes| P["primary: one per view, last in the row"]
+  B -->|No| D{"Destroys or revokes?"}
+  D -->|Yes| C{"Inside the confirm dialog?"}
+  C -->|Yes| DS["danger"]
+  C -->|No| DSF["danger-soft"]
+  D -->|No| Q{"Icon only?"}
+  Q -->|Yes| G["ghost with isIconOnly and an aria-label"]
+  Q -->|No| S["secondary, outline, or tertiary by weight"]
+```
+
 ## The Seven Variants
 
 The variant carries the weight of the action, and weight is what tells a reader which button on a row is the one they came for. Two buttons of equal weight side by side is the most common way a screen stops having a primary action.

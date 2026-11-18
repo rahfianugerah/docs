@@ -20,6 +20,21 @@ People compare rows, scan a timeline across months, and keep a board of several 
 
 This extends [[uix.component.md]] and takes every spacing value from the scale defined there. A public or marketing page is a different surface and may centre its content, per the navigation rule in that file.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  W["Window, full height"] --> B["Header bar across the full width"]
+  W --> X["Body under the bar"]
+  X --> R["Navigation rail"]
+  X --> P["Content pane, the only part that scrolls"]
+  P --> H["Page heading"]
+  H --> F["Full-width blocks with an 8px gap"]
+  F --> L{"Wider than the pane?"}
+  L -->|Yes| S["Scrolls inside its own container, min-width 0"]
+  L -->|No| FW["Fills the width"]
+```
+
 ## Built On HeroUI
 
 HeroUI has no page shell, so it is built from plain layout around HeroUI's `Surface` and `Separator` and HeroUI's theme variables, per [[uix.component.md]]. The HTML and CSS below are that build: they read only theme variables, so the result follows the light and dark theme with every HeroUI component around it.

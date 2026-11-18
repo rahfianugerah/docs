@@ -20,6 +20,20 @@ Everything in this vault is written in **English**: every document, every headin
 
 The template is the single source of truth for structure, section order, formatting, and content scope. Read it before writing, not after.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A document to write"] --> T["Start from its template"]
+  T --> O["Keep the section order"]
+  O --> W["Write in the repository's language: short sentences, real values"]
+  W --> F["Format: no emoji, no em dash, Mermaid for every diagram"]
+  F --> V["Vault document: tags on three axes, a Workflow diagram, links resolve"]
+  V --> DD{"Definition of Done holds?"}
+  DD -->|No| W
+  DD -->|Yes| C["Commit in the same change as the code"]
+```
+
 ## Language
 
 Everything in this vault is **English**. A project's documentation defaults to English too, and the rest of this section is about when it does not.
@@ -376,7 +390,10 @@ Pick the diagram type the content already has:
 | A record's lifecycle, such as a document's statuses | `stateDiagram-v2` |
 | A timeline or a rollout plan | `gantt` |
 
-- **A diagram earns its place.** A flow with a branch, a sequence across three or more parties, or a schema with relations gets one. A straight line of two or three steps stays a sentence or a text flow, per "Flow Examples" above.
+- **Every vault document carries one workflow diagram**: every rule, component, template, runbook, index, and pattern in this vault. It sits in a `## Workflow` section directly after `## Core Requirement`, or after the opening section of a document that has none. A template places it before its copy block, so the diagram is never copied into a project, and a pattern carries it as a `**Mechanism:**` block before `**Why:**`, keeping the note shape.
+- **The diagram draws only what its own document governs**: its decision, its flow, or its lifecycle. A neighbouring standard's flow belongs in that standard's diagram, and a reader who needs both follows the link.
+- **Three kinds of file carry none**: a memory note and a journal entry, which are one-screen records rather than workflows, and an agent entry point, which holds only imports.
+- **In a project document, a diagram earns its place.** A flow with a branch, a sequence across three or more parties, or a schema with relations gets one; a straight line of two or three steps stays a sentence, per "Flow Examples" above.
 - **Labels name the real thing**, such as the service name or the table name, the same way a code example shows the real identifiers.
 - **Mermaid's connectors are syntax, not formatting.** `-->`, `---`, and `->>` inside the `mermaid` block are allowed, the same exception a `---` inside any fenced block already has under "No Horizontal Rules". A Unicode arrow or an em dash inside a label is still banned.
 - **Never paste a rendered image of a diagram in place of its code.** An image cannot be diffed, goes stale without anyone noticing, and needs the tool that drew it before anyone can change it.
@@ -668,6 +685,7 @@ An experiment's result belongs in the pull request that carried it, per [[pr.rul
 - A project document opens with the title, the badge row, the lead paragraph, and the Table of Contents, and carries no frontmatter and no `---`.
 - The Table of Contents lists every `##` heading and every entry resolves.
 - Every diagram is a fenced `mermaid` block, and no diagram is an image or ASCII art.
+- A vault document carries its own workflow diagram, scoped to its own subject.
 - Every heading names the question it answers, not the category it belongs to.
 - Known Limitations is present and says what the thing is bad at.
 - No section enumerates deviations from this vault, and no standard in it is named or quoted anywhere in the document.

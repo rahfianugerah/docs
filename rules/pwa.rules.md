@@ -17,6 +17,18 @@ When building, modifying, or reviewing the frontend of a project, you must follo
 
 Every internal app must be installable as a Progressive Web App, so staff can use it from a phone without an app store, while the app stays a single web codebase.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  R["A request from the installed app"] --> K{"What is it?"}
+  K -->|App shell: JS, CSS, fonts, icons| C["Precached, cache-first"]
+  K -->|API call| N["Network-first or network-only, never cached"]
+  N --> O{"Offline with no cached shell?"}
+  O -->|Yes| F["Offline fallback page"]
+  C --> U["New version: autoUpdate with a visible prompt"]
+```
+
 ## Required Components
 
 | Component | Standard |

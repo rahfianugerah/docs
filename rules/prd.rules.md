@@ -20,6 +20,19 @@ A PRD says what is being built, for whom, and why. It does not say how; that is 
 
 The point is not process. It is that the most expensive mistake is not a bug, it is a feature nobody needed, built correctly, deployed properly, and used by no one. A PRD is the cheapest place to find that out, because it costs an hour rather than a sprint.
 
+## Workflow
+
+```mermaid
+flowchart LR
+  A["An idea"] --> B["docs/PRD.md: goal, problem, users"]
+  B --> C["What is built, and what is not"]
+  C --> D["Success measure, constraints, data"]
+  D --> E{"Owner approves?"}
+  E -->|No| B
+  E -->|Yes| F["docs/SRS.md"]
+  F --> G["Code"]
+```
+
 ## Where It Lives
 
 - One `docs/PRD.md` in the repository, beside `docs/SRS.md` from [[srs.rules.md]] and any technical plan in `docs/PLAN.md`. The PRD and SRS describe the whole project; a plan describes the work being built now, links to both, and never repeats them.

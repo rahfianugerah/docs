@@ -14,6 +14,19 @@ Code is audited against the **OWASP Secure Coding Practices** checklist below. T
 
 This file is both the standard and the review prompt. Hand it to a reviewer, human or model, and it produces the same audit either way.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A change to review"] --> B["Walk the checklist: input, output, auth, session, access"]
+  B --> C["Apply the stack controls"]
+  C --> D{"A finding?"}
+  D -->|Yes| E["Rate by impact and exploitability"]
+  E --> F["Report in the output format, fixed before merge"]
+  D -->|No| G["Audit trail and activity log in place"]
+  F --> G
+```
+
 ## Operating Rules
 
 > [!warning]

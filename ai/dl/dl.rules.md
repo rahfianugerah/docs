@@ -11,6 +11,20 @@ For neural networks: PyTorch, on unstructured data such as images, audio, or tex
 
 Read [[ai.rules.md]] first. It owns the environment, reproducibility, data, and experiment rules for every AI project. Read [[ml.rules.md]] before starting a tabular project, because **on tabular data gradient boosting usually wins** and a neural network is the wrong first answer.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A deep learning run"] --> E["PyTorch from conda-forge, CUDA build pinned"]
+  E --> D["Seeds and deterministic settings"]
+  D --> L["Training loop, validated every epoch"]
+  L --> C["Checkpoint: model, optimizer, epoch, seed"]
+  C --> B{"Best so far?"}
+  B -->|No| L
+  B -->|Yes| K["Kept as best"]
+  K --> S["Deployed on CPU, never a GPU"]
+```
+
 ## Environment: PyTorch From conda-forge
 
 Per [[ai.rules.md]], a fresh environment per project, conda-forge only, strict priority. PyTorch is where that matters most: it is the package that most often drags in a mismatched NumPy, BLAS, or CUDA runtime and produces an environment that imports and then fails at the first tensor operation.

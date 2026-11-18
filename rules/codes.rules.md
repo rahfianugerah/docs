@@ -19,6 +19,20 @@ Three principles decide every judgement call, in this order:
 
 They are ordered on purpose. Code that does not exist cannot be complex, and code that is not complex rarely needs deduplicating.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Code about to be written"] --> Y{"YAGNI: does it need to exist?"}
+  Y -->|No| SKIP["Do not write it"]
+  Y -->|Yes| K{"KISS: the simplest thing that works?"}
+  K -->|No| S["Simplify"]
+  S --> K
+  K -->|Yes| D{"DRY: is this knowledge already written?"}
+  D -->|Yes| R["Reuse it"]
+  D -->|No| W["Write it: readable, typed, short, with a test"]
+```
+
 ## YAGNI: You Are Not Going To Need It
 
 Build what the task needs today. Not what it might need.

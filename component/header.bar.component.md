@@ -20,6 +20,19 @@ tags:
 
 **When a feature is added, nothing is added to the bar.** No page title, no breadcrumb, no button for one page. A title in the bar changes with the route, competes with the page heading at a second size, and grows a little with every feature until the bar is a second navigation. Everything that names or acts on the current page belongs in the page heading, per [[header.page.component.md]].
 
+## Workflow
+
+```mermaid
+flowchart LR
+  M["Hamburger, below the breakpoint"] --> B["Brand"]
+  B --> SP["Spacer"]
+  SP --> J["Jump-to search, Ctrl K"]
+  J --> T["Theme control"]
+  T --> N["Notification bell"]
+  T -.-> TD["Light, Dark, System"]
+  N -.-> NP["Notification panel"]
+```
+
 ## Built On HeroUI
 
 HeroUI has no header bar, so it is built from HeroUI parts and theme variables:

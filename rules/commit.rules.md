@@ -20,6 +20,21 @@ A commit message is read by you six months from now, with no memory of the chang
 
 This applies to every commit, including a one-line fix and a configuration change.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Staged changes"] --> B{"One concern?"}
+  B -->|No| SP["Split into several commits"]
+  SP --> A
+  B -->|Yes| H["type, scope, imperative description"]
+  H --> BD["Body: one list item per change"]
+  BD --> C{"Secret, emoji, or attribution present?"}
+  C -->|Yes| RM["Remove it"]
+  RM --> C
+  C -->|No| CM["Commit"]
+```
+
 ## Professionalism Comes First
 
 **The first rule of a commit message is that it reads as professional work.** Anyone tracing a change years later reads it, so it is plain, precise, and neutral: no jokes, no slang, no shouting, and no decoration. Every rule below serves this one, and where a rule and professionalism pull apart, professionalism wins.

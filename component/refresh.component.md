@@ -22,6 +22,19 @@ This is not polish. Someone who refreshes a filtered report and lands on the das
 
 This policy extends [[uix.component.md]]. Read it whenever the work touches routing, a filter, a tab, or anything a user can get back to by typing a URL.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  R["Reload on any path"] --> S["The server answers index.html on every path"]
+  S --> A{"Session check settled?"}
+  A -->|No| G["Route gate, no redirect yet"]
+  G --> A
+  A -->|Signed out| L["Login, remembering the attempted page"]
+  A -->|Signed in| U["Rebuild the page from the URL: tab, filters, sort, page"]
+  L --> U
+```
+
 ## The URL Is the State
 
 **If it is not in the URL, it does not survive a refresh.** Everything else in this file follows from that one line.
