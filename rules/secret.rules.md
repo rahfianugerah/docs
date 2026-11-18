@@ -127,6 +127,26 @@ Rules:
 
 **Identity-based database authentication is still better where the database supports it.** It removes the password from the string entirely, so there is nothing to rotate and nothing to leak. Prefer it. This rule governs every connection that still carries a password, which today is most of them.
 
+## One Key per Service That Calls Another
+
+**Every service that calls another holds its own key, one per environment, and never shares it.** The service that answers is the provider; the service that calls is the client. Every client reaches every provider through a key that belongs to that client alone and opens only what that client uses.
+
+> [!warning]
+> Never put one key in a shared secret that several services mount. Revoking it cuts every service at once, the provider cannot tell which service made a call, and a leak from one service exposes every other service's access.
+
+| Item | Rule | Example |
+| :- | :- | :- |
+| Who issues the key | The provider, from its own key screen, once per client and per environment | The billing service issues one to the web app |
+| Label in the provider | The client's name, so the provider's list shows who holds which key | `web-app` |
+| Production secret | `<client>-<provider>-api-key`, owned by the client | `web-billing-api-key` |
+| Staging secret | `<client>-<provider>-api-key-staging` | `web-billing-api-key-staging` |
+| Variable in the client | `<PROVIDER>_API_KEY`, the same name in every client | `BILLING_API_KEY` |
+| Who may read the secret | Only the client's runtime account, on that one secret | The web app's service account |
+
+1. **Issue the key from the provider of the same environment.** A provider only recognizes keys in its own database, so a key from the other environment fails every call with `401`.
+2. **Open only what the client calls**, through `resource:action` scopes, per [[api.rules.md]].
+3. **The key's lifecycle**, from issue to delete, is the provider's, per "API Key Lifecycle" in [[api.rules.md]].
+
 ## A Frontend Holds No Secrets
 
 A static single-page app has no server-side process. Every build-time variable is baked into the bundle through a build argument and ends up inside the JavaScript the browser downloads. **It is public the moment it ships.**

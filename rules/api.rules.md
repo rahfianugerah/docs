@@ -89,6 +89,94 @@ Return every error in the same shape across every service:
 - Keep a tool endpoint's response friendly to a model: concise, with meaningful field names, and without a large blob in the default response. Offer a `?fields=` parameter when a caller needs to narrow it.
 - **Treat every model-generated value as untrusted input.** It is derived from something a user typed, so it is never rendered as HTML and never executed, per [[security.rules.md]].
 
+## API Key Lifecycle
+
+Every project that issues machine-to-machine keys serves the same eight routes and no others:
+
+```text
+GET    api/v1/api-keys               list, and never carries a key value
+POST   api/v1/api-keys               issue, and returns the key
+PATCH  api/v1/api-keys/{id}          rename: the label only
+POST   api/v1/api-keys/{id}/reveal   return the key again, audited
+POST   api/v1/api-keys/{id}/revoke   stop the key working, and keep the row
+POST   api/v1/api-keys/{id}/restore  undo a revoke, audited
+DELETE api/v1/api-keys/{id}          remove a key that no longer works, audited
+GET    api/v1/api-keys/scopes        the scopes a key may be issued with
+```
+
+**Revoke and restore are `POST`, not `DELETE`**, because neither removes anything: the row, the secret, and the history all stay. `DELETE` belongs to the one route that does remove the row.
+
+**There is no rotate route.** Revoking a key and issuing a new one does the same thing with an audit trail that says which key served which call, and a rotate that reuses the row makes the log ambiguous at exactly the moment it is being read.
+
+### The Key Format
+
+- A key is a fixed prefix identifying the issuer, then at least 32 characters of `secrets`-generated randomness, such as `proj_` followed by 32 characters from an alphabet with the ambiguous glyphs removed, roughly 186 bits.
+- **Remove `0`, `O`, `1`, `l`, and `I` from the alphabet.** A key is copied by hand more often than anyone plans for, and a key that cannot be misread is worth more than the entropy those five characters carry.
+- The first 12 characters are stored separately as `key_prefix`, indexed and unique, so a lookup is one index hit rather than a scan over every hash in the table.
+- **Never derive a key from a user identifier, a timestamp, or a counter.** It is random or it is not a key.
+
+### What Is Stored
+
+Four columns, four purposes. Two of them hold the key in different forms, and mixing them up is how the reveal path becomes an authentication path.
+
+| Column | Holds | Read by |
+| :- | :- | :- |
+| `key_prefix` | The first 12 characters, in the clear | The lookup, on every authenticated request |
+| `key_hash` | SHA-256 of the whole key | **Authentication**, compared with `compare_digest` |
+| `key_cipher` | The whole key, encrypted | **The reveal route only**, and nothing else |
+| `expires_at` | The expiry, or `NULL` | The validity check |
+
+- **Authentication always verifies against `key_hash`, never by decrypting `key_cipher`.** A request must not touch the encryption path at all. Decrypting on every call puts a key management round trip in the hot path and the plaintext key in application memory thousands of times a day to answer a question a hash already answers.
+- **SHA-256 without a salt is correct here, and a password hash is not.** The key carries 186 bits of entropy and comes from no dictionary, so the work factor a password hash exists to add buys nothing and costs a slow comparison on every request. A password is the opposite case, per [[security.rules.md]].
+- The comparison uses `hmac.compare_digest`. A plain `==` leaks the position of the first differing byte through its timing.
+- A key is never written to a log, a trace, an error message, or an audit row. The audit records the key's `id` and `key_prefix`, which identify it without carrying it.
+
+### Expiry, Including None
+
+`expires_at` is nullable, and **`NULL` means the key never expires**.
+
+- **The API takes an explicit intent, not a magic number.** Model it as a nullable duration where `null` means never, and reject `0` and `-1` as ways of spelling it; a caller that meant 30 days and sent `0` gets a validation error rather than an immortal key.
+- **A key that never expires is a deliberate choice and is recorded as one.** Require the `description` field when the expiry is `NULL`, so the row itself says why, and audit the issue with the acting user.
+- **Never make no-expiry the default.** A create request that omits the field gets the project's default duration.
+- A no-expiry key is still fully revocable, still scoped, and still bound to a service identity.
+- **Track `last_used_at` on every key.** On a key with no expiry it is the only signal there is: a key nobody can tell is still used is a key nobody can safely revoke.
+- The list states the expiry plainly. Render `NULL` as `Never expires`, never as an empty cell, a dash, or a far-future date.
+
+### Renaming a Key
+
+`PATCH api/v1/api-keys/{id}` changes the label, and nothing else.
+
+- **The `name` and `description` are the only mutable fields.** The scopes, the linked identity, the expiry, and the secret are immutable. Changing what a key may do is issuing a different key, so the audit trail can say what a key was allowed to do at the time it was used.
+- **A rename never changes the secret.** A caller holding the key notices nothing.
+- Validate the new name as the create route does: not empty, at most 150 characters, and unique among the active keys.
+- Audit the rename with the old name, the new name, and the acting user.
+- **The name is a label, never a credential.** Never encode a scope, an environment, or a secret in it.
+
+### Revealing a Key Again
+
+`POST api/v1/api-keys/{id}/reveal` returns the key in full, to the person who asked, once per request.
+
+> [!warning]
+> A key that can be revealed is stored reversibly, and that is strictly weaker than a hash-only key. It is accepted because the alternative in practice is worse: when a key cannot be recovered, a lost key is rotated across every client that holds it, and the pressure to avoid that produces one shared key that never rotates at all. The controls below are what make the trade acceptable, and none of them is optional.
+
+- **Encrypted, never hashed, and never plain.** `key_cipher` holds the key under envelope encryption with a key-encryption key in a key management service, per [[security.rules.md]]. A database dump on its own reveals nothing.
+- **`POST`, not `GET`.** A reveal is an event that is recorded, not a resource that is read. A `GET` lands in an access log, a browser history, and a proxy cache, and invites an automatic retry.
+- **Administrator only, and re-authenticated at the moment of the reveal.** An open laptop is the threat this control exists for.
+- **Audit every reveal, successful or refused**, with the acting user, the key `id`, the time, and the source address.
+- **Rate limit it hard**, per key and per acting user. A burst of reveals is an incident.
+- The response carries `Cache-Control: no-store` and exactly one key. There is no bulk reveal.
+- **A revoked or expired key is never revealed.** Return `403` with a stable code.
+- A key issued before the project stored `key_cipher` cannot be revealed. Return `409` with a code such as `KEY_NOT_REVEALABLE`, never a `500` and never an empty string.
+- The frontend shows the key masked, reveals it on an explicit action, and never places it in a URL or browser storage.
+
+### Revoking, Restoring, and Deleting
+
+- **Revoke sets `revoked_at` and `revoked_by_id`.** The row, the secret, the scopes, and the history stay, which is what makes revoke the first response to a suspicious key: it is the one action that can be taken back. A revoked key is refused at authentication, stays visible in the list, and takes effect on the next request; never cache a key's validity beyond the request that checked it.
+- **Restore clears the revoke and changes nothing else**, and is for a revoke made by mistake, never for a key that leaked. A leaked key is deleted and replaced. Only a revoked key is restored, and an expired key is never restored; both return `409`.
+- **Only a key that no longer authenticates is deleted**: revoked or expired. A valid key returns `409` and is revoked first, so nothing that still depends on it vanishes in one click.
+- **The audit row outlives the key.** The delete's audit detail records the key `id`, `key_prefix`, name, scopes, linked identity, and `last_used_at`, never the secret.
+- **No table references a key through a foreign key.** A table that remembers which key made a call records the `key_prefix` it saw, so a delete never fails on a constraint and never cascades into history.
+
 ## Definition of Done
 
 - Every route is `api/<version>/<route>`, including `api/v1/docs`, and `/health` is the only route outside the prefix.
