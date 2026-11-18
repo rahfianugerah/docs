@@ -4,9 +4,9 @@
 ![Conda](https://img.shields.io/badge/Conda-Miniconda-44A833?logo=anaconda&logoColor=white)
 ![Cloud Run](https://img.shields.io/badge/Cloud_Run-Deploy-4285F4?logo=googlecloud&logoColor=white)
 ![Obsidian](https://img.shields.io/badge/Obsidian-Vault-7C3AED?logo=obsidian&logoColor=white)
-![Rules](https://img.shields.io/badge/Rules-26-4C1D95)
-![Components](https://img.shields.io/badge/Components-22-4C1D95)
-![Templates](https://img.shields.io/badge/Templates-10-4C1D95)
+![Rules](https://img.shields.io/badge/Rules-29-4C1D95)
+![Components](https://img.shields.io/badge/Components-23-4C1D95)
+![Templates](https://img.shields.io/badge/Templates-11-4C1D95)
 ![Patterns](https://img.shields.io/badge/Patterns-16-4C1D95)
 ![Status](https://img.shields.io/badge/Status-Active-2EA043)
 
@@ -52,6 +52,7 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | [[pr.rules.md]] | When a pull request is worth opening, what an experiment must record, and when an AI may open or merge one |
 | [[docs.rules.md]] | What every project documents, how it is written, the tag taxonomy, and the Obsidian conventions |
 | [[journal.rules.md]] | The journal written when a piece of work ends, its four questions, and the numbers it must carry |
+| [[notes.rules.md]] | The project note: one brief, digits-only numbering, and a Done When table a tester can tick |
 | [[badge.rules.md]] | shields.io badges: the two kinds, the product name, and Title Case on every state |
 | [[callout.rules.md]] | The callout types, where one is required, and where it is forbidden |
 
@@ -61,7 +62,7 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | :- | :- |
 | [[codes.rules.md]] | YAGNI, KISS, DRY, readability, Python 3.13, conda and `.venv`, and the ML practices that differ |
 | [[database.rules.md]] | PostgreSQL and SQLAlchemy, which cases take the ORM and which take raw SQL, and the restore nobody tested |
-| [[data.rules.md]] | The schema is readable and the rows are not, in every environment, including a local copy |
+| [[data.rules.md]] | Four data classes: the schema is readable, rows need explicit approval, and protected data is never read |
 | [[env.rules.md]] | Why a real environment file is never read, what belongs in a table instead, and the notebook cell |
 | [[path.rules.md]] | Every path relative to a named anchor, and the three path namespaces that never mix |
 | [[secret.rules.md]] | Which values are secrets, where each one lives, and why a frontend holds none |
@@ -75,6 +76,8 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | [[prd.rules.md]] | The PRD every project carries, written before the code, and the non-goals that bound it |
 | [[srs.rules.md]] | The numbered, checkable requirements that follow the PRD and precede the code |
 | [[media.rules.md]] | Document and media upload, covering PDF and photo |
+| [[automation.rules.md]] | Scheduled and triggered work: one folder, deployed apart, tested before release, with a force stop |
+| [[report.automation.md]] | What an automated report delivers: the header, the caption, the file type, the numbers, and the colours |
 | [[pwa.rules.md]] | The PWA layer of a frontend: manifest, icons, and offline behavior |
 
 **What you build for the web:**
@@ -96,6 +99,7 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | [[login.component.md]] | The sign-in screen, and why every failure reads the same |
 | [[loading.component.md]] | The four loading surfaces, and which wait each one serves |
 | [[notification.component.md]] | The notification center, and the toast and inline alert for status messages |
+| [[log.component.md]] | The activity log: every page, click, sign-in, and data change, to the second |
 | [[animation.component.md]] | What moves, for how long, and what reduced motion turns off |
 | [[skeleton.component.md]] | The loading state a component shows in its own place, instead of holding the page |
 | [[dashboard.component.md]] | Charts: the form before the color, the validated palette, and the export |
@@ -131,6 +135,7 @@ Every documentation file starts from one of these, per [[docs.rules.md]]. Keep t
 | [[api.template.md]] | An `API.md` documenting endpoints |
 | [[model.template.md]] | A `MODEL.md` model card: data, seed, metrics, failure modes |
 | [[agent.template.md]] | A project's `CLAUDE.md` and `AGENTS.md`, pointing agents at the map and the rules |
+| [[notes.template.md]] | A project note in `docs/notes/`: one brief, its items, and its acceptance table |
 | [[cloudbuild.service.template.yaml]] | The build pipeline for a backend service |
 | [[cloudbuild.frontend.template.yaml]] | The build pipeline for a static frontend |
 | [[cloudbuild.job.template.yaml]] | The build pipeline for a scheduled job |
@@ -189,6 +194,7 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[agent.rules.md]]
 - [[analytics.rules.md]]
 - [[api.rules.md]]
+- [[automation.rules.md]]
 - [[auth.rules.md]]
 - [[badge.rules.md]]
 - [[branch.rules.md]]
@@ -201,10 +207,12 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[env.rules.md]]
 - [[journal.rules.md]]
 - [[media.rules.md]]
+- [[notes.rules.md]]
 - [[path.rules.md]]
 - [[pr.rules.md]]
 - [[prd.rules.md]]
 - [[pwa.rules.md]]
+- [[report.automation.md]]
 - [[srs.rules.md]]
 - [[repository.rules.md]]
 - [[secret.rules.md]]
@@ -234,6 +242,7 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[header.page.component.md]]
 - [[layout.component.md]]
 - [[loading.component.md]]
+- [[log.component.md]]
 - [[login.component.md]]
 - [[notification.component.md]]
 - [[pagination.component.md]]
@@ -260,6 +269,7 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[api.template.md]]
 - [[model.template.md]]
 - [[agent.template.md]]
+- [[notes.template.md]]
 
 ### Patterns
 
