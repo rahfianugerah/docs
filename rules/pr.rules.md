@@ -40,6 +40,51 @@ Stop. Do not open the pull request, do not merge, and do not do a smaller versio
 - Do not ask again in the same turn, and do not reframe the request hoping for a different answer.
 - Report what was left undone, and leave the work where the user can act on it themselves.
 
+### When the User Says Yes
+
+Do it. An explicit instruction to open a pull request, to merge one, or both, is carried out in the same turn, in the order below, without asking for the same permission a second time.
+
+- Open and merge exactly what the instruction names, and nothing beyond it. Permission to promote `dev` into `staging` still does not reach `main`.
+- If something blocks the merge, stop and report it, per "When Something Blocks the Merge". A yes is permission to merge cleanly, not permission to remove the obstacle.
+
+### Every Commit Is Checked First
+
+A pull request is only as compliant as the commits inside it. Before opening one, list exactly what it will carry:
+
+```bash
+git fetch origin
+git log --format='%h %s%n%b' origin/<base>..origin/<head>
+```
+
+Check each commit against [[commit.rules.md]]: the subject shape and an allowed type, a professional message with no emoji, a flat `-` body with one change per item, one concern, no footer the commit standard does not permit, no attribution of any kind, and no secret or personal data.
+
+A commit that fails is fixed before the pull request is opened. A commit that exists only locally is reworded or split there. **A commit already pushed to a shared branch is never rewritten** without the owner's explicit permission, because rewriting it needs a force push; report it and wait.
+
+### Pull Request and Merge Are the Last Step
+
+**The pull request and the merge come after every other piece of work in the request, always.** A pull request opened before the last update is committed ships an incomplete change under an approval that was given for the complete one.
+
+1. Apply every update the user asked for, on the working branch, per [[branch.rules.md]].
+2. Commit each update, one concern per commit, and push.
+3. Check every commit the pull request will carry, including the ones just added.
+4. Open the pull request, with a Changes list that covers every update.
+5. Merge, once the required approval and checks are in place.
+
+| The update arrives | What happens |
+| :- | :- |
+| With the permission, in one instruction | Steps 1 to 5 in order |
+| Before the pull request is opened | Stop, apply and commit the update, then continue from step 3 |
+| After it is opened, before it is merged | Do not merge. Commit and push the update, rewrite the Changes list and the Test Plan, re-run step 3, then merge |
+| After the merge | A new change, promoted by a new pull request that needs its own permission |
+
+### After the Merge, Stop
+
+**Once the merge completes, the task is done. Do not wait for the build.** The user tests the release directly, so an AI that sits watching a pipeline only delays the report.
+
+- Do not poll the build, the deploy, or the new revision, and do not run a health check or read the service's logs unless the user asks.
+- **Report at once**: the pull request link, the merge commit, and the branch it reached; that the build starts from the merge, never that the deploy succeeded, because nobody has seen it yet; and every step still needed on the owner's side, such as a migration job or a secret to create, as names and complete commands.
+- A later report of a failed build is a new task, investigated then.
+
 ### The User's Yes Is the Human Approval
 
 [[branch.rules.md]] requires an approving review from a human before any promotion is merged, and states that an AI never approves a promotion. This rule does not weaken that one.
@@ -83,6 +128,12 @@ This standard reuses the type list, the scope rules, and the terminology already
 
 A pull request that would need a type not on that table, or more than one scope, covers more than one concern and must be split, the same as a commit would.
 
+## Professional, With No Emoji
+
+**A pull request reads as professional work first.** The reviewer approves against it, the release notes are built from it, and it stays in the history beside the commits it merges, so its title, description, and comments are plain, precise, and neutral, with no jokes, no slang, and no decoration.
+
+**No emoji, ever.** An emoji is banned everywhere in a pull request: the title, the description, a review comment, a reply, and a commit it carries. That covers a Unicode emoji, a Gitmoji prefix, a shortcode such as `:rocket:` that the platform renders as one, and a symbol used the way an emoji is, such as a check mark or a warning sign. **A Test Plan item is ticked with the Markdown task box `- [x]`**, never with a check mark symbol.
+
 ## Language
 
 Titles and descriptions are written in **English**, the same exception [[commit.rules.md]] makes for commit messages and for the same reason: a pull request is consumed by hosting platforms and release tooling that expect it, and it sits next to a history already written in English.
@@ -100,7 +151,7 @@ Same structure as a commit description:
 1. The type is required, lowercase, and from the Types table in [[commit.rules.md]].
 2. The scope is optional and follows the Scope rules there: a single lowercase noun, no file path, reused from what the project already uses for that area.
 3. A `!` immediately before the colon marks a breaking change.
-4. The description is imperative, starts lowercase unless the first word is a proper noun, has no trailing period, and stays at 72 characters or fewer.
+4. The description is imperative, starts lowercase unless the first word is a proper noun, has no trailing period, and stays around 72 characters. A longer title is acceptable when a shorter one would lose meaning; a clear, professional title beats a short, vague one.
 5. No issue number in the title. Use the Related Issues section.
 6. When a pull request carries several commits, the title describes its overall concern. Do not concatenate two types or two scopes into one title.
 
@@ -291,7 +342,7 @@ The `##` headings that lay out Summary, Changes, Results, Test Plan, and Related
 
 ## Definition of Done
 
-- The title is in English, follows `<type>[scope]: <description>`, is 72 characters or fewer, and has no trailing period.
+- The title is in English, follows `<type>[scope]: <description>`, stays around 72 characters without losing meaning, and has no trailing period.
 - The type is on the allowed list in [[commit.rules.md]] and is lowercase.
 - The scope, when present, is a single lowercase noun matching the scope already used for that area.
 - Summary, Changes, and Test Plan are all present.
@@ -303,7 +354,7 @@ The `##` headings that lay out Summary, Changes, Results, Test Plan, and Related
 - No tool, AI, model, or bot attribution appears anywhere.
 - The pull request covers one logical concern.
 - A promotion carries an approving review from a human before it is merged, per [[branch.rules.md]].
-- No emoji, prohibited character, or decorative divider is present.
+- No emoji of any kind is present, including a shortcode or a symbol used as one, and no prohibited character or decorative divider.
 - No secret, credential, or personal data is present.
 - When an AI opened or merged it, the user explicitly authorized that specific action, and authorization for a merge into `main` was given separately from any authorization for `staging`.
 - No Test Plan item is marked verified unless that step was actually run.
