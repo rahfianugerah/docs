@@ -24,8 +24,8 @@ A single-user tool needs no activity log. The moment a second person can sign in
 
 ```mermaid
 flowchart LR
-  B["Browser tracker"] -->|"open, close, click, in batches"| P["POST /activity"]
-  W["Any write route"] -->|"same transaction"| C["before_flush capture"]
+  B["Browser tracker"] -->|open, close, click, in batches| P["POST /activity"]
+  W["Any write route"] -->|same transaction| C["before_flush capture"]
   A["Sign-in and sign-out routes"] --> L
   P --> L[("activity_log, append only")]
   C --> L

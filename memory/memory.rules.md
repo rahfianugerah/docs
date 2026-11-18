@@ -8,6 +8,20 @@ This is the protocol every model follows when reading or writing the memory in [
 
 **One note holds one thing.** A note that holds three facts cannot be corrected, superseded, or linked to precisely, and it will rot as one unit.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Something learned"] --> B{"True beyond this session and not in the code?"}
+  B -->|No| NW["Do not write it"]
+  B -->|Yes| C{"A secret or personal data?"}
+  C -->|Yes| NS["Never store it"]
+  C -->|No| N["One note, one thing, slug.type.memory.md"]
+  N --> I["Listed in the memory index"]
+  I --> G["pmb digest after the batch"]
+  Q["A question"] --> RC["Recall: the note, Cognee, Graphify, then the code"]
+```
+
 ## What to Write
 
 Write a note when something is **true beyond this session** and **not recoverable from the code**.

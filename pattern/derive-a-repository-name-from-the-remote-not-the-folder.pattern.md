@@ -21,6 +21,16 @@ The mismatch is a typo in the local clone rather than on the remote, so it is fi
 
 The general form: **never derive an identifier from a human-typed path when the authoritative value is available from the system that owns it.** A folder name is a convenience; the remote is the fact.
 
+**Mechanism:**
+
+```mermaid
+flowchart TD
+  L["Loop over every folder in a workspace"] --> F{"Name taken from?"}
+  F -->|The folder name| X["One folder differs by a letter"]
+  X --> S["Twenty successes and one quiet failure"]
+  F -->|git remote get-url origin| R["Every repository resolves"]
+```
+
 **Why:** a bulk pull request run over fourteen repositories failed on exactly this one, and the error arrived in the middle of thirteen successful lines.
 
 **Applies to:** any script or loop that maps a workspace folder to a remote repository, and any automation whose per-item failure is one line in a long output.

@@ -17,6 +17,19 @@ A badge answers one question at a glance: what is this built with, and which ver
 
 This applies to every project README, and to this vault's own README. A README with no badge row is not following this standard; nor is one whose badges disagree with what the repository actually ships.
 
+## Workflow
+
+```mermaid
+flowchart LR
+  A["README opens"] --> B["One badge row, regular style"]
+  B --> P["Product badge: logo, name, version"]
+  B --> S["State badge: label and Title Case state"]
+  P --> H{"Still true of the repository?"}
+  S --> H
+  H -->|No| U["Update or remove it"]
+  H -->|Yes| K["Keep it"]
+```
+
 ## The Two Kinds
 
 A badge is one of two kinds, and mixing their shapes is what makes a row look untidy even when every badge is individually correct.

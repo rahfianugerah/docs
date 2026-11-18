@@ -20,6 +20,19 @@ The header bar above the rail and the content is a different thing with its own 
 
 This extends [[uix.component.md]]. Its actions are HeroUI `Button`s, per [[button.component.md]]; its title and description are plain text in Google Sans.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  R["Route changes"] --> M["Look up the label in the route map"]
+  M --> F{"Mapped?"}
+  F -->|No| P["Fall back to the product name"]
+  F -->|Yes| T["h1: the page name, one line"]
+  P --> T
+  T --> A["Actions on the right, the primary one last"]
+  A --> D["Description under the title row"]
+```
+
 ## The Bar Is Not the Page Heading
 
 Two different things are both called a header, and confusing them is the most common way either standard gets broken.

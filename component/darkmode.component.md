@@ -21,6 +21,20 @@ HeroUI makes this cheap. Its components read their colors from theme variables o
 
 This standard owns only what changes when the theme flips. The variables themselves, the contrast floor, and every component rule stay in [[uix.component.md]] and its companions.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  L["Page load"] --> S["Inline head script reads heroui-theme"]
+  S --> Q{"Light, Dark, or System?"}
+  Q -->|System| M["Resolve from prefers-color-scheme"]
+  Q -->|Light or Dark| C["Set the class and data-theme on html before the first paint"]
+  M --> C
+  C --> V["Every component reads HeroUI theme variables"]
+  T["Theme control in the header bar"] --> U["useTheme writes heroui-theme"]
+  U --> C
+```
+
 ## How the Switch Works
 
 HeroUI applies a theme from the root element. It responds to a class and to a `data-theme` attribute, and HeroUI's own controller sets both:

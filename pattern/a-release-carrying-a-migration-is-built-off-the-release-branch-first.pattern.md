@@ -28,6 +28,18 @@ Two things about this sequence are easy to get wrong:
 - **The database flag is spelled differently on each command, and the error names neither.** The deploy command takes `--add-cloudsql-instances`, while the jobs command accepts only `--set-cloudsql-instances`.
 - **A release that also adds a secret needs one manual deploy after the promotion.** A push never installs a new secret, because the trigger never touches configuration.
 
+**Mechanism:**
+
+```mermaid
+flowchart TD
+  P["A release carries a migration"] -->|wrong order| X["Push to the release branch builds and deploys at once"]
+  X --> F["New code serves before its table exists"]
+  P -->|right order| D["Build the image from dev by hand"]
+  D --> J["Point the migrate job at that image"]
+  J --> E["Execute the job and wait"]
+  E --> PR["Promote: the trigger rebuilds onto a migrated schema"]
+```
+
 **Why:** a runbook that says "run the migration job before pushing" is impossible as written, and nothing records that the job's image does not exist yet at that point. The failure surfaces as every authenticated request breaking after a green build.
 
 **Applies to:** any release that adds a schema revision, on any platform where one pipeline both builds and deploys.

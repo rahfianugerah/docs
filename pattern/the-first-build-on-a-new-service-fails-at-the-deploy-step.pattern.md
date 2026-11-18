@@ -16,6 +16,19 @@ The cause is that the pipeline deliberately carries no environment-variable file
 
 Continue rather than debug: the image is already pushed, so run the manual deploy once with the environment file and the secret mounts. Every later build succeeds end to end, because the configuration is then attached to the service.
 
+**Mechanism:**
+
+```mermaid
+flowchart TD
+  B["First build of a new service"] --> I["Build and push succeed"]
+  I --> D["Deploy step carries no env-vars file and no secrets, by design"]
+  D --> N{"Service already exists?"}
+  N -->|Yes| K["Keeps its attached config"]
+  N -->|No| F["Container refuses to start: the settings check fails"]
+  F --> M["Deploy once by hand with the config attached"]
+  M --> T["Later pushes keep that config"]
+```
+
 **Why:** the failure reads as a broken pipeline, and the natural response is to inspect the pipeline file, the container definition, and the port binding, none of which are wrong. Neither the pipeline nor the runbook says the first build is expected to fail this way, so the symptom has no written cause anywhere in the repository.
 
 **Applies to:** the first bootstrap of any service on a platform where the deploy command preserves existing configuration.

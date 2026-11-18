@@ -24,6 +24,16 @@ Where a project's own runbook is written in a different language from this vault
 
 **Where the project has no runbook of its own, that is the finding to report.** Do not substitute the canonical file and fill in guesses: the missing copy is a real gap.
 
+**Mechanism:**
+
+```mermaid
+flowchart TD
+  Q["How do I deploy?"] --> X["Not from memory, not from the canonical template"]
+  X --> O["Open deploy.cloud.md in the project's own root"]
+  O --> V["Steps with the real service, region, image, variables, and secrets"]
+  V --> B["Give bash and PowerShell, without asking which"]
+```
+
 **Why:** deploy commands carry real service names and real secret references, so a command assembled from memory or from a template's placeholders either fails on a name that does not exist or, worse, succeeds against the wrong service.
 
 **Applies to:** any request to deploy, redeploy, roll back, run a migration job, or change configuration.

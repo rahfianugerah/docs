@@ -18,6 +18,18 @@ An assistant with no memory relearns the same context every session, and asks th
 
 So the memory is **plain markdown in a git repository**. Every model reads it. No model owns it.
 
+## Workflow
+
+```mermaid
+flowchart LR
+  M["Markdown notes in memory/"] --> D["pmb digest"]
+  D --> C[("Cognee: graph and vectors")]
+  D --> G[("Graphify: code map")]
+  A["Any coding agent"] -->|recall over MCP| C
+  A -->|where is X| G
+  A -->|writes a note| M
+```
+
 ## Architecture
 
 Three layers, one substrate:

@@ -21,6 +21,18 @@ A migration script that opens every source connection as read-only is safe to ru
 
 Separately, **the snapshot freezes the source at the instant it opens**, so anything written during the dump does not travel. That is a completeness problem, not a safety one: fine for a rehearsal, which is why a real cutover stops the old application first.
 
+**Mechanism:**
+
+```mermaid
+flowchart TD
+  D["Read-only dump of a live database"] --> L["Shared lock on every table"]
+  D --> X["Snapshot held open, vacuum waits"]
+  D --> IO["Sequential reads load the host"]
+  D --> CN["One connection used"]
+  L --> B["ALTER, DROP, and TRUNCATE block until it ends"]
+  L --> RW["Reads and ordinary writes continue"]
+```
+
 **Why:** the question "is it safe to point this at live production?" gets asked again before every cutover, and answering it properly means auditing every source connection site, sweeping the subprocess calls, and proving the read-only enforcement rather than trusting it.
 
 **Applies to:** any rehearsal or cutover run of a migration script against a live source.

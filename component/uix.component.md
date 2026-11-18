@@ -50,6 +50,21 @@ Read this file first. Read a companion when the work touches the area it owns.
 
 Every companion reads HeroUI's theme variables, through the names in "The Theme Contract" below, and none of them redefines one. A new color, radius, or shadow is added here first, then used there.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A screen element"] --> B{"Does HeroUI ship it?"}
+  B -->|Yes| H["Use the HeroUI component, props from the MCP server"]
+  B -->|No| P["Build it from HeroUI parts and theme variables"]
+  H --> C{"Needs a different look?"}
+  C -->|Yes| V["Override a theme variable, once per theme"]
+  C -->|No| K["Keep HeroUI's default"]
+  P --> R["Google Sans, 8px maximum radius, light and dark"]
+  V --> R
+  K --> R
+```
+
 ## HeroUI's Theme Is the Base
 
 **The base is HeroUI's own light and dark themes, set in Google Sans, with every corner at 8px.** Every project starts there, and is already correct before it adds a single color of its own.

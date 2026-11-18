@@ -27,13 +27,13 @@ Two rules hold for every one of them:
 ```mermaid
 flowchart LR
   S["Scheduler checks every 5 minutes"] --> D{"Slot due and data ready?"}
-  D -->|"Data not ready"| W["Answer defer, retry next check"]
-  D -->|"Due"| C["Host calls the function"]
+  D -->|Data not ready| W["Answer defer, retry next check"]
+  D -->|Due| C["Host calls the function"]
   C --> F["Function reads the source through its API"]
   F --> P["Function answers content parts"]
   P --> R["Host renders, sends once per key"]
   R --> L["Host writes the run log"]
-  T["Test run before release"] -.->|"sends only to the test target"| R
+  T["Test run before release"] -.->|sends only to the test target| R
 ```
 
 ## Where the Code Lives

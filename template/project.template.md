@@ -15,6 +15,15 @@ Copy the block below into a new project's `README.md`. **The block carries no fr
 
 Delete a section only when it genuinely does not apply. **Known Limitations is never deleted**: an empty section is information, a missing one is a question. Never add a section listing deviations from the vault's standards; the vault is private and that section discloses it, per [[docs.rules.md]].
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Title, badges, lead paragraph"] --> T["Table of Contents"]
+  T --> S["Setup"] --> U["Usage"] --> C["Configuration"] --> D["Data"]
+  D --> P["Project Structure"] --> V["Development"] --> K["Known Limitations"] --> L["License"]
+```
+
 ````markdown
 # [Project Name]
 

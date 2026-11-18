@@ -24,6 +24,23 @@ This standard does not redefine a token. A loading state that introduces its own
 **One indicator per wait.** A route gate does not sit above a section that is also loading.
 
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Something is waiting"] --> B{"What is waiting?"}
+  B -->|Session check on first paint| G["Route gate, full page"]
+  B -->|A submitted form| P["Button with isPending"]
+  B -->|A section with a known shape| S["Skeleton in place"]
+  B -->|A section with an unknown shape| I["Inline Spinner with text"]
+  G --> T["Indicator plus text naming the wait"]
+  P --> T
+  S --> T
+  I --> T
+  T --> E{"Request failed?"}
+  E -->|Yes| ER["Error state, never an endless spinner"]
+```
+
 ## Choosing the Right Surface
 
 | The wait | Surface | Why |

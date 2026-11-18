@@ -13,6 +13,18 @@ An AI project fails differently from ordinary software. Ordinary code is broken 
 
 The general code standard in [[codes.rules.md]] still applies: YAGNI, KISS, DRY, English, Python 3.13, pytest. This file adds what is specific to AI and does not repeat what is not.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A new AI project"] --> E["Its own conda environment from environment.yml"]
+  E --> S["Every seed set and recorded"]
+  S --> D["Data outside git, split once"]
+  D --> X["Each experiment recorded"]
+  X --> V["Evaluated on the held-out set"]
+  V --> SV["Served on CPU, weights outside the image"]
+```
+
 ## Environment: One Per Project, Always Conda
 
 **Every ML, DL, or AI project gets its own conda environment. No exceptions, no sharing, no reuse.**

@@ -27,6 +27,22 @@ The order is fixed and never runs backwards:
 > [!warning]
 > Picking the chart first and fitting the question to it afterwards is the most common way a dashboard becomes decorative. A bar chart nobody can state a question for is not a neutral choice; it is a claim that the comparison matters, made without anyone deciding that it does.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A dataset to show"] --> B{"A single number?"}
+  B -->|Yes| ST["Stat tile, not a chart"]
+  B -->|No| M["Find its row in the chart selection matrix"]
+  M --> E{"Row exists?"}
+  E -->|No| NR["Add a row with its reasoning, or pick an existing one"]
+  E -->|Yes| G["Apply the guardrails: no silent aggregation, bar axis from zero"]
+  NR --> G
+  G --> Q{"Seems to need 3D?"}
+  Q -->|Yes| ASK["Stop and ask the owner first"]
+  Q -->|No| RD["Render per the dashboard standard"]
+```
+
 ## Chart Selection Matrix
 
 | Data shape | Analytical question | Chart | Why this chart |

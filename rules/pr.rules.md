@@ -17,6 +17,22 @@ A pull request is a written record of why a change happened. On a personal proje
 
 It sits directly next to the commit history it merges, so it follows the same discipline as [[commit.rules.md]]. This applies to every pull request, including a one-line fix and a configuration change.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Work on the request"] --> B["Apply every update, commit each, push"]
+  B --> C["Check every commit the pull request will carry"]
+  C --> D{"Explicit permission to open?"}
+  D -->|No| R["Report and leave it for the user"]
+  D -->|Yes| E["Open: Summary, Changes, Test Plan"]
+  E --> F{"Explicit permission to merge?"}
+  F -->|No| R
+  F -->|Yes| G{"Clean merge and checks green?"}
+  G -->|No| BL["Stop and report the blocker"]
+  G -->|Yes| H["Merge and report at once, without waiting for the build"]
+```
+
 ## AI Authorization to Open and Merge
 
 > [!danger] This is the most important rule in this standard

@@ -20,6 +20,19 @@ Three checks, before any work is planned:
 2. **Which role did the reporter hold**, against the visibility condition on the element?
 3. **Is the cause the report names the one the code actually takes?**
 
+**Mechanism:**
+
+```mermaid
+flowchart TD
+  R["Report: the feature does not exist"] --> T{"File tracked and in the deployed image?"}
+  T -->|No| U["Never shipped: ship it"]
+  T -->|Yes| V{"Reporter's role meets the visibility condition?"}
+  V -->|No| H["Hidden by role: explain it, or change the condition"]
+  V -->|Yes| C{"Does the code take the cause the report names?"}
+  C -->|No| W["Investigate the real cause"]
+  C -->|Yes| B["Only now build or fix"]
+```
+
 **Why:** a bug report names a symptom, and the reporter's model of the cause is a guess made from outside the system. Treating that guess as the finding is how work gets done twice.
 
 **Applies to:** any acceptance-testing round or bug report where the claim is that something is missing rather than wrong.

@@ -17,6 +17,17 @@ When creating, modifying, or reviewing a repository, follow the rules in this po
 
 These are the baseline hygiene practices that let a project be maintained by someone other than its original author. Each one exists because its absence has actually cost something: a repository with no git history, a database file committed into the tree, a secret hardcoded in a compose file.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["One deployable"] --> B["One repository"]
+  B --> C[".gitignore before the first commit"]
+  C --> D["README, docs/PRD.md, docs/SRS.md, .env.example"]
+  D --> E["Structured logging, errors handled and never swallowed"]
+  E --> F["Tests run before every merge"]
+```
+
 ## One Deployable, One Repository
 
 **There is no monorepo.** A backend and a frontend are two separate repositories, even when they are two halves of one product and are worked on by the same person on the same day.

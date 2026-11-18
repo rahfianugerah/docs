@@ -20,6 +20,22 @@ This standard extends [[uix.component.md]]. It does not redefine the token set; 
 
 [[dropdown.component.md]] owns the collapsible group itself, including the icon placement rule and the chevron. This file owns everything around it. Read both when working on a sidebar.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Navigation items"] --> P{"User has permission?"}
+  P -->|No| NR["Not rendered"]
+  P -->|Yes| G{"Part of a group?"}
+  G -->|Yes| D["Collapsible group, text-only children"]
+  G -->|No| L["Flat row with its icon"]
+  D --> M["Markers: a count on a leaf, a dot on a closed group"]
+  L --> M
+  M --> F["Account footer pinned at the bottom"]
+  F --> W{"Below the breakpoint?"}
+  W -->|Yes| DR["Drawer with a backdrop"]
+```
+
 ## Built On HeroUI
 
 HeroUI has no navigation rail, so it is built from HeroUI's `Link`, `Badge`, and `Avatar`, with HeroUI's `Drawer` for the rail below the breakpoint and HeroUI's theme variables, per [[uix.component.md]]. The HTML and CSS below are that build: they read only theme variables, so the result follows the light and dark theme with every HeroUI component around it.

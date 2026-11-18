@@ -26,6 +26,17 @@ The difference from [[memory/README.md]] matters and is not a technicality:
 
 **A memory note requires a `Source` path that resolves from the workspace root**, per [[memory.rules.md]]. A lesson learned in a system this vault does not contain cannot honour that, and inventing a path would be a fabricated provenance. So it lives here instead, and says plainly where it came from.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  I["An incident"] --> Q{"A mechanism that repeats elsewhere?"}
+  Q -->|No| M["A memory note, if it names a real file"]
+  Q -->|Yes| G["Generalized away from its system"]
+  G --> P["One pattern, one mechanism, drawn"]
+  P --> X["Indexed here by group"]
+```
+
 ## Shape
 
 The same shape as a memory note, with `kind/pattern` in the frontmatter and one difference in the labels:
@@ -46,6 +57,10 @@ The statement, in one or two sentences.
 
 The detail underneath it.
 
+**Mechanism:**
+
+[a mermaid flowchart of the failure and its fix]
+
 **Why:** why the symptom points at the wrong thing.
 
 **Applies to:** the conditions under which this repeats.
@@ -56,6 +71,7 @@ The detail underneath it.
 ```
 
 - **One pattern holds one mechanism.** Two mechanisms is two files.
+- **The mechanism is drawn**, as a Mermaid flowchart under `**Mechanism:**`, per [[docs.rules.md]]: the condition, the misleading symptom, and the fix.
 - **The title states the mechanism, not the topic.** "A host-only cookie never reaches a second host" beats "Cookie notes".
 - At most one callout, per [[callout.rules.md]].
 - One paragraph is one line, per [[docs.rules.md]].

@@ -23,6 +23,19 @@ What works is to **detach only the foreign keys whose column is nullable**, load
 
 **Keep every non-nullable foreign key enforced throughout.** An orphan there means the source really is broken, and that has to stop the migration rather than be patched silently.
 
+**Mechanism:**
+
+```mermaid
+flowchart TD
+  L["Load the dump into the stricter schema"] --> F["Foreign key violation on a stale reference"]
+  F --> Q{"Is the column nullable?"}
+  Q -->|Yes| D["Detach that foreign key"]
+  D --> LD["Load the dump"]
+  LD --> N["Null the orphaned values"]
+  N --> R["Re-add the constraint"]
+  Q -->|No| S["Stop: the source is really broken"]
+```
+
 **Why:** the error points at a row, so the instinct is to fix data. The difference is in the schema definitions, and it is invisible from either side alone.
 
 **Applies to:** any restore into a schema whose constraints are stricter than the source's, which is every migration away from a tool that treats constraints as optional.

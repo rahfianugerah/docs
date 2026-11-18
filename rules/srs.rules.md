@@ -18,6 +18,19 @@ tags:
 
 The point is that a requirement nobody can check is a requirement nobody will meet. "The search is fast" survives every review and every release unmet; "recall answers within 3 seconds for 95% of requests" is either true or false on the day it ships.
 
+## Workflow
+
+```mermaid
+flowchart LR
+  P["docs/PRD.md: What Is Built"] --> F["Product functions"]
+  F --> R["Numbered requirements: FR and NFR codes"]
+  R --> C{"Checkable, with a priority and a status?"}
+  C -->|No| W["Rewrite with a measurement"]
+  W --> R
+  C -->|Yes| A["Acceptance criteria"]
+  A --> K["Commits and tests cite the codes"]
+```
+
 ## Where It Lives
 
 - One `docs/SRS.md` in the repository, beside `docs/PRD.md`. A technical plan in `docs/PLAN.md` names the requirement codes it satisfies instead of repeating the requirements.

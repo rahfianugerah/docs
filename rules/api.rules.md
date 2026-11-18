@@ -18,6 +18,19 @@ When designing, building, or modifying a REST API, follow the rules in this poli
 
 One consistent style makes integration between services predictable and makes every endpoint safe to expose as a tool to an agent. This standard covers REST. An event bus is a later phase and is not part of it.
 
+## Workflow
+
+```mermaid
+flowchart LR
+  C["Client"] --> R["api/v1/route"]
+  R --> AU{"Authenticated?"}
+  AU -->|No| E1["401 in the shared error shape"]
+  AU -->|Yes| V{"Input valid?"}
+  V -->|No| E2["422 in the shared error shape"]
+  V -->|Yes| H["Handler: filter, sort, and page in the database"]
+  H --> OKR["200 in the base shape, with page metadata"]
+```
+
 ## Route Shape
 
 **Every route is `api/<version>/<route>`. There is no exception, and nothing sits outside it.**

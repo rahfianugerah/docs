@@ -17,6 +17,17 @@ Confirm it by resolving the host: an AAAA row and no A row is the whole story. U
 
 Any connection-string parameter copied from the provider's console may belong to a different client library entirely. A driver that does not recognize it rejects the whole string as an unknown parameter.
 
+**Mechanism:**
+
+```mermaid
+flowchart TD
+  D["Connect to the direct host"] --> R{"Resolves to IPv4?"}
+  R -->|No, AAAA only| E["Name resolution error that looks like a typo"]
+  E --> P["Use the pooler host"]
+  P --> S["Session-mode port, not transaction mode"]
+  S --> U["Username gains the project reference suffix"]
+```
+
 **Why:** three separate failures all present as either a name-resolution error or a bare authentication refusal, and none of them mentions the address family, the pooler, or the missing suffix.
 
 **Applies to:** any migration or one-off dump against a managed database reached through a pooler.

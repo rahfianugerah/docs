@@ -14,6 +14,16 @@ tags:
 
 Copy everything from the `# Title` line down into the backend repository's `README.md`.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  O["1. Project Overview"] --> S["2. Technology Stack"] --> A["3. System Architecture"]
+  A --> P["4. Project Structure"] --> C["5. Configuration"] --> D["6. Database"]
+  D --> AU["7. Authentication and Security"] --> B["8. Business Logic and Integrations"]
+  B --> T["9. Testing and Error Handling"] --> DV["10. Development and Deployment"]
+```
+
 ```markdown
 # [Project Name]
 

@@ -18,6 +18,16 @@ Fill in every bracket. The point of this file is to stop an agent rediscovering 
 
 Rules for filling it in are in [[docs.rules.md]]; the memory protocol is [[memory.rules.md]].
 
+## Workflow
+
+```mermaid
+flowchart LR
+  A["Fill the block"] --> C["Save it as CLAUDE.md"]
+  C --> D["Copy it byte-identical to AGENTS.md"]
+  D --> E["Agents read the code map before searching"]
+  E --> F["Rules come from the vault, memory from the server"]
+```
+
 ```markdown
 # [Project Name]
 

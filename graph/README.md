@@ -36,6 +36,17 @@ Both are written by `pmb digest`, deleted by `pmb reset`, and gitignored. This R
 those and survives a reset. Graphify's raw `graph.json` stays in the `plugmybrain` repository,
 because nobody reads json in Obsidian.
 
+## Workflow
+
+```mermaid
+flowchart LR
+  B["A brain's sources"] --> D["pmb digest"]
+  D --> G["graph/: generated, never hand-edited"]
+  G --> K{"Worth keeping?"}
+  K -->|Yes| M["Moved to memory/ with its Why line"]
+  K -->|No| R["Rebuilt or reset away"]
+```
+
 ## Keeping Something You Find Here
 
 A note here is disposable, so editing it is wasted work. When one turns out to be worth

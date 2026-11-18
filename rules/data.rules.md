@@ -28,6 +28,23 @@ The rule holds in every environment. **Production, staging, and a local copy of 
 
 This is the same rule [[env.rules.md]] applies to configuration, extended to the thing configuration connects to: the definition is readable, and the data is not, unless a person who owns it says so for one task.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["A value an AI might need"] --> B{"Which class?"}
+  B -->|Schema| S["Read freely"]
+  B -->|Protected data| P["Never read: offer the schema route"]
+  B -->|Finance figure| F{"Did the user ask for this calculation?"}
+  F -->|No| NC["Do not calculate"]
+  F -->|Yes| Q["Read-only query, named columns, no protected column"]
+  B -->|Rows| R["Send the request shape and wait"]
+  R --> Y{"Explicit yes for this task?"}
+  Y -->|No| NQ["Do not query"]
+  Y -->|Yes| Q
+  Q --> REC["Use the answer, record the finding, never the data"]
+```
+
 ## The Law Behind It
 
 A project that holds personal data is bound by the data protection law where it operates, such as Indonesia's UU PDP. This standard also holds every project to the GDPR, because its requirements are the most fully specified, and a project built to them meets most local laws as well. **Where two laws differ, the stricter one applies.**

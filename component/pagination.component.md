@@ -19,6 +19,21 @@ tags:
 
 A table shows a bounded number of rows at a time, and the reader moves between those bounds by an explicit control that names where they are. This is not a performance technique that happens to be visible; it is the interaction model, and it is chosen over scrolling on purpose.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Result set size"] --> B{"How many rows?"}
+  B -->|Up to 200| C["20 per page"]
+  B -->|201 to 2000| D["50 per page"]
+  B -->|More than 2000| E["100 per page, and offer a filter"]
+  C --> F["limit and offset to the API"]
+  D --> F
+  E --> F
+  F --> G["Page and size in the URL"]
+  G --> H["HeroUI Pagination with the full control set"]
+```
+
 ## Built On HeroUI
 
 This is HeroUI's `Pagination`. HeroUI owns the markup, the keyboard handling, the focus ring, and the accessibility; this standard owns the decisions HeroUI leaves to the project. Exact props come from the HeroUI MCP server, per [[stacks.rules.md]].

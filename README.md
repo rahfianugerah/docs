@@ -25,6 +25,19 @@ Alongside them sits a portable AI memory. An assistant with no memory relearns t
 
 The whole repository is an Obsidian vault. Open the folder and the graph is already wired.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  S["A new personal project"] --> R["Apply the rules and the stack"]
+  R --> T["Documents start from the templates"]
+  T --> B["Interface built on the component standards"]
+  B --> D["Shipped with the gcp runbook"]
+  D --> J["Work journaled when it ends"]
+  J --> M["Lasting findings written as memory notes"]
+  M --> X["pmb digest into Cognee and Graphify"]
+```
+
 ## Repository Contents
 
 | Contents | Description |

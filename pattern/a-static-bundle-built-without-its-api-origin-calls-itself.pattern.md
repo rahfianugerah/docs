@@ -21,6 +21,18 @@ The console's own "set up continuous deployment" button is the usual cause: it g
 
 While there, check the tag substitution. A typo in the short-SHA variable leaves the tag empty and the build rejects the image reference with `could not parse reference`.
 
+**Mechanism:**
+
+```mermaid
+flowchart TD
+  B["Build without the API origin build argument"] --> E["Empty base URL baked into the bundle"]
+  E --> C["Requests go to the frontend's own origin"]
+  C --> I["The static fallback answers with index.html"]
+  I --> N["The browser shows a network error, not an HTTP status"]
+  N --> R{"Fixed by a redeploy?"}
+  R -->|No| RB["Only a rebuild with the argument fixes it"]
+```
+
 **Why:** the failure appears in the browser as a CORS or connectivity problem, so the investigation goes to CORS headers and the backend, both of which turn out to be correct.
 
 **Applies to:** any static frontend whose configuration is baked at build time, and any service whose trigger was created from a cloud console rather than by hand.

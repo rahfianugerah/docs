@@ -25,6 +25,20 @@ The 401 misleads because everything it might implicate is correct:
 
 This is also exactly what cross-service single sign-on needs, per [[auth.rules.md]].
 
+**Mechanism:**
+
+```mermaid
+sequenceDiagram
+  participant B as Browser
+  participant F as Frontend host
+  participant A as API host
+  B->>F: Log in
+  F-->>B: Cookie with no domain, host-only
+  B->>A: API request
+  Note over B,A: The cookie is never sent to a different host
+  A-->>B: 401 that reads like a permissions bug
+```
+
 **Why:** a host-only cookie plus a not-yet-mapped host produces a 401 that reads like a documentation, role, or configuration bug, and sends debugging down the wrong path entirely.
 
 **Applies to:** any two services on different hosts sharing a session, and any domain cutover.

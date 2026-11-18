@@ -25,6 +25,21 @@ Two things get in the way of running them:
 
 **The only check that settles it is connecting as one environment's user to the other environment's database and being refused.** Reading the ACL narrows the possibilities; it does not close them.
 
+**Mechanism:**
+
+```mermaid
+flowchart TD
+  C["Two users and two databases made by the platform"] --> M["Both users join a shared superuser role"]
+  M --> R["REVOKE CONNECT alone"]
+  R --> S["Each user still reaches the other database"]
+  S --> F1["ALTER DATABASE OWNER TO its own user"]
+  F1 --> F2["REVOKE ALL FROM PUBLIC and the sibling user"]
+  F2 --> F3["REVOKE the shared role from each user"]
+  F3 --> V{"Connecting across is refused?"}
+  V -->|No| F1
+  V -->|Yes| W["The wall is real"]
+```
+
 **Why:** the isolation is the entire basis for putting a lower and a production database on one shared instance. Nothing errors, nothing logs, and the wall is assumed to exist until something writes across it.
 
 **Applies to:** any two environments sharing one managed database instance, per [[database.rules.md]].

@@ -21,6 +21,21 @@ A transcript is lost when the window closes. A memory note survives, is searchab
 
 It governs the agent's behaviour. [[memory.rules.md]] governs the shape of the note it writes, and this file does not repeat it.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Work on one concern"] --> B{"Concern finished or switched?"}
+  B -->|No| A
+  B -->|Yes| C["Summarize the generation before starting the next"]
+  C --> T{"True beyond this session and not in the code?"}
+  T -->|No| NW["Nothing to write"]
+  T -->|Yes| N["One memory note per finding"]
+  N --> I["Listed in the memory index"]
+  NW --> R["Report the generation in Bahasa Indonesia"]
+  I --> R
+```
+
 ## A Generation Is the Unit
 
 A **generation** is one continuous stretch of work on one concern: a feature built, a bug traced to its cause, a migration run, an investigation that reached an answer. It usually spans several turns, and a long session holds more than one.

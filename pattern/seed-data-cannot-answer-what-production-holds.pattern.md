@@ -23,6 +23,17 @@ Seeded rows drift from production in ways that look like real findings. A local 
 
 **What can be said about production without touching its database:** whatever the deployed configuration says, read from the platform's own service description, and whatever the code does with it. That combination answers most real questions correctly while a database reading is misleading.
 
+**Mechanism:**
+
+```mermaid
+flowchart TD
+  Q["A question about production data"] --> L["Query the local database"]
+  L --> S["The query succeeds"]
+  S --> X{"Reported as production?"}
+  X -->|Yes| W["Wrong as often as right, and it reads as authoritative"]
+  X -->|No| R["Say it describes the seed, and hand the user the production query"]
+```
+
 **Why:** two consecutive reports were drawn from seeded local rows and both were wrong, and the correction came from the owner rather than from any check. A successful query feels like evidence.
 
 **Applies to:** any claim about what production data contains, especially about accounts, roles, and permissions.

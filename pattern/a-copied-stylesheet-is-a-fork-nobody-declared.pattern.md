@@ -21,6 +21,19 @@ The recovery is not to re-copy over the local edits. **Read what diverged, decid
 
 A project that abandons the shared system entirely is a third state, and it is fine as long as it is written down. What is not fine is a project that looks like it follows the system because its class names still match.
 
+**Mechanism:**
+
+```mermaid
+flowchart TD
+  C["Stylesheet copied verbatim"] --> E{"Ever edited in place?"}
+  E -->|Never| S["One thing in two places: upstream copied down"]
+  E -->|Once| F["A fork nobody declared"]
+  F --> U["Upstream fixes stop arriving"]
+  F --> L["Local fixes never travel back"]
+  U --> D["Both sides believe they share one design"]
+  L --> D
+```
+
 **Why:** class names surviving a rewrite is the trap. A reader greps for a shared class, finds it, and concludes the project is on the design system, when the file behind it shares nothing but the names.
 
 **Applies to:** any project that adopted a design system, a configuration, or a pipeline by copying a file rather than depending on one.

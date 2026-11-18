@@ -21,6 +21,20 @@ A project copy replaces the generic placeholders with its real service name, var
 
 Implements [[deploy.rules.md]]. Region is always `asia-southeast1`.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  P1["Phase 1, bootstrap by hand"] --> A["APIs, registry, account, database, secrets, IAM"]
+  A --> F["First deploy with the config attached"]
+  F --> P2["Phase 2, connect the trigger"]
+  P2 --> P3["Phase 3, ongoing releases"]
+  P3 --> K{"Kind of change?"}
+  K -->|Code| G["git push: the trigger owns the image"]
+  K -->|Config| T["Terminal redeploy with the last tag"]
+  K -->|Bad release| R["8.4 roll back: move traffic, never downgrade"]
+```
+
 ## 1. Service Summary
 
 Every project copy opens with this table, filled in.

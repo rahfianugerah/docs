@@ -28,6 +28,22 @@ Six principles hold everywhere:
 5. **Only `opacity` and `transform` animate.** Animating `width`, `height`, `top`, `margin`, or `padding` forces layout on every frame and stutters on a slow laptop.
 6. **Reduced motion is honored everywhere**, per "Reduced Motion" below.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Something changes"] --> B{"Caused by a user action?"}
+  B -->|No| NA["No animation"]
+  B -->|Yes| H{"A HeroUI component?"}
+  H -->|Yes| K["Keep HeroUI's own motion"]
+  H -->|No| W{"What changed?"}
+  W -->|Page or section| F["Fade in over 200ms, no fade out"]
+  W -->|Drawer| S["Slide in and out over 240ms"]
+  F --> R{"Reduced motion?"}
+  S --> R
+  R -->|Yes| I["Instant, checked in JavaScript too"]
+```
+
 ## Built On HeroUI
 
 **HeroUI's components keep their own motion.** A `Popover`, a `Modal`, a `Drawer`, a `Toast`, a `Tooltip`, and the indicator of a `Select` all animate as HeroUI ships them, and that motion already respects reduced motion. Never override it, slow it, or add a second animation on top.

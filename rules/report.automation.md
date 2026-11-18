@@ -24,9 +24,9 @@ A reader who opens one report must recognise the next one at a glance. Two repor
 flowchart TD
   F["Function answers a page part"] --> H["Host draws the standard header"]
   H --> N{"How many data rows?"}
-  N -->|"0 to 10"| T["One text message"]
-  N -->|"11 to 50"| J["A JPG of the page"]
-  N -->|"More than 50"| P["A PDF of the same page"]
+  N -->|0 to 10| T["One text message"]
+  N -->|11 to 50| J["A JPG of the page"]
+  N -->|More than 50| P["A PDF of the same page"]
   T --> C["Caption: bold title with date and time, one line per figure"]
   J --> C
   P --> C

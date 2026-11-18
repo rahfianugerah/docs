@@ -20,6 +20,22 @@ The two halves are not the same problem and do not use the same technique. **A f
 
 This standard sits under [[uix.component.md]] for the search box itself, and depends on [[database.rules.md]] for the query underneath it. Every query rule here runs on the stack fixed by [[stacks.rules.md]]: PostgreSQL with SQLAlchemy 2.x.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  Q["A typed query"] --> Z{"Stage 0: empty, too short, or too long?"}
+  Z -->|Yes| NDB["Never reaches the database"]
+  Z -->|No| N["Normalize"]
+  N --> E{"Stage 1: exact match?"}
+  E -->|Hit| R["Answer"]
+  E -->|None| P{"Stage 2: prefix match?"}
+  P -->|Hit| R
+  P -->|None| T{"Stage 3: trigram on the phonetic column?"}
+  T -->|Hit| RF["Answer, labelled as closest matches"]
+  T -->|None| NR["No results"]
+```
+
 ## Built On HeroUI
 
 This is HeroUI's `SearchField`, and `Autocomplete` for a search that picks a value, per [[dropdown.component.md]]. HeroUI owns the markup, the keyboard handling, the focus ring, and the accessibility; this standard owns the decisions HeroUI leaves to the project. Exact props come from the HeroUI MCP server, per [[stacks.rules.md]].

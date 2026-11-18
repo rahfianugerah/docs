@@ -19,6 +19,18 @@ Two rules were added to a pagination standard and withdrawn the same day, both a
 
 The second is the sharper form and generalizes past pagination: **a control must never remove the way to undo the state it produced.** Check it against any control that hides itself based on its own effect.
 
+**Mechanism:**
+
+```mermaid
+flowchart TD
+  R["A proposed component rule"] --> O["Drawn with one instance"]
+  O --> P1["Passes"]
+  R --> T["Drawn on a page that stacks two"]
+  T --> Q{"Still holds?"}
+  Q -->|No| RJ["Reject the rule"]
+  Q -->|Yes| A["Add it"]
+```
+
 **Why:** a component standard is written per component, so the mental model while writing is one component alone on a page. Real apps never render one; a dashboard carries three paged lists, several charts, and a toolbar of the same select. **The interaction between two instances is where the rule is actually tested, and it is invisible from inside the component's own file.**
 
 **Applies to:** every new rule added to any file in [component/](../component/), and every rule that says a part appears, repeats, or disappears conditionally.

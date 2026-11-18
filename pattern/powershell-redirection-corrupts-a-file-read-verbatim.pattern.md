@@ -24,6 +24,16 @@ Write these with .NET instead, which emits no byte order mark and no trailing ne
 
 The same class of problem hits git on Windows. With automatic line-ending conversion on and no `.gitattributes`, a checkout rewrites a shell script to CRLF, the shebang gains a carriage return, and the platform reports the interpreter as missing for a script that is plainly present. **Pin `*.sh`, the container definition, the web server config, and the ignore file to `eol=lf` in `.gitattributes`.** Only a manual upload of the working tree is affected; a trigger clones LF from the remote.
 
+**Mechanism:**
+
+```mermaid
+flowchart TD
+  P["PowerShell redirect writes a file"] --> B["Byte order mark, often UTF-16LE"]
+  B --> S["Secret value: revision aborts on non-UTF8 data"]
+  B --> T["Tag pointer file: image not found much later"]
+  P -.->|instead| N["WriteAllText with UTF8Encoding false, then check the byte count"]
+```
+
 **Why:** every one of these reports a symptom that points at the wrong file. The secret error names the secret rather than the shell that wrote it, and the interpreter error names the script rather than its first line, so the natural response is to inspect the container definition, which is not wrong.
 
 **Applies to:** any deploy run from a Windows machine, and any file whose bytes are consumed literally rather than parsed.

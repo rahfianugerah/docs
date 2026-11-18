@@ -14,6 +14,18 @@ A standards-compliant provider serves a discovery document that carries every va
 
 **Check the body, not the status code.** The provider's frontend and its API are usually different hosts, and a single-page frontend answers *any* path with its own HTML and a 200. Probing the frontend host for the key set therefore looks like it succeeded while returning a document, which makes the wrong host easy to write into a configuration and hard to notice.
 
+**Mechanism:**
+
+```mermaid
+flowchart TD
+  I["Integrate a service"] --> D["Fetch the discovery document"]
+  D --> H{"Body is JSON, not the frontend's HTML?"}
+  H -->|No, a 200 with HTML| W["Wrong host: use the API host"]
+  W --> D
+  H -->|Yes| V["Read the issuer, key set URL, algorithm, and claim names"]
+  V --> C["Configure the service from those values"]
+```
+
 **Why:** a runbook that says these values must be requested from the provider's owner and never guessed has the right instinct and the wrong conclusion. The values are self-serve, so the request is a round trip nobody needs, and someone who takes the instruction literally is blocked waiting on a reply.
 
 **Applies to:** any service configuring a key set URL, an issuer, or claim names against a provider that serves a discovery document.

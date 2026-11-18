@@ -38,8 +38,8 @@ flowchart TD
   D --> E["One numbered section per item: steps, what happened, what is correct, cause"]
   E --> F["Done When table a tester can tick"]
   F --> G{"Every row holds?"}
-  G -->|"No"| E
-  G -->|"Yes"| H["Mark the note done"]
+  G -->|No| E
+  G -->|Yes| H["Mark the note done"]
 ```
 
 ## Number and Title

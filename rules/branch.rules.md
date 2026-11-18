@@ -26,6 +26,19 @@ Trunk is the default. A staging branch exists to coordinate a deployment window;
 
 This standard governs where code lives and how it moves. [[pr.rules.md]] governs what a pull request looks like, and [[commit.rules.md]] governs what a commit message looks like. A promotion follows all three.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A{"Does the project deploy?"} -->|No| T["Trunk shape"]
+  T --> W1["Working branch"]
+  W1 -->|merge| M1["main"]
+  A -->|Yes| P["Promotion shape"]
+  P --> DV["dev: every change lands here"]
+  DV -->|pull request with human approval| SG["staging"]
+  SG -->|pull request with its own approval| M2["main, production"]
+```
+
 ## The Branches
 
 | Branch | Lives | Accepts a merge from | Rule |

@@ -21,6 +21,19 @@ This is the rule everything else here serves, and it is the one most often broke
 
 This extends [[uix.component.md]] and uses its tokens.
 
+## Workflow
+
+```mermaid
+flowchart TD
+  A["Content overflows"] --> B["Scrolls inside its own component"]
+  B --> C["The shared scrollbar: pill thumb, no arrows, transparent track"]
+  C --> D{"Horizontal overflow under a table?"}
+  D -->|Yes| V["Always visible"]
+  D -->|No| H{"The rail or the year grid?"}
+  H -->|Yes| HD["A documented exception that hides it"]
+  H -->|No| V2["Visible while it overflows"]
+```
+
 ## Built On HeroUI
 
 This is HeroUI's scrollbar styling, set through its `--scrollbar-*` theme variables, with `ScrollShadow` where an edge fade helps. HeroUI owns the markup, the keyboard handling, the focus ring, and the accessibility; this standard owns the decisions HeroUI leaves to the project. Exact props come from the HeroUI MCP server, per [[stacks.rules.md]].
