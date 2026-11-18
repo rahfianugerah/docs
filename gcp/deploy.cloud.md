@@ -252,6 +252,37 @@ gcloud artifacts repositories describe [REPOSITORY] --location=asia-southeast1 \
 
 `cleanupPolicyDryRun` reading `True` means the policy is listed but deleting nothing.
 
+**Tag sync.** The `keep-in-use` rule keeps every version tagged `active-*`, and the `tag-active` step in each pipeline moves that tag on every deploy, per [[deploy.rules.md]]. Run this sync once before switching the dry run off, and again after any deploy or `gcloud run jobs update` done by hand. It tags the image every service and job runs as `active-<name>`. `tags add` deletes the old tag to move it, so run the sync as an account holding `artifactregistry.tags.delete`, such as the project owner; the build account does not, which is why the pipeline step uses `tags update` instead.
+
+```bash
+BASE=asia-southeast1-docker.pkg.dev/[PROJECT_ID]/[REPOSITORY]
+{ gcloud run services list --format="csv[no-heading](metadata.name,spec.template.spec.containers[0].image)"
+  gcloud run jobs list --format="csv[no-heading](metadata.name,spec.template.spec.template.spec.containers[0].image)"
+} | tr -d '\r' | while IFS=, read -r NAME IMG; do
+  case "$IMG" in "$BASE"/*:*) ;; *) continue ;; esac
+  PACKAGE=${IMG#"$BASE"/}; PACKAGE=${PACKAGE%%:*}
+  gcloud artifacts docker tags add "$IMG" "$BASE/$PACKAGE:active-$NAME"
+done
+```
+
+```powershell
+$BASE = "asia-southeast1-docker.pkg.dev/[PROJECT_ID]/[REPOSITORY]"
+$rows = @(gcloud run services list --format="csv[no-heading](metadata.name,spec.template.spec.containers[0].image)") + @(gcloud run jobs list --format="csv[no-heading](metadata.name,spec.template.spec.template.spec.containers[0].image)")
+foreach ($row in $rows) {
+  $name, $img = $row -split ",", 2
+  if ($img -notlike "$BASE/*:*") { continue }
+  $package = ($img.Substring($BASE.Length + 1) -split ":", 2)[0]
+  gcloud artifacts docker tags add $img "$BASE/${package}:active-$name"
+}
+```
+
+Then apply the same file with `--no-dry-run`, and run the `describe` above again; `cleanupPolicyDryRun` must be gone or `false`. Leaving the flag out keeps the dry run on.
+
+```bash
+gcloud artifacts repositories set-cleanup-policies [REPOSITORY] \
+  --location=asia-southeast1 --policy=cleanup-policy.json --no-dry-run
+```
+
 ### 6.4 Dedicated Runtime Service Account
 
 Optional. Only when the service needs permissions the default compute service account should not carry project-wide, for example write access to a single bucket.
@@ -705,6 +736,49 @@ If the value is a `cloudbuild.yaml` default, edit it, commit, and push. If it is
 gcloud builds triggers update github [REPO_NAME]-main --region=global \
   --substitutions='_TAG=$SHORT_SHA,_API_BASE_URL=[NEW_URL]'
 ```
+
+### 8.4 Roll Back
+
+A rollback moves traffic back to an older revision of one service. **It never runs a downgrade migration**: migrations stay additive, expand first and contract in a later release, so the previous release always runs on the current schema. A backend and a frontend that changed one API together roll back together.
+
+The window is the image retention of [[deploy.rules.md]]: an image is still in the registry while it is among the 10 newest of its package or younger than 30 days. Beyond that it is gone, and rebuilding the commit is the only way back.
+
+**1. Find the revision that ran the target image.**
+
+```bash
+export SERVICE=[SERVICE] REGION=asia-southeast1
+gcloud run revisions list --service=$SERVICE --region=$REGION --limit=10 \
+  --format="table(metadata.name,spec.containers[0].image,metadata.creationTimestamp)"
+```
+
+**2. Send all traffic to it.** This takes seconds and starts no build.
+
+```bash
+gcloud run services update-traffic $SERVICE --region=$REGION --to-revisions=[REVISION]=100
+gcloud run services describe $SERVICE --region=$REGION --format="value(status.traffic)"
+```
+
+Check `/health` and the feature that broke.
+
+**3. Keep its image.** The pipeline's `tag-active` step still names the newer image after `update-traffic`, so tag the image the revision runs by hand:
+
+```bash
+IMG=$(gcloud run revisions describe [REVISION] --region=$REGION --format="value(spec.containers[0].image)")
+DIGEST=$(gcloud artifacts docker images describe "$IMG" --format="value(image_summary.digest)")
+PACKAGE=${IMG##*/}; PACKAGE=${PACKAGE%%:*}
+gcloud artifacts tags update active-$SERVICE --location=$REGION --repository=[REPOSITORY] --package=$PACKAGE --version=$DIGEST \
+  || gcloud artifacts tags create active-$SERVICE --location=$REGION --repository=[REPOSITORY] --package=$PACKAGE --version=$DIGEST
+```
+
+**4. Jobs.** A service rollback leaves the jobs alone. **Never execute the migrate job of an older image against a newer schema**: Alembic stops with `Can't locate revision`. A worker job whose own code broke moves back with `gcloud run jobs update [SERVICE]-[JOB] --region=$REGION --image=$IMG`, and its `active-[SERVICE]-[JOB]` tag moves the same way as in step 3.
+
+**5. Return to the newest release.** While traffic is pinned to a revision, a new deploy receives none of it, because `gcloud run deploy` only takes the traffic assigned to the latest revision. After the fix merges and its build is green:
+
+```bash
+gcloud run services update-traffic $SERVICE --region=$REGION --to-latest
+```
+
+**Never leave a rollback pinned.** A pinned service keeps serving the old revision while every later build reports green, and nothing on any screen says so.
 
 ## 9. Troubleshooting
 
