@@ -44,6 +44,7 @@ Where a companion shows CSS, it records the measurement the HeroUI theme or a `c
 | [[header.page.component.md]] | The page heading: the `h1`, its description, and the page's actions |
 | [[notification.component.md]] | The bell, its panel, and the toast |
 | [[animation.component.md]] | What moves, for how long, and what reduced motion turns off |
+| [[log.component.md]] | The activity log: every page, click, sign-in, and data change, to the second |
 
 Read this file first. Read a companion when the work touches the area it owns.
 
@@ -363,6 +364,8 @@ These apply to every component, including the ones with no companion file.
 - **A clickable target is at least 44px tall on a touch screen.** This includes a nav row, a table row, and a dropdown option.
 - **Every list or table that can be empty gets a shared empty state**: a muted icon, a muted message, and an optional action. A blank area reads as a broken page.
 - **Every table pages rather than scrolls**, per [[pagination.component.md]]. It is a HeroUI `Table` inside a container that scrolls horizontally on overflow. No zebra striping.
+- **A form's save bar is sticky and flush with the pane's bottom edge.** The row holding the unsaved-changes notice and the save button is `position: sticky; bottom: 0` inside the scrolling content pane, and cancels the pane's bottom padding with a negative margin, so it never floats above a strip of page and never hides the last field.
+- **A time of day is a HeroUI `TimeField` with `hourCycle={24}`**, never a native time input, per [[calendar.component.md]].
 - **Animate `transform` and `opacity` only.** Animating `width`, `height`, `top`, or `margin` forces layout on every frame.
 - **Respect `prefers-reduced-motion`.** Slow or remove a decorative animation; keep an animation that carries information.
 
@@ -404,6 +407,7 @@ Which HeroUI component each area rests on. The companion is the standard; HeroUI
 | Motion | [[animation.component.md]] | HeroUI's built-in transitions, plus the shell's |
 | Product name | [[title.header.component.md]] | Text, from one constant |
 | Refresh | [[refresh.component.md]] | Behaviour only; no component |
+| Activity log | [[log.component.md]] | `Table`, `Chip`, `SearchField`, `Select`, `DatePicker` |
 
 **A HeroUI component with no companion is used as HeroUI ships it**, themed by the variables above: `Alert`, `AlertDialog`, `Accordion`, `Avatar`, `Checkbox`, `CheckboxGroup`, `Chip`, `ColorPicker`, `Drawer`, `InputOTP`, `Kbd`, `Meter`, `Modal`, `NumberField`, `Popover`, `ProgressCircle`, `RadioGroup`, `Separator`, `Slider`, `Switch`, `Tabs`, `TagGroup`, `TextArea`, `TimeField`, `Tooltip`. A companion is written only when a project needs a rule HeroUI does not decide.
 

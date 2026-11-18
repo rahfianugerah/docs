@@ -442,8 +442,11 @@ These extend [[media.rules.md]], which owns the upload feature itself, and [[pat
 
 - Scope every key with a `resource:action` format, for example `report:read` or `user:read`. A key must only be able to perform what it is scoped for.
 - Issue one key per client. Never share a single global key across every client, so each key can be revoked and audited independently.
-- Send the key in an `X-API-Key` header. Store only its hash on the receiving side where possible.
+- Send the key in an `X-API-Key` header, and authenticate it against a stored SHA-256 hash compared with `compare_digest`. **An authentication path never decrypts anything.**
+- A project may let a key be shown again after it is issued. That path stores the key encrypted under a key management service, beside the hash and never in place of it, gated by administrator access, re-authentication, a rate limit, and an audit row, per "API Key Lifecycle" in [[api.rules.md]].
+- A key with no expiry is permitted only when asked for explicitly, with a written reason and a recorded `last_used_at`. Never the default.
 - Never issue a key with full administrative access.
+- Never write a key value to a log, a trace, an error message, or an audit row. Record the key's identifier and prefix instead.
 
 ### SQL Injection
 
@@ -524,7 +527,7 @@ Sessions are `HttpOnly` cookies, per [[auth.rules.md]], so the browser attaches 
 
 Personal data means anything that identifies a person: a name, a national identity number, a bank account, a phone number, an email address, a location, a photograph of a face. Most data protection law treats it the same way, and the rules below satisfy the common core rather than any one statute.
 
-- **Redact personal data before it reaches a model or a memory layer.** Extract text first, redact the extracted text, then send it. Raw bytes cannot be redacted.
+- **Redact personal data before it reaches a model or a memory layer.** Extract text first, redact the extracted text, then send it. Raw bytes cannot be redacted. **The stronger rule is that it never reaches one at all**: an AI never reads protected data and reads other rows only with the user's approval, per [[data.rules.md]], so there is normally nothing to redact.
 - Use a provider whose region satisfies the project's obligations, and record that choice in the README.
 - **Log access to personal data:** who accessed it, what data, and when. This is mandatory for any project holding employee or customer records.
 - Minimize collection. Do not store or log personal data that is not required, and never write it into application logs.
@@ -534,6 +537,7 @@ Personal data means anything that identifies a person: a name, a national identi
 ## Audit Trail
 
 - Log important actions, such as a login, a failed login, a configuration change, and a destructive action, together with the acting identity and a timestamp.
+- **A project with sign-in and more than one user ships the activity log** in [[log.component.md]]: each page opened and closed, each click, each sign-in and sign-out, and every create, update, and delete with its before and after values, timed to the second.
 - **Any write action performed by a model requires a confirmation flow and an audit trail** recording who approved it.
 - An audit entry is append-only. A record that can be edited by the same role it audits is not an audit trail.
 

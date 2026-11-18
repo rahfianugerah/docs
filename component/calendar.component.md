@@ -190,6 +190,15 @@ Two real failures make this necessary. Without a clamp, the year view's arrows p
 - `Escape` closes without selecting and returns focus to the trigger.
 - Picking a day closes. Picking a month or a year does not; it advances to the next view.
 
+## Time Fields
+
+A time of day, such as the start of opening hours or the hour of a scheduled task, is a HeroUI `TimeField` with `hourCycle={24}`, never a native `<input type="time">`.
+
+- **The native control follows the operating system's language**, so one form shows `08:00` on one laptop and `8:00 AM` on another, and it looks different on every platform. HeroUI's segmented field is the same everywhere.
+- **Always pass `hourCycle={24}`.** Without it HeroUI follows the locale, which is the native control's problem again.
+- **The value is the 24-hour `HH:MM` string**, `00:00` to `23:59`, both in the field and in the data sent to the API. Pass `granularity="minute"` unless seconds genuinely matter.
+- **An invalid time keeps what was typed** and shows HeroUI's field error under the field; the form value does not change until the time is valid.
+
 ## Accessibility
 
 A custom date panel replaces a native control that was fully accessible. Everything it gave you has to be rebuilt, and this is the section most implementations skip.
