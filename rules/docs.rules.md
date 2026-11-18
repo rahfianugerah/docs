@@ -290,7 +290,7 @@ Do not fill a gap with an assumption.
 
 Do not use:
 
-- Emoji.
+- Emoji of any kind, per "No Emoji, Anywhere" below.
 - An em dash, a left arrow, or a right arrow.
 - Smart quotation marks where normal ones work.
 - A macOS-specific symbol or format.
@@ -307,6 +307,14 @@ The replacements, since each banned character has exactly one:
 | A left arrow | `<` |
 | A right arrow | `>` |
 | A smart quote | `"` |
+
+### No Emoji, Anywhere
+
+**An emoji never appears in anything this vault governs, and the ban has no exception.** That covers a document, a template, a code comment, a commit message, a pull request, and a branch name, per [[commit.rules.md]], [[pr.rules.md]], and [[branch.rules.md]]. Professionalism is the first requirement of every one of them, and an emoji is the quickest way to lose it.
+
+- **Every form is banned**: a Unicode emoji, an emoji shortcode such as `:rocket:` that a viewer renders as one, and a symbol used the way an emoji is, such as a check mark, a cross, a warning sign, or a star used as a bullet or a status.
+- **A status is written with a status indicator**, per "Status Indicators" below, never with a colored symbol.
+- **Emphasis is bold, and a warning is a callout**, per [[callout.rules.md]], never an icon in front of a sentence.
 
 ### Flow Examples
 
@@ -669,7 +677,7 @@ An experiment's result belongs in the pull request that carried it, per [[pr.rul
 - Every status indicator is green, yellow, or red, and uses the `code` element form.
 - No real value from any environment or configuration file appears anywhere.
 - No absolute path to an executable appears in a command, in the document or in what an agent runs.
-- No emoji, no prohibited character, no decorative divider, and no boxed or bannered code comment.
+- No emoji of any kind, including a shortcode or a symbol used as one, no prohibited character, no decorative divider, and no boxed or bannered code comment.
 - API detail is in `API.md`, not duplicated in the project documentation.
 - Missing information is marked, not guessed.
 - Every wikilink resolves.

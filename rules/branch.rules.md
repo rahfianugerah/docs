@@ -109,6 +109,7 @@ On a trunk project a one-line typo fix goes straight on `main`. On a promotion p
 2. Lowercase kebab-case after the slash.
 3. Name the thing being changed, not yourself and not a ticket number.
 4. Keep it short enough to type without looking, and leave out an issue number, a date, and a personal name.
+5. Use lowercase letters, digits, hyphens, and the one `/` only. **Never put an emoji, an emoji shortcode, or any other symbol in a branch name.** A branch name appears in every pull request, every log, and every deploy record, so it reads as professional work, per "No Emoji, Anywhere" in [[docs.rules.md]].
 
 ```text
 feat/streaming-dataloader

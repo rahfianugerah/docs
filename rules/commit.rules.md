@@ -20,6 +20,12 @@ A commit message is read by you six months from now, with no memory of the chang
 
 This applies to every commit, including a one-line fix and a configuration change.
 
+## Professionalism Comes First
+
+**The first rule of a commit message is that it reads as professional work.** Anyone tracing a change years later reads it, so it is plain, precise, and neutral: no jokes, no slang, no shouting, and no decoration. Every rule below serves this one, and where a rule and professionalism pull apart, professionalism wins.
+
+**No emoji, ever.** An emoji is banned in every part of a commit message: the subject, the body, and the footers. That covers a Unicode emoji, a Gitmoji prefix, a shortcode such as `:sparkles:` or `:bug:` that a platform renders as one, and a symbol used the way an emoji is, such as a check mark, a cross, or a warning sign. There is no exception, not for a release, a milestone, or a revert.
+
 ## Language
 
 All commit messages are written in **English**.
@@ -130,7 +136,7 @@ fix(auth,api): reject an expired refresh token
 1. Imperative mood, as an instruction: "add", "fix", "remove", "update". Not "added" or "adds".
 2. Start lowercase, unless the first word is a proper noun or an identifier that is normally capitalized.
 3. No trailing period.
-4. The whole first line is 72 characters or fewer.
+4. Aim for a first line of about 72 characters, so it reads in full in `git log --oneline` and on the hosting platform. A longer line is acceptable when a shorter one would lose meaning: a clear, professional description beats a short, vague one. Never cut a description down to an abbreviation or a fragment only to fit.
 5. State what the commit does, not what you did.
 6. No issue number in the description. That is what a footer is for.
 
@@ -409,14 +415,14 @@ Rules:
 - The message is written in English.
 - The type is on the allowed list and is lowercase.
 - The scope, when present, is a single lowercase noun matching the scope already used for that area.
-- The description is imperative, has no trailing period, and the first line is 72 characters or fewer.
+- The description is imperative, has no trailing period, and the first line stays around 72 characters without losing meaning.
 - The body is present and is a flat `-` list.
 - Every change in the commit has its own item, and each item explains the purpose or the effect.
 - A breaking change is marked with `!`, a `BREAKING CHANGE` footer, or both.
 - Every footer uses a permitted token and sits after a single blank line.
 - No tool, AI, model, or bot attribution appears anywhere in the message.
 - The commit covers one logical concern.
-- No emoji, prohibited character, Markdown formatting, or decorative divider is present.
+- No emoji of any kind is present, including a shortcode or a symbol used as one, and no prohibited character, Markdown formatting, or decorative divider.
 - No secret, credential, or personal data is present in the message.
 - No private key, credential file, environment file, key directory, dataset, checkpoint, or notebook output is included in the commit.
 - `git status` was reviewed before staging, and nothing was force-added past `.gitignore`.
