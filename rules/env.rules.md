@@ -53,11 +53,43 @@ The pattern in every format: **the file with `example` or `sample` in its name i
 - Reading it indirectly through a script, a notebook cell, a package script, or an IDE tool
 - Printing the process environment: `env`, `printenv`, `os.environ`, `%env`
 - Printing a single variable's value, even one believed to be harmless
-- Reading a value out of a secret store or a deployed service description
+- Running any command against a secret manager, whether it reads, lists, creates, or changes anything, per "A Secret Manager Is Off Limits to a Coding Agent" below
+- Reading the environment of a running service, such as with `gcloud run services describe`, when the output would print variable values
 - Copying a value from a real file into source, a log, a notebook, a document, a commit, or a chat message
 - Modifying, renaming, moving, or deleting a real environment file
 
 A command that names a real file is prohibited even when the intent is only to check that it exists. Test for the path instead.
+
+## A Secret Manager Is Off Limits to a Coding Agent
+
+> [!failure]
+> A coding agent never accesses a secret manager, in any way and for any reason. The user tells it the names it needs, and the user runs every secret manager command.
+
+This covers far more than reading a value. A secret's name, its versions, its labels, and who may read it are all part of the secret store, and the agent touches none of them. The ban holds even when the agent's credentials would allow the call, and even when a script in the repository would make it.
+
+Prohibited, by any route:
+
+| Route | Examples |
+| :- | :- |
+| `gcloud secrets` | `list`, `describe`, `create`, `update`, `delete`, `versions list`, `versions describe`, `versions access`, `versions add`, `versions enable`, `versions disable`, `versions destroy`, `add-iam-policy-binding`, `remove-iam-policy-binding`, `get-iam-policy`, `set-iam-policy` |
+| Mounting on a service | Running `gcloud run deploy`, `gcloud run services update`, or `gcloud run jobs update` with `--set-secrets`, `--update-secrets`, or `--remove-secrets` |
+| Code and tools | A secret manager API or client library, Terraform, or any script whose purpose is to call the secret manager |
+| A password manager or keychain | `pass`, `op`, the OS keychain, or any vault CLI |
+| The console | Opening the secret manager in a web console, or asking the user to paste what it shows |
+
+Where the names come from:
+
+1. **The user says them.** The user gives the variable name and the secret name, such as `DATABASE_URL` mounted from `[SERVICE]-database-url`.
+2. **The repository already writes them.** A name already present in `env-vars.example.yaml`, `.env.example`, `deploy.cloud.md`, or `cloudbuild.yaml` may be reused as written.
+3. **Nowhere else.** If neither source has the name, ask the user. Never list the secrets to find it, never describe a service to find it, and never guess one and present it as real.
+
+What the agent may still do:
+
+- Write a variable name and a secret name into code, an example file, a runbook, or a `cloudbuild.yaml` line such as `--set-secrets=DATABASE_URL=[SERVICE]-database-url:latest`.
+- Hand the user the exact commands to create a secret, add a version, grant the access role, or mount it on a service, with `[VALUE]` placeholders, for the user to run.
+- Tell the user which secrets must exist, and with which name, before a deploy can succeed.
+
+When a task needs a secret to exist, to hold a new version, to carry an access binding, or to be mounted on a service, stop that part of the task, name the variable and the secret, and give the user the commands. Do not run them, and do not ask the user to share the result if it would show a value.
 
 ## Notebooks
 
