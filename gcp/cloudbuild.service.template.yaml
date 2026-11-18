@@ -76,11 +76,26 @@ steps:
       - '--platform=managed'
       - '--cpu=${_CPU}'
       - '--memory=${_MEMORY}'
+      - '--cpu-throttling'                  # CPU only inside a request, so idle costs nothing
       - '--min-instances=0'                 # scale to zero: the whole point of Cloud Run here
       - '--max-instances=${_MAX_INSTANCES}'  # cap it, or a loop scales until the bill notices
       - '--concurrency=${_CONCURRENCY}'
       - '--port=8080'                       # Cloud Run default; the app still reads $PORT
       - '--timeout=60'
       - '--allow-unauthenticated'   # remove for anything not meant to be public
+
+  # Mark the image Cloud Run now runs, so the cleanup policy's keep-in-use rule
+  # never deletes it. The tag moves off the previous image, which then ages out.
+  - id: tag-active
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        set -euo pipefail
+        DIGEST=$$(gcloud artifacts docker images describe ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG} --format='value(image_summary.digest)')
+        TAG=active-${_SERVICE}
+        gcloud artifacts tags update "$$TAG" --location=${_REGION} --repository=${_REPOSITORY} --package=${_SERVICE} --version="$$DIGEST" \
+          || gcloud artifacts tags create "$$TAG" --location=${_REGION} --repository=${_REPOSITORY} --package=${_SERVICE} --version="$$DIGEST"
 
 timeout: 1200s

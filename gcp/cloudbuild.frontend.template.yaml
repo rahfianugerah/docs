@@ -135,6 +135,7 @@ steps:
       - --platform=managed
       - --cpu=1
       - --memory=512Mi
+      - --cpu-throttling
       - --min-instances=0
       # One instance absorbs a lot of traffic for pre-built files. This ceiling
       # caps cost, it does not carry load.
@@ -148,6 +149,20 @@ steps:
       - --timeout=60
       # A browser-facing frontend must be public.
       - --allow-unauthenticated
+
+  # Mark the image Cloud Run now runs, so the cleanup policy's keep-in-use rule
+  # never deletes it. The tag moves off the previous image, which then ages out.
+  - id: tag-active
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        set -euo pipefail
+        DIGEST=$$(gcloud artifacts docker images describe ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG} --format='value(image_summary.digest)')
+        TAG=active-${_SERVICE}
+        gcloud artifacts tags update "$$TAG" --location=${_REGION} --repository=${_REPOSITORY} --package=${_SERVICE} --version="$$DIGEST" \
+          || gcloud artifacts tags create "$$TAG" --location=${_REGION} --repository=${_REPOSITORY} --package=${_SERVICE} --version="$$DIGEST"
 
 images:
   - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG}

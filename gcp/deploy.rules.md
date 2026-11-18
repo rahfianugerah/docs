@@ -208,14 +208,22 @@ asia-southeast1-docker.pkg.dev/[PROJECT_ID]/[REPOSITORY]/[SERVICE]:[TAG]
 
 **Every repository carries a cleanup policy.** Without one, nothing is ever removed: each push adds a version, and the repository grows for as long as the project is worked on. What fills a registry is the rate of building, not the age of any single image, so a policy written on age alone leaves the growth untouched until the day it deletes hundreds of versions at once.
 
-The policy is two rules, applied together:
+The policy is four rules, applied together:
 
 | Rule | Action | Scope |
 | :- | :- | :- |
 | `keep-10-newest` | Keep | The 10 most recent versions of every image, whatever their age |
+| `keep-in-use` | Keep | Every version carrying a tag that starts with `active-`, which marks the image a service or job runs now |
+| `delete-untagged` | Delete | Any version with no tag left, once it is older than 3 days |
 | `delete-older-than-30d` | Delete | Any version older than 30 days |
 
-A Keep rule always wins over a Delete rule, so the two combine into a single meaning: **a version is deleted once it is both older than 30 days and outside the 10 most recent for its image.**
+A Keep rule always wins over a Delete rule, so the four combine into a single meaning: **a version is deleted only when it is no longer used.** It must be outside the 10 most recent for its image, carry no `active-` tag, and be either older than 30 days, or untagged and older than 3 days.
+
+**The `active-` tag is moved by the pipeline.** Every `cloudbuild.yaml` ends with a `tag-active` step that tags the image it just deployed as `active-[SERVICE]`, or `active-[SERVICE]-[JOB]` for a job, and moves the tag off the previous image, which then ages out. Without it, a service rolled back to an image more than 10 builds old, or left undeployed for a month, has the very image it serves deleted under it.
+
+The 30 days are the rollback reach: a rollback can return to any release of the last month, not only the 10 newest builds, per section 8.4 of [[deploy.cloud.md]].
+
+**A renamed rule is removed by name first.** When a change renames a rule, run `gcloud artifacts repositories delete-cleanup-policies [REPOSITORY] --location=asia-southeast1 --policynames=[OLD_NAME]` before applying the file, then confirm with `list-cleanup-policies` that exactly the four rules remain. Removing the old rule first leaves the repository briefly more lenient, never stricter.
 
 > [!warning]
 > Never write the age rule on its own. A service that has not been deployed for a month still has its running image in the registry, and an age-only policy deletes the very image that is being served. Rollback and redeploy then have no source to return to. `keep-10-newest` is what makes the age rule safe, not an optimization on top of it.
@@ -267,6 +275,8 @@ Connecting the trigger, converting an inline one, and verifying it are section 7
 
 - **Keep no state inside the container.** Instances are stateless and ephemeral; scale-to-zero and restarts discard anything written to local disk. Persist to a managed database or object store instead of a volume.
 - **Run database migrations as a job, never from the container `CMD`.** Migrating at container start works only at one instance. Above that, a cold-start burst starts several containers at once and they contend for the migration version table, and a failed migration crash-loops the service instead of failing one visible job. A release carrying a new migration runs the job first, then pushes.
+- **Do a service's work inside a request, with request-based CPU.** Deploy with `--cpu-throttling`, written out in the pipeline, and `--min-instances 0`, so the service scales to zero. With request-based CPU, Cloud Run all but stops the instance's CPU once the response is sent, so work left running after the response crawls until another request arrives: a three-second background task becomes ten to twenty-five seconds. When a caller needs a quick answer but the work takes longer, the caller holds the work open as a second request. Work on a schedule is a job or a scheduled endpoint. `--no-cpu-throttling` keeps the CPU on and bills the instance around the clock; use it only as a written decision, when no request can hold the work.
+- **A rollback is a traffic move to an older revision, never a downgrade migration.** Migrations stay additive, expand first and contract in a later release, so the previous release always runs on the current schema. The procedure, including the return to the newest revision, is section 8.4 of [[deploy.cloud.md]].
 - **Build a job for any other work that runs on its own** rather than in response to a user. Choose a job over a scheduled endpoint when the work runs longer than the request timeout, needs more CPU or memory than the service, would compete with user traffic, or needs retries. A job uses the service's own image with a different entrypoint, never a second image, is named `[SERVICE]-[JOB]`, and must be idempotent and bounded because it retries. The full procedure is section 6.12 of [[deploy.cloud.md]].
 - **Never bake a secret into the image.** Check `docker history` to confirm none leaked into a layer.
 - **Read the port from the `PORT` environment variable** the platform injects. Do not hardcode a port in the application or the `Dockerfile`.
@@ -287,6 +297,8 @@ Connecting the trigger, converting an inline one, and verifying it are section 7
 - No secret or configuration value is baked into the image.
 - Every connection string, including `DATABASE_URL`, is mounted with `--set-secrets`, and none is passed through `--set-env-vars` or an env-vars file.
 - `--min-instances 0` and `--max-instances 5`, with the CPU, memory, and concurrency from the allocation table.
+- Request-based CPU, `--cpu-throttling`, written out in the deploy step.
+- The pipeline ends with the `tag-active` step, and the cleanup policy carries all four rules.
 - No GPU flag anywhere.
 - Cloud SQL is attached through the proxy, the runtime account holds `roles/cloudsql.client`, and the instance has no public IP.
 - A budget alert exists on the project.

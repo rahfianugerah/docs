@@ -57,6 +57,20 @@ steps:
       - '--image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG}'
       - '--region=${_REGION}'
 
+  # Mark the image Cloud Run now runs, so the cleanup policy's keep-in-use rule
+  # never deletes it. The tag moves off the previous image, which then ages out.
+  - id: tag-active
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        set -euo pipefail
+        DIGEST=$$(gcloud artifacts docker images describe ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:${_TAG} --format='value(image_summary.digest)')
+        TAG=active-${_SERVICE}-${_JOB}
+        gcloud artifacts tags update "$$TAG" --location=${_REGION} --repository=${_REPOSITORY} --package=${_SERVICE} --version="$$DIGEST" \
+          || gcloud artifacts tags create "$$TAG" --location=${_REGION} --repository=${_REPOSITORY} --package=${_SERVICE} --version="$$DIGEST"
+
   # Uncomment to run the job on every build. Correct for a migration that must land
   # before the new code serves traffic; wrong for anything on a schedule, which would
   # then run once per push as well as at its scheduled time.
