@@ -88,7 +88,7 @@ flowchart TD
 ## Runtime and Deployment
 
 - Backend image: `python:3.13-slim`. Frontend: a `node:20-alpine` build stage producing a static bundle served by `nginx:1.27-alpine`.
-- Target: Cloud Run, following [[deploy.rules.md]] and the runbook in [[deploy.cloud.md]].
+- Target: Cloud Run by default, following [[deploy.rules.md]] and the runbook in [[deploy.cloud.md]]. A project deploys elsewhere when the owner names another platform, per the same standard.
 - Machine learning work runs in a conda environment rather than a container image, per [[ai.rules.md]]. That is the one place this stack splits.
 
 ## Versioning and Dependencies
@@ -106,6 +106,8 @@ A project may use a different runtime only when a specific library requires it. 
 
 1. Be recorded in the vault as a `decision` note with the reason, per [[memory.rules.md]], never in the project README.
 2. Still comply with every other rule here, including the database, versioning, and model rules.
+
+A deploy platform the owner names is not an exception. It follows [[deploy.rules.md]] and needs no `decision` note.
 
 ## Definition of Done
 
