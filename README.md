@@ -6,7 +6,7 @@
 ![Obsidian](https://img.shields.io/badge/Obsidian-Vault-7C3AED?logo=obsidian&logoColor=white)
 ![Rules](https://img.shields.io/badge/Rules-29-4C1D95)
 ![Components](https://img.shields.io/badge/Components-23-4C1D95)
-![Templates](https://img.shields.io/badge/Templates-11-4C1D95)
+![Templates](https://img.shields.io/badge/Templates-16-4C1D95)
 ![Patterns](https://img.shields.io/badge/Patterns-16-4C1D95)
 ![Status](https://img.shields.io/badge/Status-Active-2EA043)
 
@@ -46,7 +46,7 @@ flowchart TD
 | [ai/](ai/) | Machine learning and deep learning standards, kept separate because AI projects fail differently |
 | [component/](component/) | UI component standards on HeroUI: the theme, light and dark, buttons, cards, tables, dropdowns, notifications |
 | [gcp/](gcp/) | The Cloud Run deploy standard, the runbook, and the build templates |
-| [template/](template/) | Documentation templates: backend, frontend, project README, API, model card, agent entry point |
+| [template/](template/) | Documentation templates: the READMEs, API, model card, PRD, the community files, and the agent entry point |
 | [pattern/](pattern/) | Lessons lifted from real incidents, generalized. A failure and its mechanism, so it is not paid for twice |
 | [journal/](journal/) | One record per project per day: what was wrong, what was found, and what changed as a number |
 | [memory/](memory/) | The portable AI memory: markdown notes, indexed by Cognee |
@@ -149,6 +149,11 @@ Every documentation file starts from one of these, per [[docs.rules.md]]. Keep t
 | [[model.template.md]] | A `MODEL.md` model card: data, seed, metrics, failure modes |
 | [[agent.template.md]] | A project's `CLAUDE.md` and `AGENTS.md`, pointing agents at the map and the rules |
 | [[notes.template.md]] | A project note in `docs/notes/`: one brief, its items, and its acceptance table |
+| [[prd.template.md]] | The `docs/PRD.md` every project carries, written before the code |
+| [[license.template.md]] | The `LICENSE` file: `Proprietary`, or the full MIT text |
+| [[code-of-conduct.template.md]] | The `CODE_OF_CONDUCT.md` every repository carries |
+| [[security.template.md]] | The `SECURITY.md`: the private channel for a vulnerability, and the response times |
+| [[contributing.template.md]] | The `CONTRIBUTING.md`: setup, branches, commits, and pull requests |
 | [[cloudbuild.service.template.yaml]] | The build pipeline for a backend service |
 | [[cloudbuild.frontend.template.yaml]] | The build pipeline for a static frontend |
 | [[cloudbuild.job.template.yaml]] | The build pipeline for a scheduled job |
@@ -283,6 +288,11 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[model.template.md]]
 - [[agent.template.md]]
 - [[notes.template.md]]
+- [[prd.template.md]]
+- [[license.template.md]]
+- [[code-of-conduct.template.md]]
+- [[security.template.md]]
+- [[contributing.template.md]]
 
 ### Patterns
 

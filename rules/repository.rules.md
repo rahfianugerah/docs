@@ -23,7 +23,7 @@ These are the baseline hygiene practices that let a project be maintained by som
 flowchart TD
   A["One deployable"] --> B["One repository"]
   B --> C[".gitignore before the first commit"]
-  C --> D["README, docs/PRD.md, docs/SRS.md, .env.example"]
+  C --> D["README, LICENSE, CODE_OF_CONDUCT, SECURITY, CONTRIBUTING, docs/PRD.md, .env.example"]
   D --> E["Structured logging, errors handled and never swallowed"]
   E --> F["Tests run before every merge"]
 ```
@@ -70,8 +70,25 @@ Point every reference, in documentation and in a runbook, at the new repositorie
 ## Configuration and Documentation
 
 - Maintain a `.env.example` listing every variable the project uses, with a placeholder value such as `__fill__` and an explanatory comment, per [[env.rules.md]].
-- Maintain a README covering what the project does, how to run it in development, how to run it in a container, the environment variables, the ports, the volumes, and a checklist against these standards.
+- Maintain a README covering what the project does, how to run it in development, how to run it in a container, the environment variables, the ports, and the volumes. It never names or checks itself against the standards in this vault, which is private, per [[docs.rules.md]].
 - Record an important architectural decision briefly, in the README or in the memory, so the reasoning stays traceable.
+
+## Files Every Repository Carries
+
+**Every repository carries these five files from its first commit.** A repository missing one is not ready to be shared, even with one other person.
+
+| File | Where | Starts from | Holds |
+| :- | :- | :- | :- |
+| `LICENSE` | Root | [[license.template.md]] | `Proprietary` for a private project, one word and nothing else; the full license text for a published one |
+| `CODE_OF_CONDUCT.md` | Root | [[code-of-conduct.template.md]] | How people behave in the project, how to report a problem, and how it is enforced |
+| `SECURITY.md` | Root | [[security.template.md]] | Supported versions, the private channel for reporting a vulnerability, and the response times |
+| `CONTRIBUTING.md` | Root | [[contributing.template.md]] | Setup, branches, commits, pull requests, tests, and where to report a bug |
+| `docs/PRD.md` | `docs/` | [[prd.template.md]] | The goal, the problem, the users, and the non-goals, per [[prd.rules.md]] |
+
+- **The four root files are where GitHub looks for them.** It shows the license in the sidebar, the security policy under the Security tab, and the code of conduct and the contributing guide on every new issue and pull request.
+- **A private project still carries them.** A collaborator, a contractor, or an agent added later reads them before touching anything, and a repository made public later is ready on the day it is published.
+- **These files state the project's own conventions and never name the standards in this vault**, which is private, per [[docs.rules.md]].
+- They sit beside the documents [[docs.rules.md]] lists for every project: the README, `docs/SRS.md`, `.env.example`, and `API.md` or `MODEL.md` where they apply.
 
 ## Database
 
@@ -105,6 +122,7 @@ Point every reference, in documentation and in a runbook, at the new repositorie
 - Where a combined repository was split, the pre-split state is frozen on a protected `legacy` branch, the old repository is archived rather than deleted, and every reference points at the new repositories.
 - Git is initialized with a correct `.gitignore`, and no secret or database file is committed.
 - `.env.example` and the README are complete.
+- `LICENSE`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `CONTRIBUTING.md`, and `docs/PRD.md` exist, each started from its template.
 - Migrations run cleanly from an empty database.
 - Logs go to stdout without personal data, configuration failures fail fast, and no validation fails open silently.
 - The smoke test passes.
