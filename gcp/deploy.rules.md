@@ -18,7 +18,7 @@ tags:
 
 ## Core Requirement
 
-Every deployed project ships as a container image to **Cloud Run**, built by **Cloud Build**, stored in **Artifact Registry**.
+**Cloud Run is the default.** A deployed project ships as a container image to **Cloud Run**, built by **Cloud Build**, stored in **Artifact Registry**, unless the owner names another platform for it. Then the owner's choice wins, per "Another Platform When the Owner Names One" below.
 
 The runbook with the actual commands is [[deploy.cloud.md]]. This file decides the rules; that one is copy and paste.
 
@@ -26,7 +26,9 @@ The runbook with the actual commands is [[deploy.cloud.md]]. This file decides t
 
 ```mermaid
 flowchart TD
-  A["Something to run"] --> B{"Answers a request?"}
+  A["Something to run"] --> P{"Owner named another platform?"}
+  P -->|Yes| X["That platform, with the rules every platform keeps"]
+  P -->|No| B{"Answers a request?"}
   B -->|Yes| S["Cloud Run service: request-based CPU, scales to zero"]
   B -->|No| J["Cloud Run job, idempotent and bounded"]
   S --> I["Image from cloudbuild.yaml, non-root, listens on PORT"]
@@ -59,6 +61,20 @@ The reason is the Cost section below, not an argument against it. The memory has
 **This does not generalise.** The exception is for a stateful, always-on, single-user service whose managed equivalent costs more than the machine. A project that scales to zero has no claim on it. If a second project ever qualifies, that is when this becomes a rule rather than an exception, per [[README.md]] on a rule broken three times.
 
 What still applies to it unchanged: a pinned base image, a non-root container, no secret in the image, one region, a budget alert, and migrations as a job rather than from `CMD`.
+
+## Another Platform When the Owner Names One
+
+**When the owner names a different platform for a project, the project deploys there.** A serverless host such as Vercel, a VM, or any managed platform: the owner's instruction is the decision, so it needs no `decision` note and no cost argument. Cloud Run stays the default for every project where nobody named anything else.
+
+On another platform the Cloud Run specifics do not apply: the container image and `cloudbuild.yaml`, the resource allocation, the region, `tag-active`, the cleanup policy, and the Cloud Run budget alert. The project's own documents describe the platform it actually uses.
+
+What every platform keeps:
+
+- Configuration and secrets are set on the platform and never committed, per [[secret.rules.md]] and [[env.rules.md]].
+- No state survives in an instance between requests. Anything that must persist goes to a managed store.
+- Logs go to stdout.
+- A public health endpoint answers quickly, without calling a downstream service.
+- A spend cap or usage alert is set, where the platform offers one.
 
 ## Resource Allocation
 

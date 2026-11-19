@@ -133,7 +133,7 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 
 | Document | Owns |
 | :- | :- |
-| [[deploy.rules.md]] | What runs on Cloud Run and what does not, the allocation, the registry retention, and the cost |
+| [[deploy.rules.md]] | Cloud Run as the default target and when another platform replaces it, what runs where, the allocation, the registry retention, and the cost |
 | [[deploy.cloud.md]] | The copy-and-paste Cloud Run runbook, from project setup to rollback |
 
 ## Templates
@@ -196,7 +196,7 @@ Both are built by `plugmybrain`, whose command is `pmb`.
 | Environment | Conda (Miniconda) for machine learning, `.venv` for plain Python |
 | Database | PostgreSQL 18 with SQLAlchemy 2.x and Alembic; SQLite for a local single-user tool |
 | Tests | pytest, and Playwright for end-to-end flows |
-| Deploy | Cloud Run, built by Cloud Build, images in Artifact Registry |
+| Deploy | Cloud Run by default, built by Cloud Build, images in Artifact Registry; another platform when the owner names one |
 | Vault | Obsidian, with Graphify and Cognee over the same files, built by `plugmybrain` |
 
 ## Using It With a Model
