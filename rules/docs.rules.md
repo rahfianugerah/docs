@@ -58,7 +58,7 @@ A half-translated repository is worse than either language on its own: a reader 
 
 ## What Every Project Documents
 
-Six files, and no more unless something genuinely needs one.
+Ten files, two of them only where they apply, and no more unless something genuinely needs one.
 
 | File | Holds |
 | :- | :- |
@@ -68,8 +68,14 @@ Six files, and no more unless something genuinely needs one.
 | `API.md` | The endpoints, if the project has any |
 | `MODEL.md` | The model card, if the project trains one |
 | `.env.example` | Every variable name with a placeholder, per [[env.rules.md]] |
+| `LICENSE` | `Proprietary`, or the full text of the published license, from [[license.template.md]] |
+| `CODE_OF_CONDUCT.md` | How people behave in the project, from [[code-of-conduct.template.md]] |
+| `SECURITY.md` | How to report a vulnerability privately, from [[security.template.md]] |
+| `CONTRIBUTING.md` | How to set up, branch, commit, and open a pull request, from [[contributing.template.md]] |
 
-A project that needs a seventh document usually needs a shorter README instead.
+The last four are required in every repository, per [[repository.rules.md]]. They follow the formatting rules here but not the shape of a project document: no badge row, and a table of contents only in `CONTRIBUTING.md`, which is long enough to need one.
+
+A project that needs an eleventh document usually needs a shorter README instead.
 
 ## The README Is the Contract
 
