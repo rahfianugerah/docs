@@ -53,7 +53,7 @@ flowchart LR
 
 ## What It Contains
 
-Eight sections, in this order. Every one is required, and the shortest useful answer is the right length.
+Eight sections, in this order. Every one is required, and the shortest useful answer is the right length. A new PRD starts from [[prd.template.md]].
 
 ```markdown
 # PRD: [Project or Feature Name]
