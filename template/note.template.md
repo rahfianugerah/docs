@@ -1,4 +1,10 @@
-> Up: [[README.md]] · [[memory/README.md]]
+---
+tags:
+  - kind/template
+  - layer/docs
+---
+
+> Up: [[README.md]] · [[memory.rules.md]]
 
 # Note Template
 
@@ -126,5 +132,4 @@ Related: [[secret.rules.md]]
 ## Related
 
 - [[memory.rules.md]]
-- [[memory/README.md]]
 - [[docs.rules.md]]

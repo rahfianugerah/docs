@@ -34,7 +34,7 @@ flowchart LR
 [One line: what this project is.]
 
 @README.md
-@[path-to-vault]/memory/memory.rules.md
+@[path-to-vault]/rules/memory.rules.md
 
 ## Before You Search This Repository
 
@@ -71,7 +71,7 @@ history. `/pmb-map <brain>` switches which memory the session reads from when th
 elsewhere.
 
 **Nothing here writes, on purpose.** To add a memory, write a markdown note under
-`[path-to-vault]/memory/` and run `pmb digest`.
+`[path-to-vault]/memory/` with `/pmb-memory-digest`. The memory stays on this machine and is never committed.
 
 ## Two Things Not to Do
 
@@ -85,6 +85,4 @@ elsewhere.
 - [[docs.rules.md]]
 - [[memory.rules.md]]
 - [[agent.rules.md]]
-- [[memory/README.md]]
-- [[graph/README.md]]
 - [[project.template.md]]

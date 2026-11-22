@@ -1,4 +1,11 @@
-> Up: [[README.md]] · [[memory/README.md]]
+---
+tags:
+  - kind/rule
+  - layer/docs
+  - topic/memory
+---
+
+> Up: [[README.md]] · [[memory.rules.md]]
 
 # Reference Code Standard
 
@@ -74,7 +81,7 @@ status: current
 
 ## Related
 
-- [[memory/codes.rules.md]]
+- [[memory.codes.rules.md]]
 ```
 
 Rules for the note:
@@ -113,7 +120,7 @@ The searchable half still obeys the rule, because the note is what `recall` sees
 - A markdown note of the same stem sits beside it.
 - The code file opens with the four-line header naming the project, the date, why it was kept, and its note.
 - The note follows [[memory.rules.md]], names the code file in its first body line, and carries the `code` tag with the project.
-- **The pair is listed in the Reference Code table in [[memory/README.md]]**, added in the same commit that writes it. A script nothing links to is a script nobody finds, because `recall` indexes markdown and not source.
+- **The pair is listed in the Reference Code table of the local index, `memory/README.md`**, when the pair is written. Like every note, the pair stays on this machine, per [[memory.rules.md]]. A script nothing links to is a script nobody finds, because `recall` indexes markdown and not source.
 - Neither file holds a secret, a credential, or a real configuration value.
 - Nothing in the note repeats the body of the code.
 

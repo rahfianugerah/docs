@@ -199,7 +199,7 @@ A note may carry **at most one** callout, and only for the line that changes wha
 
 - [[docs.rules.md]]
 - [[memory.rules.md]]
-- [[memory/codes.rules.md]]
+- [[memory.codes.rules.md]]
 - [[note.template.md]]
 - [[secret.rules.md]]
 - [[uix.component.md]]

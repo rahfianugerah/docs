@@ -217,7 +217,7 @@ A project document carries a **Data** section, or a row inside Project Structure
 | Item | Location | Notes |
 | :- | :- | :- |
 | Code maps | `graph/<project>/` | Gitignored. Produced by `pmb map` |
-| The memory itself | `<vault>/memory/` | Committed, human-authored, the source of truth |
+| The memory itself | `<vault>/memory/` | Gitignored and never pushed. Human-authored, the source of truth |
 ```
 
 **"Gitignored" and "committed" are the two words that matter**, and the reader is looking for exactly one of them. A path with no such note is a path somebody will commit.
@@ -372,7 +372,7 @@ Never place a `---` horizontal rule in a document body. Headings already mark wh
 
 **A project document carries no `---` at all**, because it carries no frontmatter either, per "The Shape of a Project Document" above. In a vault document the ban covers the body only, and does not touch two things that look the same:
 
-- YAML frontmatter on a **vault** document, where the opening and closing `---` are what make a rule, a component standard, a pattern, or a memory note readable by Obsidian and by the memory indexer. Removing those breaks the file rather than tidying it, and they are the only `---` permitted anywhere in this vault.
+- YAML frontmatter on a **vault** document, where the opening and closing `---` are what make a rule, a component standard, or a memory note readable by Obsidian and by the memory indexer. Removing those breaks the file rather than tidying it, and they are the only `---` permitted anywhere in this vault.
 - A `---` inside a fenced code block, which is sample content being shown, not formatting being applied.
 
 ### Diagrams Are Mermaid
@@ -396,7 +396,7 @@ Pick the diagram type the content already has:
 | A record's lifecycle, such as a document's statuses | `stateDiagram-v2` |
 | A timeline or a rollout plan | `gantt` |
 
-- **Every vault document carries one workflow diagram**: every rule, component, template, runbook, index, and pattern in this vault. It sits in a `## Workflow` section directly after `## Core Requirement`, or after the opening section of a document that has none. A template places it before its copy block, so the diagram is never copied into a project, and a pattern carries it as a `**Mechanism:**` block before `**Why:**`, keeping the note shape.
+- **Every vault document carries one workflow diagram**: every rule, component, template, runbook, and index in this vault. It sits in a `## Workflow` section directly after `## Core Requirement`, or after the opening section of a document that has none. A template places it before its copy block, so the diagram is never copied into a project.
 - **The diagram draws only what its own document governs**: its decision, its flow, or its lifecycle. A neighbouring standard's flow belongs in that standard's diagram, and a reader who needs both follows the link.
 - **Three kinds of file carry none**: a memory note and a journal entry, which are one-screen records rather than workflows, and an agent entry point, which holds only imports.
 - **In a project document, a diagram earns its place.** A flow with a branch, a sequence across three or more parties, or a schema with relations gets one; a straight line of two or three steps stays a sentence, per "Flow Examples" above.
@@ -585,7 +585,7 @@ Do not color a normal paragraph, a heading, a technical explanation, a command, 
 
 ## Obsidian
 
-This documentation set is an Obsidian vault, and so is the memory in [[memory/README.md]]. Three conventions keep the graph usable.
+This documentation set is an Obsidian vault, and so is the local memory, per [[memory.rules.md]]. Three conventions keep the graph usable.
 
 **Wikilinks with the extension:** `[[commit.rules.md]]`, not the bare `commit` form. The extension form survives being read outside Obsidian, where a bare link means nothing.
 
@@ -683,7 +683,7 @@ A `MODEL.md` records, at minimum:
 
 The last one is the one everybody skips and the only one that prevents the model being misused.
 
-An experiment's result belongs in the pull request that carried it, per [[pr.rules.md]], and its durable finding belongs in [[memory/README.md]]. A number in a notebook cell is not a record.
+An experiment's result belongs in the pull request that carried it, per [[pr.rules.md]], and its durable finding belongs in a memory note, per [[memory.rules.md]]. A number in a notebook cell is not a record.
 
 ## Definition of Done
 

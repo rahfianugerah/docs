@@ -250,7 +250,7 @@ A log, a query result, an API response, an error message, or a file can show a p
 
 ## Never Digested Into Memory
 
-The memory vault is plain markdown in a git repository, read by every model, indexed by the tools in [[memory/README.md]]. **Anything written into it is permanent, portable, and searchable.** Real data never enters it.
+The memory is plain markdown kept on this machine, read by every model and indexed by Cognee, per [[memory.rules.md]]. **Anything written into it is durable, portable, and searchable**, and an embedding API receives its text. Real data never enters it.
 
 - Never write a row, a record, a field value, an export, a query result, or a log excerpt carrying a real value into `memory/`, `graph/`, or a journal.
 - Never point a digest, an embedding job, or any indexer at a folder holding a dump, an export, a backup, or uploaded files. An embedding of a real record is a copy of that record in a form nobody can review by reading it.

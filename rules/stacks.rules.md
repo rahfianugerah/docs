@@ -83,7 +83,7 @@ flowchart TD
 - Pin the SDK major version like any other dependency, and treat a model identifier as configuration rather than a literal spread through the code.
 - Any write action performed by a model requires a confirmation flow and an audit trail.
 - **Treat every model response as untrusted input.** It is generated from data a person typed, so it is never rendered as HTML and never executed.
-- The memory layer runs on PostgreSQL, per [[memory/README.md]]. It is an index over markdown, not a replacement for the database.
+- The memory layer runs on PostgreSQL, per [[memory.rules.md]]. It is an index over markdown, not a replacement for the database.
 
 ## Runtime and Deployment
 

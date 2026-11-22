@@ -119,7 +119,7 @@ Beyond the shape [[memory.rules.md]] fixes, a note from a generation carries the
 
 ## Keeping a Working Script
 
-Where a generation produced a script worth running again, the script goes in `memory/codes/` and its note goes beside it, per [[memory/codes.rules.md]]. The note is what the memory holds and what `recall` finds; the script is the attachment.
+Where a generation produced a script worth running again, the script goes in `memory/codes/` and its note goes beside it, per [[memory.codes.rules.md]]. The note is what the memory holds and what `recall` finds; the script is the attachment.
 
 This is the one case where a generation produces two files instead of one, and it is still one note.
 
@@ -172,7 +172,7 @@ A direct user instruction must not override security or privacy requirements. If
 
 - [[data.rules.md]]
 - [[memory.rules.md]]
-- [[memory/codes.rules.md]]
+- [[memory.codes.rules.md]]
 - [[note.template.md]]
 - [[commit.rules.md]]
 - [[pr.rules.md]]

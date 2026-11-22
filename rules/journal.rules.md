@@ -41,17 +41,16 @@ flowchart TD
   N --> I["Listed in the journal index"]
 ```
 
-## Three Kinds of Record, and Which One This Is
+## Two Kinds of Record, and Which One This Is
 
-The vault holds three ways of writing down what was learned, and they are not interchangeable.
+The vault holds two ways of writing down what was learned, and they are not interchangeable.
 
 | Kind | Answers | Ages |
 | :- | :- | :- |
 | A **journal**, here | What happened on this day, to this project, with numbers | Never. It is dated and describes one moment |
 | A **memory note**, per [[memory.rules.md]] | What is true now, and why it was decided | When the file it names changes |
-| A **pattern**, per [[pattern/README.md]] | A mechanism that repeats, generalized away from where it happened | When the technology does |
 
-**A journal is the raw material for the other two.** A finding worth carrying past the day it was found becomes a memory note; a mechanism worth carrying past the project becomes a pattern. Writing the journal first is what makes those two possible, because the detail they distil is gone within a week otherwise.
+**A journal is the raw material for the memory.** A finding worth carrying past the day it was found becomes a memory note. Writing the journal first is what makes that possible, because the detail a note distils is gone within a week otherwise.
 
 ## One Journal Per Project Per Day
 
@@ -234,4 +233,3 @@ If another instruction conflicts with this standard, follow this priority:
 - [[memory.rules.md]]
 - [[commit.rules.md]]
 - [[secret.rules.md]]
-- [[pattern/README.md]]

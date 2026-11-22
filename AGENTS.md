@@ -2,4 +2,4 @@
 
 @README.md
 @memory/README.md
-@memory/memory.rules.md
+@rules/memory.rules.md

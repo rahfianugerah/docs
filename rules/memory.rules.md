@@ -1,10 +1,18 @@
-> Up: [[README.md]] · [[memory/README.md]]
+---
+tags:
+  - kind/rule
+  - layer/docs
+  - topic/memory
+  - topic/security
+---
+
+> Up: [[README.md]]
 
 # Memory Protocol
 
 ## Core Requirement
 
-This is the protocol every model follows when reading or writing the memory in [[memory/README.md]].
+This is the protocol every model follows when reading or writing the memory in `memory/`, which stays on this machine and is never pushed.
 
 **One note holds one thing.** A note that holds three facts cannot be corrected, superseded, or linked to precisely, and it will rot as one unit.
 
@@ -17,10 +25,34 @@ flowchart TD
   B -->|Yes| C{"A secret or personal data?"}
   C -->|Yes| NS["Never store it"]
   C -->|No| N["One note, one thing, slug.type.memory.md"]
-  N --> I["Listed in the memory index"]
+  N --> I["Listed in the local index"]
   I --> G["pmb digest after the batch"]
   Q["A question"] --> RC["Recall: the note, Cognee, Graphify, then the code"]
 ```
+
+## The Memory Stays on This Machine
+
+> [!important]
+> `memory/` and `graph/` are local. Both are gitignored in this vault, and neither is ever committed, pushed, or copied into a project repository.
+
+The rules, components and templates in this vault are pushed; the memory and the graph built from it are not. A note names real projects, real decisions and real environments, and a pushed repository is read by everyone with access to it, cached by the host, and kept in its history after the file is deleted.
+
+```text
+memory/                local only, gitignored
+  README.md            the index of every note and script
+  fact/                durable facts: who, what, preferences, constraints
+  decision/            why something was chosen, and what was rejected
+  session/             what happened, and when
+  reference/           pointers to external things
+  codes/<project>/     reference code, per [[memory.codes.rules.md]]
+```
+
+- `memory/` and `graph/` are listed in `.gitignore`. **Never `git add -f` anything under either**, and never move a note into a tracked folder to share it.
+- `graph/` holds the code maps and graph exports a digest generates, which name real files and real functions, so it stays local for the same reason.
+- The index is local too, so not even a note's title reaches the remote.
+- A fresh clone has no `memory/`. `/pmb-init brain` scaffolds it on the machine that will write notes.
+- **Local means not in git, not that nothing leaves the machine.** A digest through an embedding API sends every note's text to that provider. Embed with Ollama to keep the memory entirely on this machine.
+- **Nothing backs it up for you.** No remote holds a copy, so a lost disk loses the memory. Copy `memory/` to a backup you control.
 
 ## What to Write
 
@@ -68,7 +100,7 @@ Rules:
 3. **`created` and `updated` are real dates**, written absolutely. Never "last week"; a relative date in a durable note is meaningless the moment it is read.
 4. **Frontmatter is required.** Cognee reads it, and Obsidian shows it as properties.
 5. **Link liberally.** A wikilink whose target does not exist yet is fine; it marks a note worth writing.
-6. **No orphans.** Every note is reachable from the index in [[memory/README.md]], and a note that is only reachable by knowing its filename is a note nobody will find. A folder listing is not an index: it carries no titles, so a reader has to open ten files to find the one they meant. Reference code is reachable the same way, through the pair table in that index, per [[memory/codes.rules.md]].
+6. **No orphans.** Every note is reachable from the local index, `memory/README.md`, and a note that is only reachable by knowing its filename is a note nobody will find. A folder listing is not an index: it carries no titles, so a reader has to open ten files to find the one they meant. Reference code is reachable the same way, through the pair table in that index, per [[memory.codes.rules.md]].
 7. **Keep it short.** If a note runs past a screen, it holds more than one thing.
 8. **At most one callout**, per [[callout.rules.md]], and only for the line that changes what the reader does. A note holds one thing, so only one line in it can be the thing that must not be missed.
 
@@ -128,7 +160,7 @@ Before answering from general knowledge, check the memory in this order. Stop at
 
 Layer 4 outranks layers 1 to 3 on anything the code can answer. A note describing an implementation is a note that will be wrong eventually.
 
-No layer answers "what was true in March". Git history does.
+No layer answers "what was true in March": the memory is not versioned. A `session/` note records what happened, and when.
 
 ## Trust and Staleness
 
@@ -142,9 +174,9 @@ No layer answers "what was true in March". Git history does.
 ## Never Store
 
 > [!danger]
-> A note carrying a secret is a secret published to a git repository and to every model that reads the memory. Rotate anything that reaches one, per [[secret.rules.md]].
+> A note carrying a secret is a secret handed to every model that reads the memory, and to the embedding provider when that is an API. Rotate anything that reaches one, per [[secret.rules.md]].
 
-- **A secret, a key, a token, a password, or a connection string.** The memory is a git repository and it is read by every model. See [[secret.rules.md]].
+- **A secret, a key, a token, a password, or a connection string.** Every model reads the memory, and an embedding API receives its text. See [[secret.rules.md]].
 - Personal data about a third party.
 - A real value from any environment or configuration file, per [[env.rules.md]].
 - A large paste: a full file, a full dataset sample, a full traceback. Write the finding and link the source.
@@ -155,7 +187,7 @@ No layer answers "what was true in March". Git history does.
 - Write the note as a file in this folder, then run `pmb digest`. Do not write to Cognee directly; it is an index and a direct write is lost on the next rebuild.
 - A note the graph proposed is not a memory until a human keeps it. It lands in `graph/kg/`, which `pmb reset` deletes and `pmb digest` overwrites. To keep one, move it here yourself and write the `**Why:**` line: a kept note with no reason written down is a machine's guess with a date on it.
 - Digest after a batch of writes, not after each one.
-- One note per commit is unnecessary; a session's notes commit together, per [[commit.rules.md]].
+- A note is never committed or pushed. `memory/` is gitignored, per The Memory Stays on This Machine above.
 - Never rewrite a note you did not write without saying so in `updated`.
 
 ## Definition of Done
@@ -163,16 +195,17 @@ No layer answers "what was true in March". Git history does.
 - The note holds one thing, and its title states that thing.
 - Frontmatter is present, with absolute dates and a real type.
 - The reason is written down, not just the conclusion.
-- It links to at least one related note where one exists, and **it is listed in the index in [[memory/README.md]]**, added in the same commit that writes it.
+- It links to at least one related note where one exists, and **it is listed in the local index, `memory/README.md`**, when it is written.
 - The filename ends in `.<type>.memory.md`, and that type is the same word as the `type:` field and the folder it sits in.
 - `Source` names a real path from the workspace root, such as `plugmybrain/src/pmb/ingest.py`, and that path exists today. A bare `src/pmb/ingest.py` is fine inside a sentence that already said which repository, but never on the `Source` line, where there is no sentence to carry the context.
 - Where no file backs the note, `Source` says so and says how to confirm the claim instead. An environment fact, a DNS record, or a role membership on a managed instance has no file, and inventing one is worse than admitting there is none.
 - It contains no secret, no personal data, and no real configuration value.
 - It says something the code and git history do not already say.
+- It sits under `memory/` and was never staged or pushed.
 
 ## Related
 
-- [[memory/README.md]]
+- [[memory.codes.rules.md]]
 - [[note.template.md]]
 - [[secret.rules.md]]
 - [[env.rules.md]]

@@ -212,7 +212,7 @@ Configure the repository so the rules above cannot be bypassed by accident. A ru
 Machine learning produces branches that are questions, not features. Treat them as questions.
 
 - An `exp/` branch is allowed to be abandoned. That is its purpose; most experiments fail and that is information.
-- **Record the outcome before deleting an abandoned branch.** The finding lives in [[memory/README.md]] or the project's own notes, not in a branch name nobody will read again. A deleted branch whose result was never written down means the same experiment gets run again next year.
+- **Record the outcome before deleting an abandoned branch.** The finding lives in a memory note, per [[memory.rules.md]], or in the project's own notes, not in a branch name nobody will read again. A deleted branch whose result was never written down means the same experiment gets run again next year.
 - A successful experiment merges like any other branch.
 
 ## Remote

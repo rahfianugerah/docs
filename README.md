@@ -7,7 +7,6 @@
 ![Rules](https://img.shields.io/badge/Rules-29-4C1D95)
 ![Components](https://img.shields.io/badge/Components-23-4C1D95)
 ![Templates](https://img.shields.io/badge/Templates-16-4C1D95)
-![Patterns](https://img.shields.io/badge/Patterns-16-4C1D95)
 ![Status](https://img.shields.io/badge/Status-Active-2EA043)
 
 > [!important]
@@ -21,7 +20,7 @@ A project accumulates decisions nobody wrote down. Six months later the conventi
 
 The rules here are deliberately short. A standard that costs more to follow than the mistake it prevents is a standard that gets abandoned, so each one earns its place: it exists because forgetting it has actually cost something. Every rule says why, because a rule with no reason attached is dropped the first time it is inconvenient.
 
-Alongside them sits a portable AI memory. An assistant with no memory relearns the same context every session; an assistant whose memory lives inside one vendor's product is a memory you lose when you switch models. So the memory is plain markdown in git, indexed by tools that can be rebuilt and replaced.
+Alongside them sits a portable AI memory. An assistant with no memory relearns the same context every session; an assistant whose memory lives inside one vendor's product is a memory you lose when you switch models. So the memory is plain markdown on this machine, indexed by tools that can be rebuilt and replaced. **It is never pushed**: the standards here are shared, the memory of real projects is not.
 
 The whole repository is an Obsidian vault. Open the folder and the graph is already wired.
 
@@ -47,10 +46,19 @@ flowchart TD
 | [component/](component/) | UI component standards on HeroUI: the theme, light and dark, buttons, cards, tables, dropdowns, notifications |
 | [gcp/](gcp/) | The Cloud Run deploy standard, the runbook, and the build templates |
 | [template/](template/) | Documentation templates: the READMEs, API, model card, PRD, the community files, and the agent entry point |
-| [pattern/](pattern/) | Lessons lifted from real incidents, generalized. A failure and its mechanism, so it is not paid for twice |
 | [journal/](journal/) | One record per project per day: what was wrong, what was found, and what changed as a number |
-| [memory/](memory/) | The portable AI memory: markdown notes, indexed by Cognee |
-| [graph/](graph/) | The machine-generated half: code maps and the knowledge graph export. Rebuilt, never hand-edited |
+
+### What Stays on This Machine
+
+**Three folders live in the vault on disk and are never pushed.** They are gitignored, so a fresh clone does not have them, and nothing in this repository links into them.
+
+| Folder | Holds | Why it stays local |
+| :- | :- | :- |
+| `memory/` | The AI memory: notes, kept scripts, and the index that lists them | It names real projects, decisions and environments |
+| `graph/` | Code maps and graph exports a digest generates | It maps real files and functions, and every digest rebuilds it |
+| `pattern/` | Lessons lifted from real incidents, generalized | It is a working notebook, not a standard |
+
+On a new machine, `/pmb-init brain` scaffolds `memory/` again, and a digest rebuilds `graph/`. **Nothing backs these folders up**, so copy them somewhere you control. The rules for the memory are [[memory.rules.md]].
 
 ## Rules
 
@@ -159,12 +167,6 @@ Every documentation file starts from one of these, per [[docs.rules.md]]. Keep t
 | [[cloudbuild.job.template.yaml]] | The build pipeline for a scheduled job |
 | [[cleanup-policy.template.json]] | The registry retention policy, identical for every project |
 
-## Patterns
-
-A pattern records a failure and its mechanism, generalized away from the system it happened in. It carries no claim about any repository in this vault, which is what separates it from a memory note.
-
-[[pattern/README.md]] holds the shape and the sixteen written so far, grouped around deploys that fail in the wrong place, databases that isolate less than they appear to, and reports that name the wrong cause.
-
 ## Memory
 
 A memory every model can read, because it is files rather than a vendor's store.
@@ -175,15 +177,14 @@ A memory every model can read, because it is files rather than a vendor's store.
 | Structural | Graphify | An AST map of a codebase, so an agent stops grepping the tree |
 | Semantic | Cognee | A knowledge graph and vector index built from the markdown |
 
-**The markdown is the only durable store.** The other two are indexes over it: delete either and rebuild it from the files. That is what makes the memory portable, diffable, and reviewable, and what makes switching embedding model or graph database a reindex rather than a migration.
+**The markdown is the only durable store.** The other two are indexes over it: delete either and rebuild it from the files. **It stays on this machine and is never pushed**, per [[memory.rules.md]]. That is what makes the memory portable and readable by any model, and what makes switching embedding model or graph database a reindex rather than a migration.
 
 Both are built by `plugmybrain`, whose command is `pmb`.
 
 | Document | Owns |
 | :- | :- |
-| [[memory/README.md]] | The architecture, the note types, and how to plug each tool in |
-| [[memory.rules.md]] | The write and recall protocol every model follows |
-| [[memory/codes.rules.md]] | Reference code kept beside a note that explains it |
+| [[memory.rules.md]] | The write and recall protocol every model follows, and why the memory stays local |
+| [[memory.codes.rules.md]] | Reference code kept beside a note that explains it |
 | [[note.template.md]] | The shape of a note, for each of the four types |
 
 ## Stack
@@ -294,21 +295,15 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[security.template.md]]
 - [[contributing.template.md]]
 
-### Patterns
-
-- [[pattern/README.md]]
-
 ### Memory
 
-- [[memory/README.md]]
 - [[memory.rules.md]]
-- [[memory/codes.rules.md]]
+- [[memory.codes.rules.md]]
 - [[note.template.md]]
-- [[graph/README.md]]
 
 ### Memory Notes and Reference Code
 
-Every note and every kept script is indexed in [[memory/README.md]], grouped by type and carrying its title. That index is the one place they are listed, so this file does not repeat it and the two cannot drift.
+Every note and every kept script is indexed in `memory/README.md`, grouped by type and carrying its title. That index is local, like the notes it lists, per [[memory.rules.md]]. That index is the one place they are listed, so this file does not repeat it and the two cannot drift.
 
 ### Configuration
 
@@ -321,5 +316,5 @@ A standard nobody follows is worse than no standard, because it makes a codebase
 
 - When the code and a rule disagree, fix one of them in the same session. Never leave both.
 - **A rule broken three times is a rule that is wrong.** Change the rule, do not keep losing the argument with yourself.
-- **A rule reasoned about one component breaks where a page stacks two.** Draw the stacked page before adding one, per [[pattern/README.md]].
+- **A rule reasoned about one component breaks where a page stacks two.** Draw the stacked page before adding one.
 - These documents follow their own rules, including [[docs.rules.md]] and [[badge.rules.md]]. A badge here is as current as one in a project README, or this file is not credible.

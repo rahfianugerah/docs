@@ -149,7 +149,7 @@ The train/validation/test split is derived from a recorded seed, or written to d
 
 - **A notebook explores. A module keeps.** Anything that runs twice moves out of the notebook into a function a module exposes, and the notebook imports it.
 - Track runs with a tool, not a spreadsheet: MLflow or Weights and Biases. Log the parameters, the metrics, the seed, the data version, and the commit.
-- **Record failures.** An experiment that did not work is information, and the alternative is running it again next year having forgotten. Write the finding into [[memory/README.md]].
+- **Record failures.** An experiment that did not work is information, and the alternative is running it again next year having forgotten. Write the finding as a memory note, per [[memory.rules.md]].
 - One variable at a time. Two changes and an improved metric tell you nothing about which one caused it.
 - Never tune against the test set. Tune on validation; touch test once, at the end, and report that number.
 
