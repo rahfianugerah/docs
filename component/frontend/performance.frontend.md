@@ -47,7 +47,7 @@ Each project records these in `docs/SRS.md` as `NFR-PERF` requirements, per [[sr
 npx lighthouse https://[staging-host] --only-categories=performance --output=json --output-path="$RUN-lighthouse.json" --quiet --chrome-flags="--headless"
 ```
 
-`$RUN` is the name of the QA report the result belongs to, so the result lands in the gitignored `report/` with the same date, time, and title, per the [report protocol](../../.agents/_shared/report-protocol.md).
+`$RUN` is the name of the QA report the result belongs to, so the result lands in the gitignored `report/` with the same date, time, and title, per the [[report-protocol.md|report protocol]].
 
 ## Delivery
 

@@ -12,7 +12,7 @@ tags:
 > [!example]
 > Copy the block below into `docs/PLAN.md` in the project repository. Every `[bracketed]` passage is guidance to be replaced, and a row that does not apply is removed rather than left empty.
 
-The plan is the project's timeline and its feature list: what is being built, by whom, by when, and what is already done. It names the requirement codes from `docs/SRS.md` instead of repeating the requirements, per [[srs.rules.md]]. The project-manager agent keeps it current, per the [agent team](../.agents/README.md).
+The plan is the project's timeline and its feature list: what is being built, by whom, by when, and what is already done. It names the requirement codes from `docs/SRS.md` instead of repeating the requirements, per [[srs.rules.md]]. The project-manager agent keeps it current, per the [[agents/README.md|agent team]].
 
 ## Workflow
 

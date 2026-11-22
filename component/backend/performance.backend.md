@@ -113,7 +113,7 @@ locust -f test/load/locustfile.py --headless -u 50 -r 5 -t 2m --host https://[st
 ```
 
 - Keep the load script in `test/load/`, and record the numbers in the QA report.
-- `$RUN` is the name of that QA report, so the CSV files share its date, time, and title, per the [report protocol](../../.agents/_shared/report-protocol.md).
+- `$RUN` is the name of that QA report, so the CSV files share its date, time, and title, per the [[report-protocol.md|report protocol]].
 
 ## Definition of Done
 

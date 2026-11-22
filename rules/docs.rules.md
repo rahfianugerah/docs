@@ -78,7 +78,7 @@ The last four are required in every repository, per [[repository.rules.md]]. The
 
 A project that needs a twelfth document usually needs a shorter README instead.
 
-**An agent report is not a document.** Reports live in `report/` at the project root, which is gitignored and never committed, per the [report protocol](../.agents/_shared/report-protocol.md).
+**An agent report is not a document.** Reports live in `report/` at the project root, which is gitignored and never committed, per the [[report-protocol.md|report protocol]].
 
 ## The README Is the Contract
 
@@ -404,7 +404,7 @@ Pick the diagram type the content already has:
 
 - **Every vault document carries one workflow diagram**: every rule, component, template, runbook, and index in this vault. It sits in a `## Workflow` section directly after `## Core Requirement`, or after the opening section of a document that has none. A template places it before its copy block, so the diagram is never copied into a project.
 - **The diagram draws only what its own document governs**: its decision, its flow, or its lifecycle. A neighbouring standard's flow belongs in that standard's diagram, and a reader who needs both follows the link.
-- **Four kinds of file carry none**: a memory note and a journal entry, which are one-screen records rather than workflows, an agent entry point, which holds only imports, and an agent skill or the shared persona under `.agents/`, which hold instructions an agent follows.
+- **Four kinds of file carry none**: a memory note and a journal entry, which are one-screen records rather than workflows, an agent entry point, which holds only imports, and an agent skill or the shared persona under `agents/`, which hold instructions an agent follows.
 - **In a project document, a diagram earns its place.** A flow with a branch, a sequence across three or more parties, or a schema with relations gets one; a straight line of two or three steps stays a sentence, per "Flow Examples" above.
 - **Labels name the real thing**, such as the service name or the table name, the same way a code example shows the real identifiers.
 - **Mermaid's connectors are syntax, not formatting.** `-->`, `---`, and `->>` inside the `mermaid` block are allowed, the same exception a `---` inside any fenced block already has under "No Horizontal Rules". A Unicode arrow or an em dash inside a label is still banned.

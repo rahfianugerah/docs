@@ -14,7 +14,7 @@ tags:
 
 ## Core Requirement
 
-A frontend breaks where a user clicks, so it is tested where a user clicks: in a real browser, through the real screens. The qa-engineer owns these tests and the daily run, per the [agent team](../../.agents/README.md). The frontend-engineer makes them possible by giving every element a test will touch a stable `data-testid`.
+A frontend breaks where a user clicks, so it is tested where a user clicks: in a real browser, through the real screens. The qa-engineer owns these tests and the daily run, per the [[agents/README.md|agent team]]. The frontend-engineer makes them possible by giving every element a test will touch a stable `data-testid`.
 
 ## Workflow
 

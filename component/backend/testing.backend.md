@@ -16,13 +16,13 @@ tags:
 
 A backend test proves behaviour through the API a client actually calls, against the database the code actually runs on. A mock of PostgreSQL passes while the real migration, constraint, or query plan fails, so a test that touches data runs against a real PostgreSQL in a container.
 
-The backend-engineer writes the unit tests for the logic it builds. The qa-engineer owns the integration tests, the end-to-end tests, and the automation, per the [agent team](../../.agents/README.md). The general testing rules are in [[codes.rules.md]].
+The qa-engineer writes every test, unit, integration, and end to end, and owns the automation; the engineers only build, per the [[agents/README.md|agent team]]. The general testing rules are in [[codes.rules.md]].
 
 ## Workflow
 
 ```mermaid
 flowchart LR
-  A["Feature handed to QA"] --> B["Unit tests from the engineer"]
+  A["Wave handed to QA"] --> B["Unit tests"]
   B --> C["Integration tests against PostgreSQL"]
   C --> D["Security cases"]
   D --> E{"scripts/test-all.sh passes?"}

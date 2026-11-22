@@ -16,7 +16,7 @@ Copy the block below into a project's `CLAUDE.md`, then copy that file to `AGENT
 
 Fill in every bracket. The point of this file is to stop an agent rediscovering the codebase by grepping it, which costs tokens every session and gets slower as the project grows.
 
-Rules for filling it in are in [[docs.rules.md]]; the memory protocol is [[memory.rules.md]]. The handbook import gives the project the agent team: the session-start status, the pipeline, and the reports in `report/`, per the [agent team](../.agents/README.md).
+Rules for filling it in are in [[docs.rules.md]]; the memory protocol is [[memory.rules.md]]. The handbook import gives the project the agent team: the session-start status, the pipeline, and the reports in `report/`, per the [[agents/README.md|agent team]].
 
 ## Workflow
 
@@ -35,7 +35,7 @@ flowchart LR
 
 @README.md
 @[path-to-vault]/rules/memory.rules.md
-@[path-to-vault]/.agents/README.md
+@[path-to-vault]/agents/README.md
 
 ## Before You Search This Repository
 

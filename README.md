@@ -49,8 +49,8 @@ flowchart TD
 | [cloud/gcp/](cloud/gcp/) | The Cloud Run deploy standard, the runbook, and the build templates |
 | [template/](template/) | Documentation templates: the READMEs, API, model card, PRD, plan, the community files, and the agent entry point |
 | [journal/](journal/) | One record per project per day: what was wrong, what was found, and what changed as a number |
-| [.agents/](.agents/README.md) | The seven agent skills, their shared persona, and the report protocol |
-| [.claude/agents/](.claude/agents/) | Thin wrappers that let Claude Code launch each agent |
+| [agents/](agents/README.md) | The seven agent skills, their shared persona, and the report protocol |
+| [.claude/agents/](.claude/agents/) | Thin wrappers that let Claude Code launch each agent. Hidden in Obsidian, which skips every folder whose name starts with a dot |
 
 ### What Stays on This Machine
 
@@ -114,10 +114,10 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 
 | Document | Owns |
 | :- | :- |
-| [Agent team](.agents/README.md) | The seven agents, the session-start status, the pipeline from request to release, and the orchestrator's rules |
-| [Persona](.agents/_shared/persona.md) | The one persona every agent shares, and where the CTO's word stops at a security requirement |
-| [Report protocol](.agents/_shared/report-protocol.md) | `report/`, the file name, the WIB timestamp, the levels, and the statuses |
-| [Report template](.agents/_shared/report-template.md) | The notes shape every report is written in |
+| [[agents/README.md]] | The seven agents, the session-start status, the pipeline from request to release, and the orchestrator's rules |
+| [[persona.md]] | The one persona every agent shares, and where the CTO's word stops at a security requirement |
+| [[report-protocol.md]] | `report/`, the file name, the WIB timestamp, the levels, and the statuses |
+| [[report-template.md]] | The notes shape every report is written in |
 
 **What you build with AI:**
 
@@ -193,7 +193,7 @@ Both are built by `plugmybrain`, whose command is `pmb`.
 
 ## Using It With a Model
 
-Point the assistant at this repository and give it [[CLAUDE.md]] or [[AGENTS.md]] as its entry point. Both import this file, the memory protocol, and the [agent team](.agents/README.md), so the rules, the memory, and the agents load together.
+Point the assistant at this repository and give it [[CLAUDE.md]] or [[AGENTS.md]] as its entry point. Both import this file, the memory protocol, and the [[agents/README.md|agent team]], so the rules, the memory, and the agents load together.
 
 Nothing here is model-specific. A different assistant reads the same markdown and arrives at the same context, which is the entire reason the memory is files.
 
@@ -305,17 +305,17 @@ Every note and every kept script is indexed in `memory/README.md`, grouped by ty
 
 ### Agents
 
-- [Agent team](.agents/README.md)
-- [Persona](.agents/_shared/persona.md)
-- [Report protocol](.agents/_shared/report-protocol.md)
-- [Report template](.agents/_shared/report-template.md)
-- [project-manager](.agents/project-manager/SKILL.md)
-- [system-analyst](.agents/system-analyst/SKILL.md)
-- [security-engineer](.agents/security-engineer/SKILL.md)
-- [backend-engineer](.agents/backend-engineer/SKILL.md)
-- [frontend-engineer](.agents/frontend-engineer/SKILL.md)
-- [code-reviewer](.agents/code-reviewer/SKILL.md)
-- [qa-engineer](.agents/qa-engineer/SKILL.md)
+- [[agents/README.md]]
+- [[persona.md]]
+- [[report-protocol.md]]
+- [[report-template.md]]
+- [[agents/project-manager/SKILL.md]]
+- [[agents/system-analyst/SKILL.md]]
+- [[agents/security-engineer/SKILL.md]]
+- [[agents/backend-engineer/SKILL.md]]
+- [[agents/frontend-engineer/SKILL.md]]
+- [[agents/code-reviewer/SKILL.md]]
+- [[agents/qa-engineer/SKILL.md]]
 
 ### Configuration
 

@@ -5,7 +5,7 @@ tags:
   - topic/workflow
 ---
 
-> Up: [README.md](../README.md)
+> Up: [[agents/README.md]]
 
 # Report Protocol
 
@@ -92,9 +92,9 @@ report-qa-engineer-to-user-login-otp-20260712-09_02_44-lighthouse.json
 
 ## What a Report Holds
 
-- **It starts from [report-template.md](report-template.md)**, the project note shape from [notes.template.md](../../template/notes.template.md) with the routing an agent report needs.
-- **A report to an agent is in English. A report to the CTO is in Bahasa Indonesia**, per [agent.rules.md](../../rules/agent.rules.md), with the template's headings translated and every technical term, path, and error kept in its original form.
-- **No secret, token, or real environment value**, per [secret.rules.md](../../rules/secret.rules.md) and [env.rules.md](../../rules/env.rules.md). Name the file and the line; never paste the value.
+- **It starts from [[report-template.md]]**, the project note shape from [[notes.template.md]] with the routing an agent report needs.
+- **A report to an agent is in English. A report to the CTO is in Bahasa Indonesia**, per [[agent.rules.md]], with the template's headings translated and every technical term, path, and error kept in its original form.
+- **No secret, token, or real environment value**, per [[secret.rules.md]] and [[env.rules.md]]. Name the file and the line; never paste the value.
 
 Every finding carries one of four levels:
 
@@ -105,7 +105,7 @@ Every finding carries one of four levels:
 | `medium` | Wrong behaviour that has a workaround |
 | `low` | A minor issue or polish |
 
-Every report carries one of five statuses, written as a status indicator per [docs.rules.md](../../rules/docs.rules.md):
+Every report carries one of five statuses, written as a status indicator per [[docs.rules.md]]:
 
 | Status | Color | Means |
 | :- | :- | :- |
@@ -118,6 +118,7 @@ Every report carries one of five statuses, written as a status indicator per [do
 ## Rules
 
 - **One file per recipient.** To copy someone in, write a short separate report to them that names the main report's file.
+- **End every report with a Next Action** naming the next agent's slug, `user`, or none, per "Delegation: Who Goes Next" in [[agents/README.md]]. The orchestrator launches it at once.
 - **Never edit another agent's report.** A follow-up is a new report that names the earlier one under Links.
 - **Return only the path and a one-line status** to the orchestrator:
 
@@ -127,7 +128,7 @@ report/report-qa-engineer-to-backend-engineer-login-otp-20260711-23_40_02.md - F
 
 ## Related
 
-- [report-template.md](report-template.md)
-- [notes.rules.md](../../rules/notes.rules.md)
-- [agent.rules.md](../../rules/agent.rules.md)
-- [docs.rules.md](../../rules/docs.rules.md)
+- [[report-template.md]]
+- [[notes.rules.md]]
+- [[agent.rules.md]]
+- [[docs.rules.md]]

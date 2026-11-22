@@ -11,7 +11,7 @@ tags:
 > [!example]
 > Copy the block below into `SECURITY.md` at the repository root. Replace every `[bracketed]` passage, and keep the private reporting channel: a vulnerability reported in public is a vulnerability handed to everyone before it is fixed.
 
-Every repository carries this file, per [[repository.rules.md]]. It follows the formatting rules in [[docs.rules.md]] but not the README shape: no badge row and no table of contents. It tells an outsider how to report a flaw, and records the controls in place, the risks the owner accepted, and the last audit. The security-engineer agent keeps those three current, per the [agent team](../.agents/README.md); the rules the controls come from are [[security.rules.md]], never named in the file itself.
+Every repository carries this file, per [[repository.rules.md]]. It follows the formatting rules in [[docs.rules.md]] but not the README shape: no badge row and no table of contents. It tells an outsider how to report a flaw, and records the controls in place, the risks the owner accepted, and the last audit. The security-engineer agent keeps those three current, per the [[agents/README.md|agent team]]; the rules the controls come from are [[security.rules.md]], never named in the file itself.
 
 **An accepted risk is a medium or low finding scheduled for later, or a residual risk with no fix available yet.** It is never a security requirement switched off, and never a critical or high finding.
 
