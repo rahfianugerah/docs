@@ -50,6 +50,7 @@ flowchart TD
 | [template/](template/) | Documentation templates: the READMEs, API, model card, PRD, plan, the community files, and the agent entry point |
 | [journal/](journal/) | One record per project per day: what was wrong, what was found, and what changed as a number |
 | [agents/](agents/README.md) | The seven agent skills, their shared persona, and the report protocol |
+| [commands/](commands/) | The `/custom-agents` slash commands that run one agent or the whole team, copied to `~/.claude/commands/` |
 | [.claude/agents/](.claude/agents/) | Thin wrappers that let Claude Code launch each agent. Hidden in Obsidian, which skips every folder whose name starts with a dot |
 
 ### What Stays on This Machine
@@ -118,6 +119,7 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | [[persona.md]] | The one persona every agent shares, and where the CTO's word stops at a security requirement |
 | [[report-protocol.md]] | `report/`, the file name, the WIB timestamp, the levels, and the statuses |
 | [[report-template.md]] | The notes shape every report is written in |
+| [[custom-agents-all.md]] | `/custom-agents-all` runs the whole team, `/custom-agents-<slug>` runs one agent, and `/custom-agents` lists them |
 
 **What you build with AI:**
 

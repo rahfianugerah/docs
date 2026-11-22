@@ -135,8 +135,19 @@ The CTO can also launch the code-reviewer at any time on an existing codebase or
 
 Every report follows [[report-protocol.md]] and starts from [[report-template.md]]. Reports land in `report/` at the project root, which is gitignored and never committed.
 
+## Commands
+
+The team is called with a slash command. The sources live in `commands/` in the vault, and a copy in `~/.claude/commands/` makes them work in every project; copy a file again after changing it.
+
+| Command | What runs |
+| :- | :- |
+| `/custom-agents [slug]` | Lists the seven agents and their commands, or shows one agent in detail. Launches nothing |
+| `/custom-agents-<slug> <task>` | That one agent only, such as `/custom-agents-qa-engineer`. Its Next Action is reported, not launched |
+| `/custom-agents-all <request>` | The whole team, from intake through the delegation chain to the local commit, stopping only at the three gates |
+
 ## Related
 
+- [[custom-agents-all.md]]
 - [[agent.rules.md]]
 - [[agent.template.md]]
 - [[pr.rules.md]]
