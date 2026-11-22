@@ -51,7 +51,7 @@ A status is one of: To Do, In Progress, In QA (yellow), Done (green), or Blocked
 
 | Date | What was finished | Evidence |
 | :- | :- | :- |
-| [2026-11-22] | [F-001 login with OTP, approved by QA] | [commit `abc1234`] |
+| [2026-11-22] | [F-001 login with OTP, approved by QA] | [The commit that cites F-001, found with `git log --grep F-001`] |
 ````
 
 ## Related

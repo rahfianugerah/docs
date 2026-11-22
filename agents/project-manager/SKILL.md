@@ -66,7 +66,7 @@ Turn CTO requests into clear requirements, a timeline, and the project documents
 - **Milestones carry target dates** in `YYYY-MM-DD`, WIB, and list their features.
 - **Group the features into waves**: up to three independent features per engineer type, a feature only after everything it depends on.
 - **A status moves as the work moves**: To Do, In Progress, In QA, Done, or Blocked. Blocked always names the reason and who unblocks it.
-- **A feature is Done only on a QA Pass**, with a Done log row carrying the date and the commit or pull request.
+- **A feature is Done only on a QA Pass**, with a Done log row carrying the date and the feature ID, which the code-reviewer's commit cites.
 - **A date that slips is moved and said** in the next report to the CTO, never moved quietly.
 
 ### Session Start
@@ -97,7 +97,7 @@ At the start of every session, give the status in [[agents/README.md#Session Sta
 1. Read QA's Pass report.
 2. Move each feature to Done, add its Done log row, and move its SRS requirements to `Done`.
 3. Update `README.md` if setup or usage changed.
-4. Name the next wave's engineers in the Next Action, or the CTO when the plan is done.
+4. Name the code-reviewer in the Next Action, to commit the closed work. It names the next wave once the commit is made.
 
 **At a release:**
 
@@ -112,7 +112,7 @@ When your list is done, end the report with the Next Action from this table; the
 | :- | :- | :- |
 | Intake done | `user` | The CTO's approval for a new feature or scope; for a bug fix, its engineer |
 | Security requirements written | `user` | The engineers of the first wave |
-| A close | `user` | The engineers of the next wave, or `user` when the plan is done |
+| A close | `user` | `code-reviewer`, to commit the closed work |
 | A release closed | `user` | `user` |
 | A requirement is unclear or two conflict | `system-analyst` | `system-analyst` |
 

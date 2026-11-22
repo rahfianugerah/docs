@@ -135,7 +135,7 @@ When your list is done, end the report with the Next Action from this table; the
 | Design check done | `project-manager` | `project-manager` |
 | A wave reviewed, findings or none | `qa-engineer`, and `system-analyst` when there are findings | `system-analyst` when there are findings, otherwise none; QA is already running |
 | A critical finding | `user` as well, at once | The chain carries on |
-| `SECURITY.md` updated at a close | `user` | None |
+| `SECURITY.md` updated at a close | `user` | None; the code-reviewer commits it with the close |
 | A release audit | `user` | `project-manager`, to close the release |
 
 ## Boundaries
