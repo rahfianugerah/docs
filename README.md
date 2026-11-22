@@ -44,7 +44,7 @@ flowchart TD
 | [rules/](rules/) | How code, commits, documents, and secrets are handled. Every project follows these |
 | [ai/](ai/) | Machine learning and deep learning standards, kept separate because AI projects fail differently |
 | [component/](component/) | UI component standards on HeroUI: the theme, light and dark, buttons, cards, tables, dropdowns, notifications |
-| [gcp/](gcp/) | The Cloud Run deploy standard, the runbook, and the build templates |
+| [cloud/gcp/](cloud/gcp/) | The Cloud Run deploy standard, the runbook, and the build templates |
 | [template/](template/) | Documentation templates: the READMEs, API, model card, PRD, the community files, and the agent entry point |
 | [journal/](journal/) | One record per project per day: what was wrong, what was found, and what changed as a number |
 
