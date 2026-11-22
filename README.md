@@ -6,7 +6,8 @@
 ![Obsidian](https://img.shields.io/badge/Obsidian-Vault-7C3AED?logo=obsidian&logoColor=white)
 ![Rules](https://img.shields.io/badge/Rules-29-4C1D95)
 ![Components](https://img.shields.io/badge/Components-27-4C1D95)
-![Templates](https://img.shields.io/badge/Templates-16-4C1D95)
+![Templates](https://img.shields.io/badge/Templates-17-4C1D95)
+![Agents](https://img.shields.io/badge/Agents-7-4C1D95)
 ![Status](https://img.shields.io/badge/Status-Active-2EA043)
 
 > [!important]
@@ -30,7 +31,7 @@ The whole repository is an Obsidian vault. Open the folder and the graph is alre
 flowchart TD
   S["A new personal project"] --> R["Apply the rules and the stack"]
   R --> T["Documents start from the templates"]
-  T --> B["Interface built on the component standards"]
+  T --> B["Agents build it on the component standards, reporting into report/"]
   B --> D["Shipped with the gcp runbook"]
   D --> J["Work journaled when it ends"]
   J --> M["Lasting findings written as memory notes"]
@@ -46,18 +47,21 @@ flowchart TD
 | [component/frontend/](component/frontend/README.md) | UI component standards on HeroUI, the frontend performance budgets, and the Playwright tests |
 | [component/backend/](component/backend/README.md) | Backend performance on FastAPI and SQLAlchemy, and the pytest tests against PostgreSQL |
 | [cloud/gcp/](cloud/gcp/) | The Cloud Run deploy standard, the runbook, and the build templates |
-| [template/](template/) | Documentation templates: the READMEs, API, model card, PRD, the community files, and the agent entry point |
+| [template/](template/) | Documentation templates: the READMEs, API, model card, PRD, plan, the community files, and the agent entry point |
 | [journal/](journal/) | One record per project per day: what was wrong, what was found, and what changed as a number |
+| [.agents/](.agents/README.md) | The seven agent skills, their shared persona, and the report protocol |
+| [.claude/agents/](.claude/agents/) | Thin wrappers that let Claude Code launch each agent |
 
 ### What Stays on This Machine
 
-**Three folders live in the vault on disk and are never pushed.** They are gitignored, so a fresh clone does not have them, and nothing in this repository links into them.
+**Four folders live in the vault on disk and are never pushed.** They are gitignored, so a fresh clone does not have them, and nothing in this repository links into them.
 
 | Folder | Holds | Why it stays local |
 | :- | :- | :- |
 | `memory/` | The AI memory: notes, kept scripts, and the index that lists them | It names real projects, decisions and environments |
 | `graph/` | Code maps and graph exports a digest generates | It maps real files and functions, and every digest rebuilds it |
 | `pattern/` | Lessons lifted from real incidents, generalized | It is a working notebook, not a standard |
+| `report/` | Reports the agents write to each other and to the owner | They are working files, gitignored in every project, never committed |
 
 On a new machine, `/pmb-init brain` scaffolds `memory/` again, and a digest rebuilds `graph/`. **Nothing backs these folders up**, so copy them somewhere you control. The rules for the memory are [[memory.rules.md]].
 
@@ -106,6 +110,15 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 
 **What you build behind it:** the backend performance and testing standards, and the rules every backend follows, are listed in [component/backend/](component/backend/README.md).
 
+**How the agents work:**
+
+| Document | Owns |
+| :- | :- |
+| [Agent team](.agents/README.md) | The seven agents, the session-start status, the pipeline from request to release, and the orchestrator's rules |
+| [Persona](.agents/_shared/persona.md) | The one persona every agent shares, and where the CTO's word stops at a security requirement |
+| [Report protocol](.agents/_shared/report-protocol.md) | `report/`, the file name, the WIB timestamp, the levels, and the statuses |
+| [Report template](.agents/_shared/report-template.md) | The notes shape every report is written in |
+
 **What you build with AI:**
 
 | Document | Owns |
@@ -135,6 +148,7 @@ Every documentation file starts from one of these, per [[docs.rules.md]]. Keep t
 | [[agent.template.md]] | A project's `CLAUDE.md` and `AGENTS.md`, pointing agents at the map and the rules |
 | [[notes.template.md]] | A project note in `docs/notes/`: one brief, its items, and its acceptance table |
 | [[prd.template.md]] | The `docs/PRD.md` every project carries, written before the code |
+| [[plan.template.md]] | The `docs/PLAN.md`: the timeline, the features with owner and status, and the done log |
 | [[license.template.md]] | The `LICENSE` file: `Proprietary`, or the full MIT text |
 | [[code-of-conduct.template.md]] | The `CODE_OF_CONDUCT.md` every repository carries |
 | [[security.template.md]] | The `SECURITY.md`: the private channel for a vulnerability, and the response times |
@@ -179,7 +193,7 @@ Both are built by `plugmybrain`, whose command is `pmb`.
 
 ## Using It With a Model
 
-Point the assistant at this repository and give it [[CLAUDE.md]] or [[AGENTS.md]] as its entry point. Both import this file and the memory protocol, so the rules and the memory load together.
+Point the assistant at this repository and give it [[CLAUDE.md]] or [[AGENTS.md]] as its entry point. Both import this file, the memory protocol, and the [agent team](.agents/README.md), so the rules, the memory, and the agents load together.
 
 Nothing here is model-specific. A different assistant reads the same markdown and arrives at the same context, which is the entire reason the memory is files.
 
@@ -273,6 +287,7 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[agent.template.md]]
 - [[notes.template.md]]
 - [[prd.template.md]]
+- [[plan.template.md]]
 - [[license.template.md]]
 - [[code-of-conduct.template.md]]
 - [[security.template.md]]
@@ -287,6 +302,20 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 ### Memory Notes and Reference Code
 
 Every note and every kept script is indexed in `memory/README.md`, grouped by type and carrying its title. That index is local, like the notes it lists, per [[memory.rules.md]]. That index is the one place they are listed, so this file does not repeat it and the two cannot drift.
+
+### Agents
+
+- [Agent team](.agents/README.md)
+- [Persona](.agents/_shared/persona.md)
+- [Report protocol](.agents/_shared/report-protocol.md)
+- [Report template](.agents/_shared/report-template.md)
+- [project-manager](.agents/project-manager/SKILL.md)
+- [system-analyst](.agents/system-analyst/SKILL.md)
+- [security-engineer](.agents/security-engineer/SKILL.md)
+- [backend-engineer](.agents/backend-engineer/SKILL.md)
+- [frontend-engineer](.agents/frontend-engineer/SKILL.md)
+- [code-reviewer](.agents/code-reviewer/SKILL.md)
+- [qa-engineer](.agents/qa-engineer/SKILL.md)
 
 ### Configuration
 

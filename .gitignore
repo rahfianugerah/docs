@@ -1,15 +1,21 @@
+# Environment
 .venv/
-__pycache__/
-*.pyc
 .env
 .env.*
 !.env.example
+
+# Python
+__pycache__/
+*.pyc
 .ipynb_checkpoints/
+
+# Miscellaneous
 .obsidian/
 .DS_Store
+.pmb
 
-# Local only, never pushed: the memory of real projects, the graph a digest builds from them, and the incident patterns
+# Local only, not to be shared
 memory/
 graph/
 pattern/
-.pmb
+report/
