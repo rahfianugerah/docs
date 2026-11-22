@@ -78,7 +78,11 @@ An environment that reports `False` here will train, slowly, on CPU, and you wil
 Neural networks have more sources of randomness than classical models, and the GPU adds its own.
 
 ```python
-import random, numpy as np, torch
+import random
+
+import numpy as np
+import torch
+
 
 def set_seed(seed: int) -> None:
     random.seed(seed)

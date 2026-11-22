@@ -302,6 +302,64 @@ Rate by impact and exploitability, not by category. Injection, broken authentica
 - Review all secondary applications, third-party code, and libraries for business necessity and safe functionality.
 - Implement safe updating: sign code cryptographically, verify signatures on the client, and transfer over encrypted channels.
 
+### 15. API Security
+
+The API items the controls above do not already name. Tokens and sessions are owned by [[auth.rules.md]]; these add to it.
+
+**Authentication and tokens:**
+
+- Never use HTTP Basic authentication for an API.
+- Fix the token algorithm on the server, such as `algorithms=["RS256"]`. Never read it from the token header, and reject `none`.
+- A symmetric signing secret, where one is unavoidable, is at least 256 bits of random data.
+- Keep the access token and the refresh token as short-lived as the product allows.
+- Never put personal or sensitive data in a token payload, and keep the payload small. Anyone holding the token can read it.
+
+**OAuth:**
+
+- Validate `redirect_uri` on the server against an exact allowlist.
+- Use the authorization code flow with PKCE. Never `response_type=token`.
+- Send and check a `state` value on every authorization request, against cross-site request forgery.
+- Give every client a default scope, and validate the requested scope per client.
+
+**Access control:**
+
+- TLS 1.2 or later, with secure ciphers only.
+- Reach a private or internal API only from an allowlist of networks or addresses. On Cloud Run, internal ingress or IAM.
+
+**Input:**
+
+- Answer an unsupported HTTP method with `405`.
+- Validate `Content-Type` on every request with a body, and `Accept` where the API serves more than one format. Reject a mismatch with `415` or `406`.
+- Send a token in the `Authorization` header or the session cookie, never in a URL.
+- Cap the request body size in the application, not only at the platform.
+
+**Processing:**
+
+- Keep a personal identifier out of a URL: `/me/orders`, not `/users/242/orders`.
+- Expose a UUID as a public identifier, never an auto-increment integer. It is still not an authorization control, per "Authorization and Object Access" below.
+- Disable external entities and entity expansion in every XML parser, against XXE. In Python, parse with `defusedxml`.
+- Stream a large payload, or process it in the background, rather than holding a worker on it.
+- Validate an upload's size as well as its type, per [[media.rules.md]].
+
+**Output:**
+
+- A pure JSON API sends `Content-Security-Policy: default-src 'none'; frame-ancestors 'none'`. The frontend keeps its own policy, per "HTTP Surface" below.
+- Never return a credential, a token, a password hash, or a stack trace in a response.
+- Return the status code that matches the outcome, per [[api.rules.md]].
+
+**CI and CD:**
+
+- Cover the security cases in unit and integration tests: a denied role, another user's object, an expired token, an oversized body.
+- Review every change by someone other than its author. No self-approval.
+- Run static security analysis, such as Bandit or Semgrep, on every change.
+- Keep a rollback plan for every deployment, per [[deploy.rules.md]].
+
+**Monitoring:**
+
+- Centralize the logs of every service in one place; on this stack, Cloud Logging.
+- Monitor every request, response, and error, and alert on the error rate through a channel someone reads.
+- Use an intrusion detection or prevention system where the infrastructure offers one, such as Cloud Armor in front of a public load balancer.
+
 ## Output Format
 
 Produce, after the plan is approved:
@@ -352,21 +410,25 @@ Two layers, applied in this order. The first is what makes a stolen database use
 
 ```python
 import os
+
 from argon2 import PasswordHasher
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 ph = PasswordHasher(time_cost=3, memory_cost=65536, parallelism=4)
+
 
 def load_key(raw: bytes) -> bytes:
     if len(raw) != 32:                                           # anything else is not AES-256
         raise RuntimeError("The password key must be 32 bytes.")
     return raw
 
+
 def store(password: str, user_id: str, key: bytes, key_version: int) -> dict:
     digest = ph.hash(password).encode()                          # layer 1, one way
     nonce = os.urandom(12)                                       # fresh on every write
     blob = AESGCM(key).encrypt(nonce, digest, user_id.encode())  # layer 2, AES-256-GCM
     return {"nonce": nonce, "blob": blob, "key_version": key_version}
+
 
 def verify(row: dict, password: str, user_id: str, key: bytes) -> bool:
     digest = AESGCM(key).decrypt(row["nonce"], row["blob"], user_id.encode())
@@ -590,6 +652,7 @@ Before treating a security task as complete, confirm:
 - No filesystem path is built from a client-supplied name, and no upload is served from the app's own origin as an executable type.
 - A CSP is served without `unsafe-inline` or `unsafe-eval`, and dependencies are pinned with an audit running in CI.
 - No untrusted data is deserialized with `pickle` or an unsafe YAML loader.
+- Every API passes "15. API Security": no Basic authentication, a token algorithm fixed on the server, PKCE for OAuth, `405` and `415` on a wrong method or type, a capped body, and no personal identifier in a URL.
 
 ## Conflict Resolution
 

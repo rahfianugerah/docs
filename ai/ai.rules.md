@@ -104,7 +104,10 @@ Read the exported file before committing it. It sometimes drops the `pip:` block
 ### 1. Seed Everything, and Record the Seed
 
 ```python
-import random, numpy as np
+import random
+
+import numpy as np
+
 
 def set_seed(seed: int) -> None:
     random.seed(seed)

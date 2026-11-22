@@ -106,6 +106,7 @@ df = pl.read_database(
 ```python
 SORT_COLUMNS = {"metric": "metric", "created": "created_at"}   # allowlist
 
+
 def top_runs(session, sort_by: str, limit: int):
     column = SORT_COLUMNS.get(sort_by)
     if column is None:

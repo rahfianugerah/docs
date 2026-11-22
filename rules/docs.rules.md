@@ -297,6 +297,9 @@ Do not fill a gap with an assumption.
 - **Consistent terminology.** One name per concept, for the whole document.
 - Do not repeat the same information in two sections unless the template requires it.
 - Avoid a technical explanation the project does not need. Where a technical term is unavoidable, explain it once, briefly, in plain language.
+- **One topic per file.** A document that needs two unrelated sections is two documents.
+- **Link instead of copying.** A fact written in two documents drifts in one of them; write it once and link to it from the other.
+- **Dates are absolute, in Western Indonesia Time (WIB, Asia/Jakarta).** `YYYY-MM-DD` in a table, a field, or a file name. A note's date line keeps its own form, per [[notes.rules.md]].
 
 ## Formatting
 
@@ -469,71 +472,9 @@ That rule covers a command. [[path.rules.md]] covers every other path: in source
 
 ## Code Comment Restrictions
 
-These apply to comments inside source code, not only to Markdown.
+**Documentation inside source code is compact: one line per file saying what it is for, one line per public function, class, or component saying what it does, and a one-line comment only where the why is not obvious.** Three lines is the hard ceiling, plain English is the only voice, and no comment carries decoration.
 
-### A Comment Is a Label, Not a Paragraph
-
-**One line is the default, and three is the hard ceiling.** A comment that runs longer is almost always restating what the code already says, and a reader stops reading comments at all once a few of them have wasted their time.
-
-**Write the label, not the sentence.** Name the thing and stop. A comment needs no article, no verb, and no full stop to be clear:
-
-```bash
-# API key for Ollama
-OLLAMA_AI_KEY=
-
-# Ollama model
-OLLAMA_MODEL=
-```
-
-- **Never restate the identifier.** `# This variable holds the API key used to authenticate against the Ollama service` says nothing the key name does not, at eleven times the length.
-- **One short label per key in a configuration file**, and no paragraph above the group explaining the group.
-- **A docstring does not repeat the signature.** The parameter names and types are already there. Write only what a caller cannot infer from them, and nothing at all for a function whose name and signature already say it.
-- **No comment on an obvious line.** An assignment, a getter, an import, and a loop over a named collection need none.
-- **Length is earned only by what nobody can reconstruct**: a workaround, a rejected approach, a value that came from measurement. Even then it stays within three lines and names the reason rather than narrating the investigation.
-- **The ceiling counts the comment, not a usage example inside it.** A snippet keeps its own lines, per the exception below.
-- **A file header is not an inline comment.** A template meant to be copied may open with a short header saying what the file is and how to fill it in. Keep it under ten lines; past that it is documentation and belongs in the README that the template's repository carries.
-
-| Do | Do not |
-| :- | :- |
-| `# Ollama model` | `# The name of the Ollama model this application uses when it sends a prompt` |
-| `# Retry budget, tuned against the provider's 429 rate` | Four lines explaining what a retry is |
-| Say why a value is what it is | Say what the line does |
-| Delete a comment the code made obvious | Keep it because it was already written |
-
-### No Decoration
-
-
-Do not use a special character as a decorator, border, or separator inside a code comment. This includes, but is not limited to, a repeated `=`, `-`, `*`, `+`, `#`, `$`, `~`, `_`, `^`, `/`, `\`, or `|` arranged into a line, a box, a banner, or a divider. Do not use extra blank lines or padding spaces to box a comment either.
-
-A code comment states its purpose directly, in plain language, with no surrounding decoration. Readability comes from clear wording, not visual styling.
-
-**Every comment, docstring, and configuration label is written in English**, like every identifier and every document, per [[codes.rules.md]].
-
-The one exception is a short code snippet inside a comment showing how something is called. That snippet keeps its own natural formatting and line breaks.
-
-Correct:
-
-```text
-// Validates the token and returns the decoded claims
-function verifyToken(token) { ... }
-```
-
-Correct, the exception:
-
-```text
-// Usage:
-// const result = verifyToken(token);
-function verifyToken(token) { ... }
-```
-
-Incorrect:
-
-```text
-// ==========================
-// Validates the token
-// ==========================
-function verifyToken(token) { ... }
-```
+The full rule, with its examples, is "Documentation in Code" in [[codes.rules.md]], and it is not repeated here.
 
 ## Badges
 

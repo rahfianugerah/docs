@@ -122,6 +122,7 @@ from jwt import PyJWKClient
 
 jwks = PyJWKClient(SSO_JWKS_URL, cache_keys=True)
 
+
 def current_user(request):
     token = request.cookies.get(ACCESS_COOKIE_NAME)
     if not token:

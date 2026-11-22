@@ -160,6 +160,7 @@ If the placeholder file is missing or incomplete:
 ```python
 from pydantic_settings import BaseSettings
 
+
 class Settings(BaseSettings):
     openai_api_key: str          # no default: missing means fail at startup
     data_dir: str = "./data"
