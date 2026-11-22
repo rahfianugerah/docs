@@ -114,7 +114,7 @@ Every variable the project reads. Names only, never a real value; see [[env.rule
   models/        # model definitions
   train.py       # entrypoint
 notebooks/       # exploration only, nothing that runs twice
-tests/
+test/
 ```
 
 ## Development

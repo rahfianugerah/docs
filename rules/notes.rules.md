@@ -63,7 +63,7 @@ The title is the first line, a `#` heading that names the subject:
 Directly under the title sits one italic line: the date, what kind of note this is, and where the evidence lives.
 
 ```markdown
-*7 October 2026 - staging test of the fix in note 12 (backend `6cc3bdb`, frontend `3826ff5`) - evidence in `tests/browser/03-staging.md`*
+*7 October 2026 - staging test of the fix in note 12 (backend `6cc3bdb`, frontend `3826ff5`) - evidence in `test/browser/03-staging.md`*
 ```
 
 - **The date is absolute**: day, month name, year. Never "yesterday" or "last week".

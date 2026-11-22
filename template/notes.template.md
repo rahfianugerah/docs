@@ -29,7 +29,7 @@ flowchart LR
 ````markdown
 # [The subject in one phrase]: [detail if needed]
 
-*[7 October 2026] - [test result, finding, design, decision, runbook, or next steps] - [source: note 12, backend `abc1234`, frontend `def5678`, evidence in `tests/browser/03-name.md`]*
+*[7 October 2026] - [test result, finding, design, decision, runbook, or next steps] - [source: note 12, backend `abc1234`, frontend `def5678`, evidence in `test/browser/03-name.md`]*
 
 > [!info]
 > **Release scope:** [staging only, or through to production].
@@ -87,7 +87,7 @@ flowchart LR
 | For | Where |
 | :- | :- |
 | [Original finding] | [note 12 item 2] |
-| [Test evidence] | [`tests/browser/03-name.md`] |
+| [Test evidence] | [`test/browser/03-name.md`] |
 ````
 
 ## Related

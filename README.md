@@ -5,7 +5,7 @@
 ![Cloud Run](https://img.shields.io/badge/Cloud_Run-Deploy-4285F4?logo=googlecloud&logoColor=white)
 ![Obsidian](https://img.shields.io/badge/Obsidian-Vault-7C3AED?logo=obsidian&logoColor=white)
 ![Rules](https://img.shields.io/badge/Rules-29-4C1D95)
-![Components](https://img.shields.io/badge/Components-23-4C1D95)
+![Components](https://img.shields.io/badge/Components-27-4C1D95)
 ![Templates](https://img.shields.io/badge/Templates-16-4C1D95)
 ![Status](https://img.shields.io/badge/Status-Active-2EA043)
 
@@ -43,7 +43,8 @@ flowchart TD
 | :- | :- |
 | [rules/](rules/) | How code, commits, documents, and secrets are handled. Every project follows these |
 | [ai/](ai/) | Machine learning and deep learning standards, kept separate because AI projects fail differently |
-| [component/](component/) | UI component standards on HeroUI: the theme, light and dark, buttons, cards, tables, dropdowns, notifications |
+| [component/frontend/](component/frontend/README.md) | UI component standards on HeroUI, the frontend performance budgets, and the Playwright tests |
+| [component/backend/](component/backend/README.md) | Backend performance on FastAPI and SQLAlchemy, and the pytest tests against PostgreSQL |
 | [cloud/gcp/](cloud/gcp/) | The Cloud Run deploy standard, the runbook, and the build templates |
 | [template/](template/) | Documentation templates: the READMEs, API, model card, PRD, the community files, and the agent entry point |
 | [journal/](journal/) | One record per project per day: what was wrong, what was found, and what changed as a number |
@@ -101,33 +102,9 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | [[report.automation.md]] | What an automated report delivers: the header, the caption, the file type, the numbers, and the colours |
 | [[pwa.rules.md]] | The PWA layer of a frontend: manifest, icons, and offline behavior |
 
-**What you build for the web:**
+**What you build for the web:** the 23 component standards on HeroUI, the frontend performance budgets, and the Playwright tests, each with what it owns, are listed in [component/frontend/](component/frontend/README.md).
 
-| Document | Owns |
-| :- | :- |
-| [[uix.component.md]] | HeroUI as the base, the theme contract, Google Sans, the one 8px radius, and the component map |
-| [[darkmode.component.md]] | Light and dark, both, in every project, and the one control between them |
-| [[layout.component.md]] | The page shell: full width beside the rail, and what may still carry a width limit |
-| [[header.bar.component.md]] | The full-width bar: the brand, jump-to search, the theme control, and the bell |
-| [[header.page.component.md]] | The page heading: the `h1`, the page's actions, and its description |
-| [[card.component.md]] | The HeroUI card, one level only, and a table that runs flush inside it |
-| [[button.component.md]] | The six variants, the icon before the label, and one primary action per view |
-| [[table.component.md]] | The table itself: wrapper, header, rows, cells, and the row actions |
-| [[pagination.component.md]] | Every table: paging rather than scroll, adaptive page size, controls, and the data binding |
-| [[dropdown.component.md]] | HeroUI pickers, smart search past seven options, and a long list that scrolls under it |
-| [[calendar.component.md]] | Date fields: native or custom, the panel, the full-card grid, and the year clamp |
-| [[sidebar.component.md]] | The navigation rail: anatomy, grouping, markers, and the mobile drawer |
-| [[login.component.md]] | The sign-in screen, and why every failure reads the same |
-| [[loading.component.md]] | The four loading surfaces, and which wait each one serves |
-| [[notification.component.md]] | The notification center, and the toast and inline alert for status messages |
-| [[log.component.md]] | The activity log: every page, click, sign-in, and data change, to the second |
-| [[animation.component.md]] | What moves, for how long, and what reduced motion turns off |
-| [[skeleton.component.md]] | The loading state a component shows in its own place, instead of holding the page |
-| [[dashboard.component.md]] | Charts: the form before the color, the validated palette, and the export |
-| [[search.component.md]] | Filter against search, the matching ladder, and normalization |
-| [[scrollbar.component.md]] | A scrollbar is an affordance, and where it must never be hidden |
-| [[title.header.component.md]] | The product name: one form, everywhere, never from configuration |
-| [[refresh.component.md]] | What survives a reload, and the three things that break it |
+**What you build behind it:** the backend performance and testing standards, and the rules every backend follows, are listed in [component/backend/](component/backend/README.md).
 
 **What you build with AI:**
 
@@ -249,6 +226,12 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 
 ### Components
 
+- [[component/frontend/README.md]]
+- [[component/backend/README.md]]
+- [[performance.frontend.md]]
+- [[testing.frontend.md]]
+- [[performance.backend.md]]
+- [[testing.backend.md]]
 - [[uix.component.md]]
 - [[animation.component.md]]
 - [[button.component.md]]
