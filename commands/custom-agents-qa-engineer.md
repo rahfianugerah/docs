@@ -1,8 +1,10 @@
 ---
 description: Run only the qa-engineer agent - writes and runs every test, and approves or rejects
-argument-hint: "<the task, feature IDs, or a report path>"
+argument-hint: "<task>"
 ---
 Launch the `qa-engineer` subagent with the Agent tool, and only that agent. Its skill is `~/docs/agents/qa-engineer/SKILL.md`.
+
+The task may be written in Bahasa Indonesia or in English. Take it as written, make the request slug English, and have everything written into the project in English, the language of every personal project, per `~/docs/rules/docs.rules.md`.
 
 Pass it, from $ARGUMENTS and the project:
 

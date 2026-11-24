@@ -1,8 +1,10 @@
 ---
 description: Run only the security-engineer agent - security review, analysis, and SECURITY.md
-argument-hint: "<the task, feature IDs, or a report path>"
+argument-hint: "<task>"
 ---
 Launch the `security-engineer` subagent with the Agent tool, and only that agent. Its skill is `~/docs/agents/security-engineer/SKILL.md`.
+
+The task may be written in Bahasa Indonesia or in English. Take it as written, make the request slug English, and have everything written into the project in English, the language of every personal project, per `~/docs/rules/docs.rules.md`.
 
 Pass it, from $ARGUMENTS and the project:
 

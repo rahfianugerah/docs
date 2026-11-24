@@ -137,13 +137,13 @@ Every report follows [[report-protocol.md]] and starts from [[report-template.md
 
 ## Commands
 
-The team is called with a slash command. The sources live in `commands/` in the vault, and a copy in `~/.claude/commands/` makes them work in every project; copy a file again after changing it.
+The team is called with a slash command, and a task may be typed in Bahasa Indonesia or in English. The sources live in `commands/` in the vault, and a copy in `~/.claude/commands/` makes them work in every project; copy a file again after changing it.
 
 | Command | What runs |
 | :- | :- |
-| `/custom-agents [slug]` | Lists the seven agents and their commands, or shows one agent in detail. Launches nothing |
-| `/custom-agents-<slug> <task>` | That one agent only, such as `/custom-agents-qa-engineer`. Its Next Action is reported, not launched |
-| `/custom-agents-all <request>` | The whole team, from intake through the delegation chain to the local commit, stopping only at the three gates |
+| `/custom-agents [agent]` | Lists the seven agents and their commands, or shows one agent in detail. Launches nothing |
+| `/custom-agents-<agent> <task>` | That one agent only, such as `/custom-agents-qa-engineer`. Its Next Action is reported, not launched |
+| `/custom-agents-all <task>` | The whole team, from intake through the delegation chain to the local commit, stopping only at the three gates |
 
 ## Related
 
