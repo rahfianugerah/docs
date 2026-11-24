@@ -19,3 +19,6 @@ memory/
 graph/
 pattern/
 report/
+
+# PlugMyBrain, rebuilt by every digest
+graph/code/
