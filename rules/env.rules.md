@@ -46,7 +46,7 @@ flowchart TD
 | YAML | `secrets.yaml`, `values.yaml`, `env-vars.yaml`, any config YAML holding real values |
 | JSON | `config.json`, `secrets.json`, a service account key, any credential JSON |
 | Notebook | A `.ipynb` whose cells or outputs hold a pasted key |
-| Other | `.tfvars`, `.ini`, `.toml`, `.netrc`, `.npmrc`, `.pypirc`, `~/.aws/credentials`, `~/.kaggle/kaggle.json` |
+| Other | `.tfvars`, `.ini`, a configuration `.toml` (not the `pyproject.toml` manifest), `.netrc`, `.npmrc`, `.pypirc`, `~/.aws/credentials`, `~/.kaggle/kaggle.json` |
 | Any file | Holding a secret, credential, token, key, password, or production configuration |
 
 `~/.kaggle/kaggle.json` and a Hugging Face token cache are worth naming, because an ML project reaches for them constantly and both are real credentials.
