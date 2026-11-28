@@ -4,7 +4,7 @@
 ![Conda](https://img.shields.io/badge/Conda-Miniconda-44A833?logo=anaconda&logoColor=white)
 ![Cloud Run](https://img.shields.io/badge/Cloud_Run-Deploy-4285F4?logo=googlecloud&logoColor=white)
 ![Obsidian](https://img.shields.io/badge/Obsidian-Vault-7C3AED?logo=obsidian&logoColor=white)
-![Rules](https://img.shields.io/badge/Rules-29-4C1D95)
+![Rules](https://img.shields.io/badge/Rules-30-4C1D95)
 ![Components](https://img.shields.io/badge/Components-27-4C1D95)
 ![Templates](https://img.shields.io/badge/Templates-17-4C1D95)
 ![Agents](https://img.shields.io/badge/Agents-7-4C1D95)
@@ -76,6 +76,7 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | :- | :- |
 | [[branch.rules.md]] | The two branch shapes, trunk and promotion, and which one a project declares |
 | [[commit.rules.md]] | Conventional Commits, an `exp` type for experiments, and what never enters a commit |
+| [[versioning.rules.md]] | Semantic Versioning: which commit raises MAJOR, MINOR, or PATCH, the reset, version 0, and the tag on `main` |
 | [[pr.rules.md]] | When a pull request is worth opening, what an experiment must record, and when an AI may open or merge one |
 | [[docs.rules.md]] | What every project documents, how it is written, the tag taxonomy, and the Obsidian conventions |
 | [[journal.rules.md]] | The journal written when a piece of work ends, its four questions, and the numbers it must carry |
@@ -230,6 +231,7 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[secret.rules.md]]
 - [[security.rules.md]]
 - [[stacks.rules.md]]
+- [[versioning.rules.md]]
 
 ### Deploy
 
