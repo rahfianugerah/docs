@@ -78,7 +78,7 @@ The last four are required in every repository, per [[repository.rules.md]]. The
 
 A project that needs a twelfth document usually needs a shorter README instead.
 
-**An agent report is not a document.** Reports live in `report/` at the project root, which is gitignored and never committed, per the [[report-protocol.md|report protocol]].
+**An agent report is not a document.** Reports live in `~/docs/report/<project>/`, the vault's report folder, never in the project, and are never committed, per the [[report-protocol.md|report protocol]].
 
 ## The README Is the Contract
 

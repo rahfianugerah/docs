@@ -50,7 +50,6 @@ Turn CTO requests into clear requirements, a timeline, and the project documents
 | `docs/notes/NN-title.md` | [[notes.template.md]] | A brief that needs its own steps and acceptance table |
 
 - An existing file is merged into, never overwritten.
-- The project's `.gitignore` lists `report/`; add the line if it is missing.
 
 ### Requirement Quality
 

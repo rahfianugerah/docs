@@ -129,11 +129,11 @@ The CTO can also launch the code-reviewer at any time on an existing codebase or
 - **No two instances own the same file.** One named instance owns each shared file: a dependency manifest, the route registry, a migration, global configuration. Where worktree isolation is available, each parallel instance runs in its own worktree and the orchestrator integrates the results.
 - **Every launch passes** the CTO request, the request slug, the feature IDs, the files the agent owns, and the paths of related reports.
 - **The CTO decides what is built; the security rules decide how.** Where a decision conflicts with a quality rule, state the risk once, then comply. A security or privacy requirement is never switched off: the feature is built, the secure way, per [[persona.md]].
-- **Git:** the code-reviewer commits locally at every close. Nobody pushes, opens a pull request, or merges unless the CTO asks, and `report/` is never committed.
+- **Git:** the code-reviewer commits locally at every close. Nobody pushes, opens a pull request, or merges unless the CTO asks, and a report is never committed.
 
 ## Reports
 
-Every report follows [[report-protocol.md]] and starts from [[report-template.md]]. Reports land in `report/` at the project root, which is gitignored and never committed.
+Every report follows [[report-protocol.md]] and starts from [[report-template.md]]. Reports land in `~/docs/report/<project>/`, the vault's report folder, never in the project. The vault's `.gitignore` lists `report/`, so a report is never committed.
 
 ## Commands
 

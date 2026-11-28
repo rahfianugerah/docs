@@ -10,7 +10,7 @@ tags:
 # Report Protocol
 
 > [!important]
-> Every agent finishes every task by writing one report file into `report/` at the project root, then returns only that file's path and a one-line status. `report/` is never committed and never passed to a git command.
+> Every agent finishes every task by writing one report file into `~/docs/report/<project>/`, the vault's report folder, never into the project, then returns only that file's path and a one-line status. A report is never committed and never passed to a git command.
 
 ## Core Requirement
 
@@ -21,7 +21,7 @@ Agents never talk to each other directly. A report is the only channel: one agen
 ```mermaid
 flowchart LR
   A["Task finished"] --> T["Timestamp from the clock, in WIB"]
-  T --> W["Write report/report-from-to-slug-date-time.md from the template"]
+  T --> W["Write ~/docs/report/project/report-from-to-slug-date-time.md from the template"]
   W --> R["Return the path and a one-line status"]
   R --> O["Orchestrator reads the report"]
   O --> N["Orchestrator launches the recipient with the path"]
@@ -29,8 +29,11 @@ flowchart LR
 
 ## Where Reports Live
 
-- `report/` at the root of the project being worked on. Flat, no subfolders. Create it if it does not exist.
-- **Never committed, never pushed, and never passed to a git command.** The project's `.gitignore` lists `report/`; if the line is missing, add it, and change nothing else in that file.
+- `~/docs/report/<project>/`: the `report/` folder of the vault, one folder per project, flat inside it. Create the folder if it does not exist.
+- `<project>` is the name of the project's root folder, such as `~/docs/report/github-profile-stats/`. Work on the vault itself reports into `~/docs/report/docs/`.
+- **Never inside the project.** A project holds no `report/` folder and needs no `.gitignore` line for one, so a report cannot be staged by accident, and the reports of every project sit in one place.
+- **The owner chose this location**, and only the owner moves it.
+- **Never committed, never pushed, and never passed to a git command.** The vault's `.gitignore` lists `report/`, because a report names real projects, files, and findings, as a memory note does.
 
 ## The File Name
 
@@ -70,10 +73,12 @@ TZ=UTC-7 date +%Y%m%d-%H_%M_%S
 
 ## Test Evidence Shares the Report's Name
 
-**Every file a test run produces is named after the report that cites it**: the same agent, the same request slug, the same date and time, plus a suffix for the tool that wrote it. In the flat `report/` folder the report and its evidence then sort together, and anyone can see which test run and which performance run happened at the same moment, for the same request.
+**Every file a test run produces is named after the report that cites it**: the same agent, the same request slug, the same date and time, plus a suffix for the tool that wrote it. In the project's report folder the report and its evidence then sort together, and anyone can see which test run and which performance run happened at the same moment, for the same request.
 
 ```bash
-RUN="report/report-qa-engineer-to-user-login-otp-$(TZ=UTC-7 date +%Y%m%d-%H_%M_%S)"
+DIR="$HOME/docs/report/$(basename "$PWD")"
+mkdir -p "$DIR"
+RUN="$DIR/report-qa-engineer-to-user-login-otp-$(TZ=UTC-7 date +%Y%m%d-%H_%M_%S)"
 pytest --junitxml="$RUN-pytest.xml"
 PLAYWRIGHT_JSON_OUTPUT_NAME="$RUN-playwright.json" npx playwright test --reporter=json
 npx lighthouse https://[staging-host] --only-categories=performance --output=json --output-path="$RUN-lighthouse.json" --quiet --chrome-flags="--headless"
@@ -86,9 +91,10 @@ report-qa-engineer-to-user-login-otp-20260712-09_02_44-playwright.json
 report-qa-engineer-to-user-login-otp-20260712-09_02_44-lighthouse.json
 ```
 
+- **Run it from the project root**, so `basename "$PWD"` is the project's name.
 - **The timestamp is taken once, when the run starts**, and reused for every file of that run and for the report itself, `"$RUN.md"`.
 - The suffix names the tool: `-pytest.xml`, `-playwright.json`, `-lighthouse.json`, `-locust` for Locust's CSV files.
-- Evidence is local like the report, and never committed.
+- Evidence lands beside the report, outside the project, and is never committed.
 
 ## What a Report Holds
 
@@ -123,7 +129,7 @@ Every report carries one of five statuses, written as a status indicator per [[d
 - **Return only the path and a one-line status** to the orchestrator:
 
 ```text
-report/report-qa-engineer-to-backend-engineer-login-otp-20260711-23_40_02.md - Fail, 2 high findings
+~/docs/report/shop-backend/report-qa-engineer-to-backend-engineer-login-otp-20260711-23_40_02.md - Fail, 2 high findings
 ```
 
 ## Related

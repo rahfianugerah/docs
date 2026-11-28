@@ -94,7 +94,7 @@ Per "Documentation in Code" in [[codes.rules.md]]:
 **What, and how:**
 
 - **Stage by name**, only the files the handoff and close reports list: the engineers' code, QA's tests, and the documents that changed. Never `git add -A` or `git add .`.
-- **Never stage** `report/`, a real `.env`, a key, or anything the `.gitignore` lists, per [[secret.rules.md]]. Read the staged diff once before committing; a secret in it stops the commit and goes to the security-engineer.
+- **Never stage** a report, a real `.env`, a key, or anything the `.gitignore` lists, per [[secret.rules.md]]. Read the staged diff once before committing; a secret in it stops the commit and goes to the security-engineer.
 - **One concern per commit**, per [[commit.rules.md]]: one `feat` or `fix` commit per feature, holding its code, its tests, and its `API.md` or `README.md` change, then one `docs` commit for the close in `docs/PLAN.md` and `SECURITY.md`.
 - **Conventional Commits**, an imperative description, a body of `-` items, and the feature ID and its requirement codes in the body, per [[srs.rules.md]], so `git log --grep F-001` finds it.
 - **No tool or AI attribution** in any message, per [[commit.rules.md]].

@@ -62,7 +62,7 @@ flowchart TD
 | `memory/` | The AI memory: notes, kept scripts, and the index that lists them | It names real projects, decisions and environments |
 | `graph/` | Code maps and graph exports a digest generates | It maps real files and functions, and every digest rebuilds it |
 | `pattern/` | Lessons lifted from real incidents, generalized | It is a working notebook, not a standard |
-| `report/` | Reports the agents write to each other and to the owner | They are working files, gitignored in every project, never committed |
+| `report/` | Reports the agents write to each other and to the owner, one folder per project: `report/<project>/` | They name real projects and findings. Agents write them here, never into a project |
 
 On a new machine, `/pmb-init brain` scaffolds `memory/` again, and a digest rebuilds `graph/`. **Nothing backs these folders up**, so copy them somewhere you control. The rules for the memory are [[memory.rules.md]].
 
@@ -118,7 +118,7 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 | :- | :- |
 | [[agents/README.md]] | The seven agents, the session-start status, the pipeline from request to release, and the orchestrator's rules |
 | [[persona.md]] | The one persona every agent shares, and where the CTO's word stops at a security requirement |
-| [[report-protocol.md]] | `report/`, the file name, the WIB timestamp, the levels, and the statuses |
+| [[report-protocol.md]] | `report/<project>/` in the vault, the file name, the WIB timestamp, the levels, and the statuses |
 | [[report-template.md]] | The notes shape every report is written in |
 | [[custom-agents-all.md]] | `/custom-agents-all` runs the whole team, `/custom-agents-<slug>` runs one agent, and `/custom-agents` lists them |
 

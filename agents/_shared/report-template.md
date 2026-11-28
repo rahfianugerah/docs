@@ -10,7 +10,7 @@ tags:
 # Report Template
 
 > [!example]
-> Copy the block below into a new file in `report/`, named per [[report-protocol.md]]. Replace every `[bracketed]` passage, and remove a section that does not apply rather than leaving it empty.
+> Copy the block below into a new file in `~/docs/report/<project>/`, named per [[report-protocol.md]]. Replace every `[bracketed]` passage, and remove a section that does not apply rather than leaving it empty.
 
 The block is the project note shape from [[notes.template.md]], plus the routing an agent report needs: who it is from and for, the request, and a status. Fill the items the way [[notes.rules.md]] says: digits only, steps someone else can repeat, and the real error quoted verbatim.
 
