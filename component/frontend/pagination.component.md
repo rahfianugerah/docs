@@ -12,8 +12,7 @@ tags:
 > [!important]
 > Every table in every project pages. Infinite scroll and virtualized endless scroll are prohibited, and no row is ever hidden from the reader. The data behind these tables is the same data the charts read, per [[dashboard.component.md#Data Tables]].
 
-> [!note]
-> This standard has no reference implementation yet. The first project to build it becomes the source every later one copies from.
+**This standard has no reference implementation yet.** The first project to build it becomes the source every later one copies from.
 
 ## Core Requirement
 
@@ -64,8 +63,7 @@ Page size follows the size of the result set, so a small table is not split into
 
 These sizes align with the contract in [[api.rules.md#Pagination, Filtering, and Sorting]]: `limit` defaults to 20 and is capped at 100. The ceiling is the API's, not a preference, and a page size above 100 is not available to ask for.
 
-> [!warning]
-> `total` is not known until the first response returns, so the first request of a table always uses 20. The adaptive size applies from the second request onward, once `total` has been read from the envelope. An implementation that tries to pick the size before it knows the total is guessing, and the guess is wrong on exactly the large tables the rule exists for.
+**`total` is not known until the first response returns, so the first request of a table always uses 20.** The adaptive size applies from the second request onward, once `total` has been read from the envelope. An implementation that tries to pick the size before it knows the total is guessing, and the guess is wrong on exactly the large tables the rule exists for.
 
 The user may override the size from a control offering 20, 50, and 100. A user choice outranks the adaptive default and persists in the URL, so it survives a refresh like any other view state.
 
@@ -95,8 +93,7 @@ Every paginated table carries the full control set. A partial set is what forces
 
 The control set has **one home and only one**: directly below the paged content, outside its scroll region, full width, with the range indicator on the left and the navigation on the right. There is no second position and no second copy, whatever the height of the page.
 
-> [!warning]
-> An earlier version of this policy repeated the controls **above** content taller than one screen, so a reader who scanned and gave up at the top would not have to scroll back down. That rule is withdrawn. It reasoned about one list in isolation, and these pages do not hold one list: a dashboard stacks a facet grid, then a table, then another table. The upper pager of one list lands immediately beneath the lower pager of the list before it, and two pager rows in a row read as a rendering fault, not as a convenience. The problem it solved is real but smaller than the problem it caused.
+**An earlier version of this policy repeated the controls above content taller than one screen, so a reader who scanned and gave up at the top would not have to scroll back down.** That rule is withdrawn. It reasoned about one list in isolation, and these pages do not hold one list: a dashboard stacks a facet grid, then a table, then another table. The upper pager of one list lands immediately beneath the lower pager of the list before it, and two pager rows in a row read as a rendering fault, not as a convenience. The problem it solved is real but smaller than the problem it caused.
 
 Rules:
 
@@ -179,7 +176,6 @@ The guardrails in [[analytics.rules.md#Guardrails]] apply to tables in the forms
 | Hide the controls when there is only one page | Render a row of disabled arrows |
 | Render every column on load | Hide a column by default |
 | Scroll a wide table | Drop columns to make it fit |
-
 
 ## Related Standards
 

@@ -248,7 +248,6 @@ Do not:
 - Hardcode Sunday as the first day of the week.
 - Ship a custom panel without the keyboard map and the ARIA structure.
 
-
 ## Related Standards
 
 | Document | Owns | Read it for |

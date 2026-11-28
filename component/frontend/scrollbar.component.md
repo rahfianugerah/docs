@@ -144,7 +144,6 @@ Everything else shows its scrollbar. These are documented exceptions, not a patt
 - **Never trap the wheel** or override the platform's scrolling behaviour.
 - Respect `prefers-reduced-motion` on any programmatic scroll: jump rather than smooth-scroll.
 
-
 ## Do and Do Not
 
 Do:
@@ -162,7 +161,6 @@ Do not:
 - Let the page body scroll horizontally.
 - Use a fade alone to signal more content.
 - Style the thumb so thin it cannot be grabbed.
-
 
 ## Related Standards
 

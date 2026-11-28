@@ -245,8 +245,7 @@ canvas > canvas.toDataURL("image/png") > addImage > save
 
 Two alternatives were considered and rejected. A print stylesheet driven by the browser print dialog needs no dependency and keeps text selectable, but the output depends on the browser, the margins and headers are outside the app's control, and a paged table prints only its current page unless the app renders a second full copy for print anyway. Server-side rendering is the most consistent of the three, and it was rejected on cost: it means another always-on service to run and pay for, which the budgets in [[deploy.rules.md]] do not have room for.
 
-> [!warning]
-> Whatever is exported must equal what the guardrails require on screen: every series, every category, every row, every axis starting where it should. An export path that quietly differs from the screen is worse than no export, because a PDF is what gets forwarded and archived, and the reader of the file has no dashboard to check it against.
+**Whatever is exported must equal what the guardrails require on screen: every series, every category, every row, every axis starting where it should.** An export path that quietly differs from the screen is worse than no export, because a PDF is what gets forwarded and archived, and the reader of the file has no dashboard to check it against.
 
 ## Do and Do Not
 

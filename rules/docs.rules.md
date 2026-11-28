@@ -10,650 +10,269 @@ tags:
 # Documentation Standard
 
 > [!important]
-> Every documentation file starts from a template in [template/](../template/), keeps that template's section order, and follows the formatting restrictions below.
+> Every document starts from its template in [template/](../template/), keeps that template's section order, and passes `scripts/harness/check_docs.py`. The rules the script checks are listed once, in "Checked by Script"; the rest of this file is what a script cannot judge.
 
 ## Core Requirement
 
-Documentation is written for the person who arrives with no context, which is usually you in six months.
+Documentation is written for the reader who arrives with no context, usually the author six months later.
 
-Everything in this vault is written in **English**: every document, every heading, every comment, every commit, every identifier. A project's own documentation defaults to English and keeps whatever language it already uses, per "Language" below.
-
-The template is the single source of truth for structure, section order, formatting, and content scope. Read it before writing, not after.
+- **Plain language, no filler.** Short sentences, active voice, one idea per sentence. Delete "basically", "simply", "just", "in order to", and "it should be noted that". "Simply" is false whenever the thing is not simple.
+- **Examples over adjectives.** Show the command that ran, the error it printed, and the real value. "Fast", "robust", and "easy" give the reader nothing to check.
+- **Documentation lives next to the code it describes**, in the same repository, and changes in the same commit as that code.
+- **No emoji decoration**: no emoji, no shortcode such as `:rocket:`, and no symbol used as one, such as a check mark, a cross, or a star as a bullet. Emphasis is bold, a warning is a callout per [[callout.rules.md]], and a status is a status indicator.
+- **Every output is in English**, per "Language".
+- **The work is attributed only to the owner**, per "Attribution".
 
 ## Workflow
 
 ```mermaid
 flowchart TD
   A["A document to write"] --> T["Start from its template"]
-  T --> O["Keep the section order"]
-  O --> W["Write in the repository's language: short sentences, real values"]
-  W --> F["Format: no emoji, no em dash, Mermaid for every diagram"]
-  F --> V["Vault document: tags on three axes, a Workflow diagram, links resolve"]
-  V --> DD{"Definition of Done holds?"}
-  DD -->|No| W
-  DD -->|Yes| C["Commit in the same change as the code"]
+  T --> W["Write in plain language, with real values"]
+  W --> S["Run check_docs.py"]
+  S --> P{"Exit 0?"}
+  P -->|No| W
+  P -->|Yes| D{"Definition of Done holds?"}
+  D -->|No| W
+  D -->|Yes| C["Commit with the code it describes"]
 ```
+
+## Checked by Script
+
+`scripts/harness/check_docs.py` enforces every rule in this table, and the `after-edit` hook runs it on each changed file. Run it by hand with `--changed`, `--all`, or a list of paths. A rule in this table is not repeated below.
+
+| Rule | Check |
+| :- | :- |
+| No em dash (U+2014), no en dash (U+2013) used as punctuation, no smart quote (U+2018, U+2019, U+201C, U+201D), no Unicode arrow, and no emoji or pictograph. It applies everywhere, fenced code and Mermaid labels included. Write `-`, `"`, `>`, and `<` instead, so a flow reads `Client > API > Database` | `banned-char` |
+| No trailing whitespace | `trailing-whitespace` |
+| One paragraph is one line, and so is one list item. Markdown reflows a paragraph anyway, and a wrapped one turns a one-word change into a rewritten paragraph in the diff | `hard-wrap` |
+| One blank line between blocks, never two | `blank-lines` |
+| Every fenced code block carries a language tag | `fence-language` |
+| No horizontal rule in the body. Headings already divide, and the frontmatter delimiters are the only `---` allowed | `horizontal-rule` |
+| At most three callouts per document. [[callout.rules.md]] owns the types and is itself exempt | `callout-limit` |
+| A status indicator is exactly `<code style="color: green">`, with `yellow` or `red` as the only other colors | `status-indicator` |
+| Tags come from the closed lists under "Tags": exactly one `kind/`, at most two `topic/`, and `project/` only on a journal | `tags` |
+| A tagged document has `> Up: [[...]]` as its first line after the frontmatter | `breadcrumb` |
+| A rule, component, runbook, or template has a `## Workflow` section holding a `mermaid` diagram | `workflow` |
+| Every `[[wikilink]]` names a file in the vault and carries its extension. Links into `memory/`, `graph/`, `pattern/`, and `report/` are skipped | `wikilink` |
+| A project document's Table of Contents links every `##` heading, and every entry names one | `toc` |
+| A count badge in the vault `README.md` equals the files it counts. `Rules`: every `.md` in `rules/`. `Components`: every `.md` under `component/`. `Templates`: every `*.template.*` under `template/` and `cloud/`. `Agents`: every `.md` in `.agents/agents/`. `README.md` is never counted | `badge-count` |
+
+Agent prompts under `.agents/`, `.claude/`, and `.codex/`, and the root `AGENTS.md` and `CLAUDE.md`, get `banned-char` only. `memory/`, `graph/`, `pattern/`, and `report/` are never checked. A new mechanical rule goes into the script and this table in one commit, and `--self-test` still passes.
 
 ## Language
 
-Everything in this vault is **English**. A project's documentation defaults to English too, and the rest of this section is about when it does not.
+Every output is in English: documents, headings, comments, commits, identifiers, and reports. A request may arrive in another language; the answer is English.
 
-### An Existing Project Keeps Its Language
+- **An existing project already written in another language keeps it.** A half-translated repository is worse than either language, so a repository has one language, and a document never mixes two.
+- **Converting a repository is one deliberate pass over all of it**, in one change, never file by file.
+- **Code is always English**, whatever the documentation uses: identifiers, comments, docstrings, commit messages, and branch names, per [[codes.rules.md]] and [[commit.rules.md]].
+- **Two things follow their audience instead.** A `docs/PRD.md` follows its readers, per [[prd.rules.md]], and interface text follows the product's users, per [[stacks.rules.md]].
+- **A technical term keeps its original form**: a library, a command, a file name, a field, a route.
+- **Dates are absolute**, `YYYY-MM-DD`, in Western Indonesia Time (WIB, Asia/Jakarta). A note's date line keeps its own form, per [[notes.rules.md]].
 
-**A project already written in another language stays in that language.** Consistency inside one repository beats consistency across the set.
+## Attribution
 
-A half-translated repository is worse than either language on its own: a reader meets two languages in one README, the terminology stops matching between sections, and nobody can tell which half is current. That mixed state is the thing this rule exists to prevent, not the second language itself.
+**The work is attributed only to the owner.** No AI or tool is named as an author, co-author, or generator in a commit message, a pull request, code, a comment, a file header, or a document.
 
-- **Open the README before writing a new document, and match what is already there.** Whatever the repository uses is what the next file uses.
-- **Never mix inside one document, and never inside one repository.** One language per repository.
-- **A new repository starts in English**, and so does a new document in a repository that has none yet.
-- **Converting a repository is one deliberate pass over all of it**, in a single change. Never file by file as each one happens to be edited, because that is how the mixed state arrives.
-- A `docs/PRD.md` follows its readers rather than the repository, per [[prd.rules.md]]. It is the one document whose audience is not the people reading the code.
+- No "Generated with", "created with", or "written with" line.
+- No co-author trailer naming a tool or a model. A human collaborator's trailer is governed by [[commit.rules.md]].
+- No session link, and no tool-specific marker or watermark in a generated file.
 
-### What Is Not Governed by This
+`scripts/harness/check_attribution.py` and the `commit-msg` git hook enforce it.
 
-- **Interface text is not documentation.** A label, a button, a placeholder, a loading string, and an error message shown to a user follow that product's audience, per [[prd.rules.md]] and [[stacks.rules.md]].
-- **Code is always English**, whatever language the documentation uses: every identifier, every comment, every docstring, every commit message, and every branch name, per [[codes.rules.md]] and [[commit.rules.md]]. This is the one thing that never varies, because it sits next to library and language keywords that are English already.
-- **A technical term keeps its original form**: a library name, a framework, a command, a file name, a variable, a database field, a route path.
+**Citing the source of an idea is not attribution, and it is expected.** The README of `rules/`, of `.agents/agents/`, and of `.agents/skills/` carries a `## Citations` section with one BibTeX entry per item:
+
+```bibtex
+@misc{conventionalcommits,
+  title = {Conventional Commits 1.0.0},
+  url = {https://www.conventionalcommits.org/en/v1.0.0/}
+}
+```
 
 ## What Every Project Documents
-
-Eleven files, two of them only where they apply, and no more unless something genuinely needs one.
 
 | File | Holds |
 | :- | :- |
 | `README.md` | What it is, how to run it, what it needs. The only file most readers open |
 | `docs/PRD.md` | The problem, the users, the goal, and the non-goals, per [[prd.rules.md]] |
 | `docs/SRS.md` | The numbered, checkable requirements, per [[srs.rules.md]] |
-| `docs/PLAN.md` | The timeline, the features with their owner and status, and the done log, from [[plan.template.md]] |
+| `docs/PLAN.md` | The timeline, the features with owner and status, and the done log, from [[plan.template.md]] |
 | `API.md` | The endpoints, if the project has any |
 | `MODEL.md` | The model card, if the project trains one |
 | `.env.example` | Every variable name with a placeholder, per [[env.rules.md]] |
-| `LICENSE` | `Proprietary`, or the full text of the published license, from [[license.template.md]] |
+| `LICENSE` | `Proprietary`, or the full published license, from [[license.template.md]] |
 | `CODE_OF_CONDUCT.md` | How people behave in the project, from [[code-of-conduct.template.md]] |
 | `SECURITY.md` | How to report a vulnerability privately, from [[security.template.md]] |
 | `CONTRIBUTING.md` | How to set up, branch, commit, and open a pull request, from [[contributing.template.md]] |
 
-The last four are required in every repository, per [[repository.rules.md]]. They follow the formatting rules here but not the shape of a project document: no badge row, and a table of contents only in `CONTRIBUTING.md`, which is long enough to need one.
+The last four are required in every repository, per [[repository.rules.md]], and carry no badge row; only `CONTRIBUTING.md` is long enough to need a Table of Contents. A project that needs a twelfth document usually needs a shorter README.
 
-A project that needs a twelfth document usually needs a shorter README instead.
-
-**An agent report is not a document.** Reports live in `~/docs/report/<project>/`, the vault's report folder, never in the project, and are never committed, per the [[report-protocol.md|report protocol]].
+**An agent report is not a document.** It lives in `~/agentic/report/<project>/`, never in the project, and is never committed, per [[report.rules.md]].
 
 ## The README Is the Contract
 
-A reader must be able to go from a clone to a running project using only the README. If they cannot, the README is incomplete regardless of how much it contains.
-
-Required, in this order:
+A reader goes from a clone to a running project using only the README, or the README is incomplete. Required, in this order:
 
 1. Title, then the badge row per [[badge.rules.md]].
-2. One paragraph: what this is and what it is for.
-3. Setup: the exact commands, copy and paste, including the environment activation.
+2. One paragraph: what this is and why it exists.
+3. Setup: the exact commands, including environment activation, in a block that pastes whole.
 4. Usage: the smallest example that does something real.
 5. Configuration: the variable names, never a real value.
 6. Project structure, if the layout is not obvious.
 
-Write the setup commands as a block that can be pasted whole. Do not describe the steps in prose and leave the reader to assemble them.
-
 ## The Shape of a Project Document
 
-**A project document opens with the title, then the badge row, then one paragraph that says what the thing is and why it exists, then the Table of Contents.** Nothing else comes before those four.
+A project document (a README, `API.md`, `MODEL.md`, `docs/PRD.md`) opens with the title, the badge row, the lead paragraph, and the Table of Contents, in that order. **It carries no YAML frontmatter and no `---` at all**; frontmatter belongs to vault documents.
 
-```markdown
-# Project Name
+- **The lead paragraph says what it is in one line, then why it exists**, with the claim that matters in bold. The why is the part nobody can rebuild from the code.
+- **The Table of Contents is a numbered list of links to the `##` headings**, directly under the lead paragraph, updated in the commit that adds or renames a section. A document that fits on one screen skips it.
+- **A heading names the answer, not the category**: `No Chat Model`, not `Architecture Notes`; `Known Limitations`, not `Notes`.
+- **A command is the one that ran**, copied from a shell, with real values where they can be shown.
+- **Setup is numbered steps with a bold name**: one line saying what the step is, the block that runs, then what to know before the next step. Say up front which steps are already done.
+- **A gotcha sits directly under the command that triggers it**, in bold, with the mechanism, the real error text, and why the behaviour is deliberate. Not in a Troubleshooting section the reader finds only after hitting it.
+- **Say what is committed and what is not.** A Data section, or a row in Project Structure, marks each location "Gitignored" or "Committed".
 
-![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Active-2EA043)
-
-A one-line description of what it is, then the sentence that says **why it exists**, with the
-claim that matters in bold.
-
-## Table of Contents
-```
-
-> [!important]
-> **A project document carries no YAML frontmatter and no `---` anywhere in it.** Frontmatter belongs to a vault document, where the tag axes below need it. A README, a PRD, an `API.md`, and a `MODEL.md` open with `# Title` and nothing above it.
-
-### The Lead Paragraph Says Why, Not What
-
-The first paragraph is the only one most readers finish. **Say what it is in one line, then say why it exists**, because the second is the part nobody can reconstruct from the code.
-
-Weak, because it describes the mechanism and stops:
+Weak and strong lead paragraphs:
 
 ```text
-A CLI that reads markdown files and writes them into a vector database.
+Weak: A CLI that reads markdown files and writes them into a vector database.
+Strong: A plug-and-play memory for coding agents. Point it at a folder of markdown and that folder becomes a brain the agent searches over MCP. **No chat model anywhere in it**: the agent asking already has one.
 ```
 
-Strong, because it names the problem being solved and puts the surprising claim in bold:
-
-```text
-A plug-and-play memory for coding agents. Point it at a folder of markdown and that folder
-becomes a brain the agent searches over MCP. **No chat model anywhere in it**: the agent
-asking the question already has one.
-
-It exists because an agent with no memory relearns the same context every session and pays
-for that in tokens every time.
-```
-
-### The Table of Contents
-
-**Every project document carries one, directly under the lead paragraph**, as a numbered list linking to each top-level section.
+A gotcha with all three parts:
 
 ```markdown
-## Table of Contents
-
-1. [Setup](#setup)
-2. [Usage](#usage)
-3. [Configuration](#configuration)
+**Step 3 has to come first.** `compose.yaml` declares `.env` as required, so `docker compose up` without it fails with `env file ... not found`. That is deliberate: made optional, the service would start on its defaults and quietly serve the wrong database.
 ```
 
-- **It lists the `##` headings only.** A `###` in the contents makes the contents longer than the reader's patience.
-- **It is updated in the same commit that adds or renames a section.** A contents entry pointing at a heading that no longer exists is the first thing a reader tries and the first thing that fails.
-- A document short enough to read without scrolling does not need one. That is roughly one screen, and almost nothing real is that short.
+### Known Limitations
 
-### Name a Section for the Question It Answers
-
-**A heading is a question the reader already has, answered.** Not a category the writer filed it under.
-
-| Write | Not |
-| :- | :- |
-| `Four Commands` | `Commands` |
-| `No Chat Model` | `Architecture Notes` |
-| `Nothing Is Written Into a Digested Folder` | `File Handling` |
-| `Known Limitations` | `Notes` |
-| `One Stack or Several` | `Deployment Options` |
-
-A heading that states the answer means a reader scanning the contents already learns something, and a reader who needs the detail knows exactly which section holds it.
-
-### Show the Real Thing
-
-- **A command in a document is the command that runs**, copied from a shell where it worked. Not a paraphrase, and not a placeholder where a real value could be shown.
-- **A table for anything with two or more parallel attributes.** A list of things that each have a name, a purpose, and a default is a table, and reading it as prose is work the writer pushed onto the reader.
-- **A code block carries a language tag**, and shows the smallest thing that does something real.
-- **Bold the sentence that carries the point**, inline, where the reader is. A paragraph whose claim is buried in the third line is a paragraph most readers leave before reaching it.
-
-### A Setup Section Is a Numbered Walkthrough
-
-**Setup is numbered steps with a bolded name, not a wall of commands.** Each step is a short line saying what it is, then the block that runs, then anything the reader needs to know before the next one.
-
-````markdown
-**1. Environment.** Conda, an environment named `env`, Python 3.13.
-
-```bash
-conda env update -f environment.yml
-conda activate env
-```
-
-Never use bare `pip` or bare `python` outside the activated environment. On this machine they
-resolve to different interpreters, and an install lands somewhere the code cannot import it.
-
-**2. Configuration.** Copy the template and fill it in by hand.
-````
-
-- **Say what the step is before the command**, in one line. A block with no lead is a block the reader has to run to understand.
-- **Number the steps, and say up front which are already done.** "Steps 1 and 2 are done; step 3 onward needs your keys" tells a returning reader where to start.
-- Where the walkthrough is long enough that the steps need their own headings, they become numbered `###` headings and the contents entry points at each one.
-
-### State the Trap Where It Bites
-
-**The gotcha goes directly under the command that triggers it, in bold, with the mechanism.** Not in a Troubleshooting section at the bottom, where it is found only after the reader has already hit it.
+Every `README.md`, `API.md`, and `MODEL.md` ends with **Known Limitations**: what the thing does not do and the ceiling of each part, each with its reason. A project with none keeps the heading and says so in one line. `docs/PRD.md` has non-goals instead, `docs/SRS.md` gives a requirement a status, and an agent entry point carries none.
 
 ```markdown
-**Step 3 has to come first.** `compose.yaml` declares `.env` as a required env file, so
-`docker compose up` without it fails with `env file ... not found`. That is deliberate: made
-optional, the service would start on its embedded defaults and quietly serve the wrong database.
+- **Only markdown is digested.** PDF, docx, and csv are not read. Convert first.
 ```
 
-Three parts, and all three are needed:
+> [!warning]
+> Never write a deviation from a vault standard in a project document. It tells every reader that the standards exist, what they require, and where the project falls short. Record it as a `decision` note in the vault, per [[memory.rules.md]], and write any real effect on users as a plain limitation: "a restart drops a pending job", never "deviates from the deploy standard".
 
-1. **The rule, in bold**, as a sentence the reader can act on.
-2. **The mechanism**: what the tool actually does, and the error it produces.
-3. **Why it is that way**, where the behaviour is deliberate rather than a bug. That is what stops the next reader "fixing" it.
+## Template Usage
 
-**Quote the real error text.** A reader who is already staring at `env file ... not found` finds the answer by matching the string, and a paraphrase does not match.
-
-### Say What Is Committed and What Is Not
-
-A project document carries a **Data** section, or a row inside Project Structure, that says where each thing lives and whether it is in git.
-
-```markdown
-| Item | Location | Notes |
-| :- | :- | :- |
-| Code maps | `graph/<project>/` | Gitignored. Produced by `pmb map` |
-| The memory itself | `<vault>/memory/` | Gitignored and never pushed. Human-authored, the source of truth |
-```
-
-**"Gitignored" and "committed" are the two words that matter**, and the reader is looking for exactly one of them. A path with no such note is a path somebody will commit.
-
-### The Section Every Project Document Ends With
-
-**Known Limitations.** What the thing does not do, what it is bad at, and the ceiling of each part. This is the section everybody skips writing and every reader needs, and it is what separates a document from a sales page. State the limit and the reason:
-
-```markdown
-- **Only markdown is digested.** Obsidian is the viewer and markdown is the substrate, so PDF,
-  docx, and csv are not read. Convert first if you need them.
-- **1024 dimensions is a ceiling, not a preference.** The index will not build above 2000, and
-  it does not fail loudly; it just leaves every search doing a sequential scan.
-```
-
-**A deviation from a standard is never written in a project document.** This vault is private, and a section enumerating departures from it discloses that the standards exist, what they require, and where this project is weaker than they ask. A reader of the project does not need any of that, and a stranger should not have it.
-
-A deviation is recorded in the vault instead, as a `decision` note naming the standard, the reason, and the cost accepted, per [[memory.rules.md]]. The project document states what the project does; it says nothing about what it was measured against.
-
-Where a limitation genuinely affects someone using the project, it belongs in **Known Limitations**, written as a property of the project rather than as a departure from a rule. "The scheduler runs in-process, so a restart drops a pending job" is useful. "Deviates from the deploy standard" is not, and it leaks.
-
-**Known Limitations is never deleted.** A project with none writes the heading and one line saying so: an empty section is information, a missing one is a question.
-
-Which document carries it:
-
-| Document | Known Limitations |
-| :- | :- |
-| `README.md` | Yes, always |
-| `API.md` | Yes |
-| `MODEL.md` | Yes |
-| `docs/PRD.md` | No; its non-goals section already does this work |
-| `docs/SRS.md` | No; a requirement it cannot meet is a requirement with a status |
-| The agent entry point | No; it is instructions, not a description |
-
-The README is the one document that speaks for the whole project, so it is the one that always carries it.
-
-## Template Usage Rules
-
-You must:
-
-1. Read the template before creating or editing any project documentation.
-2. Follow the exact section order the template uses.
-3. Use only the headings and sections the template includes.
-4. Keep the documentation within the scope the template defines.
-5. Preserve the template structure unless the user explicitly asks to change the template itself.
-6. Write the documentation directly into the template's sections.
-7. Preserve the placeholders, tables, and formatting patterns the template defines.
-8. Remove instructional placeholder text once real project information has replaced it.
-
-You must not:
-
-- Add a section the template does not include.
-- Add an appendix, a summary, a note, a recommendation, or an extra explanation that is not already in the template.
-- Expand the documentation beyond what the template asks for.
-- Replace the template with a different structure.
-- Remove a required section.
-- Invent a project detail that the repository or the user does not support.
-- Put endpoint documentation in the main project documentation when the project has a separate `API.md`.
-
-If information for a required section is unavailable, write:
-
-```text
-To be confirmed
-```
-
-Do not fill a gap with an assumption.
-
-## Writing
-
-- **Short sentences.** One idea per sentence.
-- **Active voice.** "The loader reads the file", not "the file is read by the loader".
-- **Say what it does, then why.** The why is the part nobody can reconstruct.
-- **No filler.** Delete "basically", "simply", "just", "in order to", "it should be noted that". "Simply" is a lie whenever the thing is not simple.
-- **Concrete over abstract.** Name the file, the function, the value.
-- **Write the failure.** The command that fails and what the error looks like is worth more than three paragraphs of happy path.
-- **If the explanation is longer than the code, delete the explanation** and make the code clearer instead.
-- **Consistent terminology.** One name per concept, for the whole document.
-- Do not repeat the same information in two sections unless the template requires it.
-- Avoid a technical explanation the project does not need. Where a technical term is unavoidable, explain it once, briefly, in plain language.
-- **One topic per file.** A document that needs two unrelated sections is two documents.
-- **Link instead of copying.** A fact written in two documents drifts in one of them; write it once and link to it from the other.
-- **Dates are absolute, in Western Indonesia Time (WIB, Asia/Jakarta).** `YYYY-MM-DD` in a table, a field, or a file name. A note's date line keeps its own form, per [[notes.rules.md]].
+- Read the template before writing, and keep its section order, headings, placeholders, and scope exactly. Change a template only when the owner asks.
+- Write into the template's sections, and remove instructional placeholder text once real content replaces it.
+- Never add a section, appendix, summary, or note the template lacks, never remove a required one, and never invent a detail the repository does not support.
+- Read `.env.example` for variables, never a real environment file, per [[env.rules.md]].
+- A project's `deploy.cloud.md` uses [[deploy.cloud.md]] as its template: same numbering, names, and order, with an unused section kept and marked by a status indicator.
 
 ## Formatting
 
-- ATX headings (`#`), sentence-case or title-case consistently within a file.
-- Fenced code blocks with a language tag.
-- Tables for anything with two or more parallel attributes.
-- A bullet list for items, a numbered list only for genuine ordered steps.
-- One blank line between blocks. No trailing whitespace.
-- A path, a filename, a variable, a command, and a value all wear backticks.
-- **One paragraph is one line.** Never hard-wrap a paragraph across several source lines. Markdown reflows a paragraph to the reader's width, so the wrap adds nothing to the rendered page and it ruins a diff: reflowing one sentence rewrites every line after it, so a one-word change shows up as a rewritten paragraph.
+- ATX headings (`#`), with one casing style per file.
+- A table for anything with two or more parallel attributes; a bullet list for items; a numbered list only for ordered steps.
+- A path, a file name, a variable, a command, and a value wear backticks.
+- Bold the sentence that carries the point. No wall of bold, no ALL CAPS, no macOS-specific symbol, and no decorative Unicode symbol.
+- A command names the executable, never its absolute path: `python`, not a path into an environment folder. An absolute path fails on every other machine, leaks a username, and hides a `PATH` problem; fix `PATH` once instead. A variable that takes a path, such as `CLOUDSDK_PYTHON`, gets a placeholder like `C:\path\to\python.exe`, and a path inside the repository stays relative. Other paths follow [[path.rules.md]].
+- Comments in code follow [[codes.rules.md]].
 
-Do not use:
+## Diagrams Are Mermaid
 
-- Emoji of any kind, per "No Emoji, Anywhere" below.
-- An em dash, a left arrow, or a right arrow.
-- Smart quotation marks where normal ones work.
-- A macOS-specific symbol or format.
-- A decorative Unicode symbol that is not required.
-- ALL CAPS for emphasis.
-- **Any tool, AI, model, or bot attribution.** No "generated with", "created with", or "written with" line, no bot co-author, no product link presented as a credit, and no signature or watermark. A document records what the thing does, not what wrote the document. This is the same ban [[commit.rules.md]] applies to a commit message, and it applies to every document, every template, and every code comment.
-- A wall of bold text. If everything is bold, nothing is.
-
-The replacements, since each banned character has exactly one:
-
-| Instead of | Write |
-| :- | :- |
-| An em dash | `-` |
-| A left arrow | `<` |
-| A right arrow | `>` |
-| A smart quote | `"` |
-
-### No Emoji, Anywhere
-
-**An emoji never appears in anything this vault governs, and the ban has no exception.** That covers a document, a template, a code comment, a commit message, a pull request, and a branch name, per [[commit.rules.md]], [[pr.rules.md]], and [[branch.rules.md]]. Professionalism is the first requirement of every one of them, and an emoji is the quickest way to lose it.
-
-- **Every form is banned**: a Unicode emoji, an emoji shortcode such as `:rocket:` that a viewer renders as one, and a symbol used the way an emoji is, such as a check mark, a cross, a warning sign, or a star used as a bullet or a status.
-- **A status is written with a status indicator**, per "Status Indicators" below, never with a colored symbol.
-- **Emphasis is bold, and a warning is a callout**, per [[callout.rules.md]], never an icon in front of a sentence.
-
-### Flow Examples
-
-A flow is written with the plain angle bracket, in both directions.
-
-Incorrect, using arrows:
-
-```text
-Client [right arrow] API [right arrow] Database
-Database [left arrow] API
-```
-
-Correct:
-
-```text
-Client > API > Database
-Database < API
-```
-
-Incorrect, using an em dash to join a clause:
-
-```text
-The service handles authentication [em dash] including token validation.
-```
-
-Correct:
-
-```text
-The service handles authentication - including token validation.
-```
-
-### No Horizontal Rules
-
-Never place a `---` horizontal rule in a document body. Headings already mark where one section ends and the next begins, so a rule on top of them is decoration that carries no meaning, and a document that leans on it reads as a stack of fragments rather than one continuous piece. Add one only when the owner asks for it directly.
-
-**A project document carries no `---` at all**, because it carries no frontmatter either, per "The Shape of a Project Document" above. In a vault document the ban covers the body only, and does not touch two things that look the same:
-
-- YAML frontmatter on a **vault** document, where the opening and closing `---` are what make a rule, a component standard, or a memory note readable by Obsidian and by the memory indexer. Removing those breaks the file rather than tidying it, and they are the only `---` permitted anywhere in this vault.
-- A `---` inside a fenced code block, which is sample content being shown, not formatting being applied.
-
-### Diagrams Are Mermaid
-
-**When a document needs a diagram, it is a fenced `mermaid` code block, always.** Never an image, never ASCII art built from boxes and lines, and never a diagram exported from another tool. GitHub, Obsidian, and most Markdown viewers render Mermaid natively, so the diagram stays text in the same file: diffable, reviewable, and updated in the same commit as the change it describes.
-
-````markdown
-```mermaid
-flowchart LR
-  Browser --> Frontend --> API[api-service] --> DB[(PostgreSQL)]
-```
-````
-
-Pick the diagram type the content already has:
+A diagram is a fenced `mermaid` block, never an image, ASCII art, or an export from another tool, so it diffs and changes with the code.
 
 | Content | Mermaid type |
 | :- | :- |
 | A flow with branches, or an architecture | `flowchart` |
 | A request crossing three or more services | `sequenceDiagram` |
 | Tables and their relations | `erDiagram` |
-| A record's lifecycle, such as a document's statuses | `stateDiagram-v2` |
+| A record's lifecycle | `stateDiagram-v2` |
 | A timeline or a rollout plan | `gantt` |
 
-- **Every vault document carries one workflow diagram**: every rule, component, template, runbook, and index in this vault. It sits in a `## Workflow` section directly after `## Core Requirement`, or after the opening section of a document that has none. A template places it before its copy block, so the diagram is never copied into a project.
-- **The diagram draws only what its own document governs**: its decision, its flow, or its lifecycle. A neighbouring standard's flow belongs in that standard's diagram, and a reader who needs both follows the link.
-- **Five kinds of file carry none**: a memory note and a journal entry, which are one-screen records rather than workflows, an agent entry point, which holds only imports, an agent skill or the shared persona under `agents/`, which hold instructions an agent follows, and a slash command under `commands/`, which is a prompt.
-- **In a project document, a diagram earns its place.** A flow with a branch, a sequence across three or more parties, or a schema with relations gets one; a straight line of two or three steps stays a sentence, per "Flow Examples" above.
-- **Labels name the real thing**, such as the service name or the table name, the same way a code example shows the real identifiers.
-- **Mermaid's connectors are syntax, not formatting.** `-->`, `---`, and `->>` inside the `mermaid` block are allowed, the same exception a `---` inside any fenced block already has under "No Horizontal Rules". A Unicode arrow or an em dash inside a label is still banned.
-- **Never paste a rendered image of a diagram in place of its code.** An image cannot be diffed, goes stale without anyone noticing, and needs the tool that drew it before anyone can change it.
+- **A vault document's workflow diagram** sits in `## Workflow`, directly after `## Core Requirement`, and draws only what its own document governs. A template places it before its copy block. A memory note, a journal entry, an agent entry point, an agent skill or persona, and a slash command carry none.
+- **In a project document a diagram earns its place**: a branch, three or more parties, or related tables. A straight line of two or three steps stays a sentence.
+- **Labels name the real thing**: the service, the table. Mermaid connectors such as `-->` are syntax, not formatting.
 
 ## Tags
 
-Every rule and every component standard opens with YAML frontmatter carrying its tags. Tags connect two documents that never link to each other: a wikilink says "read that one next", a tag says "these belong to the same concern", and only the second one surfaces the file you did not know to look for.
-
-```markdown
----
-tags:
-  - kind/component
-  - layer/frontend
-  - topic/ux
----
-
-> Up: [[README.md]]
-```
-
-The frontmatter is the first thing in the file, before the breadcrumb. The breadcrumb keeps its place directly under it.
-
-### The Three Axes
-
-A tag comes from one of three axes, and the axis is the prefix. Nesting them this way makes them group in the Obsidian tag pane instead of arriving as one flat alphabetical list.
+A vault document opens with YAML frontmatter carrying its tags, then the breadcrumb. A wikilink says "read that next"; a tag says "same concern", and surfaces the file you did not know to look for.
 
 | Axis | Values | Answers |
 | :- | :- | :- |
 | `kind/` | `rule`, `component`, `runbook`, `template`, `pattern`, `journal` | What this document is |
 | `layer/` | `frontend`, `backend`, `database`, `infra`, `docs` | Where it applies |
 | `topic/` | `security`, `accessibility`, `data`, `ux`, `state`, `workflow`, `deploy`, `memory`, `performance` | The concern it belongs to |
-| `project/` | The project folder name | Which project the work touched. Journals only |
+| `project/` | The project folder name | Which project a journal touched, per [[journal.rules.md]] |
 
-Every document carries exactly one `kind/`. Most carry one `layer/`, and a document that genuinely applies everywhere, such as the commit or branch standard, carries none rather than a wrong one. One or two `topic/` tags is the working range.
-
-The `project/` axis exists for a journal and is empty on a rule or a component. A rule that named one project would be a rule that does not apply to the rest, which is a contradiction; a journal is always about specific work on a specific project, and work that spans two carries both, per [[journal.rules.md]].
-
-> [!warning]
-> Two `topic/` tags is the ceiling in practice, and three is a signal the document holds more than one thing. A standard tagged with five concerns is a standard nobody looking for any of them will find, because the tag has stopped narrowing anything.
-
-### Adding a Value
-
-The lists above are closed. Adding a value to an axis is a change to that table first, made deliberately, and never a tag invented inside one file.
-
-An invented tag is worse than a missing one: `topic/auth` beside the existing `topic/security` splits one concern across two names, and a reader who filters on either now sees half the documents with no way to know that.
-
-## Command Restrictions
-
-A command is written the way it is typed, and the way it is typed is by name.
-
-> [!failure]
-> Never write an absolute path to an executable. Write `openssl`, not the full path into a toolchain's `usr\bin`. Write `python`, not `C:\path\to\envs\name\python.exe`. This applies to a command in documentation and to a command an agent runs.
-
-An absolute path fails three ways at once, and all three are invisible to whoever wrote it:
-
-- **It is wrong on every other machine.** A path under one person's home directory runs for exactly one person, and the next reader gets `The term is not recognized` with no hint that the path was the problem rather than the tool being missing.
-- **It leaks who wrote it.** A home directory carries a username into a document everyone reads, and for a public repository, everyone else too.
-- **It hides a real setup problem.** Someone reached for the full path because the tool was not on `PATH`. Writing the path around it fixes one command on one machine and leaves the same failure waiting in every other command that needs the same tool.
-
-Fix the environment once instead. If a toolchain ships a binary the shell cannot find, its `bin` directory belongs on `PATH`: one change on one machine, against a path repeated in every runbook.
-
-That rule covers a command. [[path.rules.md]] covers every other path: in source, in configuration, and in a document.
-
-### The Two Exceptions
-
-- **A variable that names an interpreter or a file is a path by definition.** `CLOUDSDK_PYTHON` points at an interpreter and `--key-file` points at a file. Those take paths because that is what they are for. Write them as a placeholder such as `C:\path\to\python.exe`, never as a real path from the machine the document was written on.
-- **A path inside the repository is relative and stays relative.** `./scripts/migrate.py`, not the absolute form of the same file.
-
-## Code Comment Restrictions
-
-**Documentation inside source code is compact: one line per file saying what it is for, one line per public function, class, or component saying what it does, and a one-line comment only where the why is not obvious.** Three lines is the hard ceiling, plain English is the only voice, and no comment carries decoration.
-
-The full rule, with its examples, is "Documentation in Code" in [[codes.rules.md]], and it is not repeated here.
-
-## Badges
-
-Every README carries a badge row, and [[badge.rules.md]] owns its content: which badges, in which order, on which color, with which logo. Two rules belong here because they are about honesty rather than style:
-
-- **Do not invent a build, test, coverage, deployment, or version status.** A green badge nothing produces is a claim the reader has no way to check.
-- **Do not claim a technology the repository does not use.** The badge row is read as an inventory.
+Most documents carry one `layer/`; one that applies everywhere, such as the commit standard, carries none rather than a wrong one. The lists are closed: a new value is added to this table and to `TAGS` in `check_docs.py` in one commit, never invented in one file, because `topic/auth` beside `topic/security` splits one concern across two names.
 
 ## Status Indicators
 
-When a feature, service, module, integration, or documentation item is unused, unavailable, incomplete, active, or needs attention, mark it with an HTML `code` element carrying a color.
-
-Three colors, and only three:
+A documented condition is marked with an HTML `code` element in one of three colors, and the text is in the document's own language.
 
 | Color | Means |
 | :- | :- |
-| Green | Active, available, complete, enabled, supported, successful |
+| Green | Active, available, complete, enabled, supported |
 | Yellow | Pending, partial, optional, under review, needs attention |
-| Red | Not used, unavailable, disabled, failed, unsupported, missing |
+| Red | Not used, unavailable, disabled, failed, missing |
 
 ```html
-<code style="color: green">Active</code>
 <code style="color: yellow">Needs Confirmation</code>
-<code style="color: red">Not Used</code>
 ```
 
-Rules:
-
-1. Use the document's own language for the status text.
-2. Green, yellow, or red only.
-3. Lowercase color name in the `style` attribute.
-4. One space after the colon.
-
-Correct:
-
-```html
-<code style="color: red">Not Used</code>
-```
-
-Incorrect, in three different ways, the space before the colon, the missing space after it, and the wrong element:
-
-```html
-<code style="color : red">Not Used</code>
-<code style="color:red">Not Used</code>
-<span style="color: red">Not Used</span>
-```
-
-Do not color a normal paragraph, a heading, a technical explanation, a command, or source code. Use a status indicator only where it makes a documented condition clearer.
+Never color a paragraph, a heading, a command, or source code.
 
 ## Obsidian
 
-This documentation set is an Obsidian vault, and so is the local memory, per [[memory.rules.md]]. Three conventions keep the graph usable.
+The vault is an Obsidian vault, and so is the local memory, per [[memory.rules.md]].
 
-**Wikilinks with the extension:** `[[commit.rules.md]]`, not the bare `commit` form. The extension form survives being read outside Obsidian, where a bare link means nothing.
+- A wikilink carries the extension, `[[commit.rules.md]]`, so it still means something outside Obsidian.
+- A callout marks the one thing on a page a reader must not miss, per [[callout.rules.md]].
+- Badges follow [[badge.rules.md]].
 
-**Callouts** mark the one thing on a page a reader must not miss, and every type comes from [[callout.rules.md]]. A hard prohibition is a callout, not a bolded sentence, because a prohibition written as ordinary prose gets skipped and the reader discovers it was serious only after breaking it.
+| Block | Where |
+| :- | :- |
+| Frontmatter | The very first line |
+| Breadcrumb, `> Up: [[README.md]]` | Directly under the frontmatter |
+| `## Index` | A `README.md` only |
+| `## Applies To` | The end of a rules document |
+| `## Related` | The end of any other document |
 
-> [!warning]
-> A callout is Obsidian syntax, so it renders as a plain blockquote everywhere else and is digested into the memory index verbatim. Three per document is the ceiling, because a page of callouts has no emphasis left.
-
-**Fixed placement, so re-runs are deterministic:**
-
-| Block | Where | Contains |
-| :- | :- | :- |
-| Frontmatter | The very first line | The three-axis tags |
-| Breadcrumb | Directly under the frontmatter | `> Up: [[README.md]]` |
-| `## Index` | `README.md` only | Every document, grouped |
-| `## Applies To` | A rules document, at the end | What it governs |
-| `## Related` | Any other document, at the end | Lateral links |
-
-Update a block in place. Never append a second one.
-
-## The Deploy Runbook Is Its Own Template
-
-The deploy runbook is the one document whose template does not live in [template/](../template/). For a project's `deploy.cloud.md`, treat [[deploy.cloud.md]] as the template: follow its section numbering, section names, and order exactly. Keep every section even when a project does not use it, and mark the unused one with a status indicator instead of deleting it, so any two repositories stay comparable line for line.
+Update a block in place; never append a second one.
 
 ## API Documentation
 
-When a project has an `API.md`:
-
-- Endpoint documentation lives only in `API.md`.
-- The main project documentation does not carry an endpoint path, a request parameter, a request body example, a response payload, an endpoint-specific status code, or an endpoint-specific error response.
-- The main documentation may explain the general API architecture. It must not duplicate `API.md`.
-
-## Documentation Workflow
-
-Before writing:
-
-1. Locate and read the template.
-2. Review the relevant project files.
-3. Review `.env.example` when environment variables need documenting.
-4. **Do not read any real environment file**, per [[env.rules.md]].
-5. Identify what the repository actually supports.
-6. Map that information to the template's sections.
-7. Write only what those sections ask for.
-8. Add the badge row per [[badge.rules.md]].
-9. Use a status indicator only where a condition needs one.
-10. Review for unsupported additions, prohibited characters, undocumented assumptions, and any real credential or environment value.
-
-## Updating Existing Documentation
-
-- Preserve valid existing content.
-- Correct anything inaccurate or outdated.
-- Keep the structure aligned with the template.
-- Remove a section added outside the template unless the user asks otherwise.
-- Do not rewrite an unrelated section for no reason.
-- Update a badge only when the repository supports the new value, and replace an unsupported claim with a factual one.
-- Update a status indicator when the condition it describes changes.
-- Keep terminology consistent across the whole document.
-
-## When Something Is Missing
-
-**No template:** do not invent a replacement, do not copy a structure from another project, and do not improvise one. Say the template is missing and ask for it.
-
-**No information:** do not guess, do not infer an unsupported value, and do not inspect a secret file. Use the template's placeholder, or `To be confirmed` where the template has none, and mark it:
-
-```html
-<code style="color: yellow">Needs Confirmation</code>
-```
-
-**No file to reference:**
-
-```html
-<code style="color: red">Not Available</code>
-```
-
-## Keeping It True
-
-**A stale document is worse than no document**, because it is believed.
-
-- Update the document in the same commit that makes it wrong. A README fixed "later" is a README that stays wrong.
-- Delete a section describing something that no longer exists.
-- A code example in a document is code: if it stops working, it is a bug.
-- When the document and the code disagree, the code is right and the document gets fixed. Never the reverse.
+When a project has an `API.md`, every endpoint path, parameter, request and response body, and endpoint-specific status code or error lives only there. The main documentation may describe the API's architecture and links to `API.md`.
 
 ## Machine Learning Documents
 
-An ML project has one documentation failure the rest do not: a result nobody can reproduce.
+A `MODEL.md`, from [[model.template.md]], records what the model does and must not be used for, the data (source, version, size, split), the training setup (parameters, seed, hardware, runtime), the metrics against a baseline, and the failure modes. An experiment's result belongs in its pull request, per [[pr.rules.md]], and its durable finding in a memory note.
 
-A `MODEL.md` records, at minimum:
+## When Something Is Missing
 
-- What the model does, and what it must not be used for.
-- The data: source, version, size, and how it was split.
-- The training setup: parameters, seed, hardware, runtime.
-- The metrics, with the baseline they are compared against.
-- The known failure modes, and what the model is bad at.
+- **No template:** say so and ask for it. Never improvise one or copy another project's.
+- **No information:** never guess. Write the template's placeholder, or `To be confirmed`, marked `<code style="color: yellow">Needs Confirmation</code>`.
+- **No file to reference:** mark it `<code style="color: red">Not Available</code>`.
 
-The last one is the one everybody skips and the only one that prevents the model being misused.
+## Keeping It True
 
-An experiment's result belongs in the pull request that carried it, per [[pr.rules.md]], and its durable finding belongs in a memory note, per [[memory.rules.md]]. A number in a notebook cell is not a record.
+A stale document is worse than none, because it is believed.
+
+- Update the document in the commit that makes it wrong, and delete a section about something that no longer exists.
+- A code example that stops working is a bug.
+- When the document and the code disagree, the code is right and the document is fixed.
+- When editing an existing document, keep what is valid, fix what is not, and remove sections added outside the template.
 
 ## Definition of Done
 
-- Written in English, from the right template, with the template's section order.
-- A project document opens with the title, the badge row, the lead paragraph, and the Table of Contents, and carries no frontmatter and no `---`.
-- The Table of Contents lists every `##` heading and every entry resolves.
-- Every diagram is a fenced `mermaid` block, and no diagram is an image or ASCII art.
-- A vault document carries its own workflow diagram, scoped to its own subject.
-- Every heading names the question it answers, not the category it belongs to.
-- Known Limitations is present and says what the thing is bad at.
-- No section enumerates deviations from this vault, and no standard in it is named or quoted anywhere in the document.
+- `python scripts/harness/check_docs.py` exits 0 on the changed files, and `check_attribution.py` passes.
+- Written from the right template, in its section order, in plain language with real values.
+- A project document opens with title, badge row, lead paragraph, and Table of Contents, and carries no frontmatter.
+- Every heading names its answer, and Known Limitations is present where required.
+- No deviation from a vault standard is written in a project document.
 - The README takes a reader from clone to running with no other source.
-- The frontmatter carries exactly one `kind/`, and at most two `topic/` values.
-- The badge row follows [[badge.rules.md]], every version is current, and no badge claims something the repository does not do.
-- Every status indicator is green, yellow, or red, and uses the `code` element form.
-- No real value from any environment or configuration file appears anywhere.
-- No absolute path to an executable appears in a command, in the document or in what an agent runs.
-- No emoji of any kind, including a shortcode or a symbol used as one, no prohibited character, no decorative divider, and no boxed or bannered code comment.
-- API detail is in `API.md`, not duplicated in the project documentation.
-- Missing information is marked, not guessed.
-- Every wikilink resolves.
-- Nothing in the document contradicts the code.
+- No real value from an environment or configuration file, and no absolute path to an executable.
+- No AI or tool attribution anywhere; sources of ideas are cited where required.
+- Missing information is marked, not guessed, and nothing contradicts the code.
 
 ## Conflict Resolution
-
-If another instruction conflicts with this standard, follow this priority:
 
 1. Security and privacy requirements
 2. Direct user instructions
@@ -662,7 +281,7 @@ If another instruction conflicts with this standard, follow this priority:
 5. Existing project documentation
 6. General repository conventions
 
-A direct user instruction must not override security or privacy requirements. Even when following a higher-priority instruction, keep the language professional, clear, and simple, and do not use a prohibited character or format.
+A direct instruction never overrides a security or privacy requirement, and never makes a banned character or format acceptable.
 
 ## Applies To
 

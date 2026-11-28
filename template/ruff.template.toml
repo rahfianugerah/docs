@@ -1,0 +1,47 @@
+# Ruff settings for a Python 3.13 project. Paste into pyproject.toml, then run: ruff check . && ruff format --check .
+[tool.ruff]
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+    "E722",
+    "BLE001",
+    "S110",
+    "S112",
+    "B904",
+    "ERA001",
+    "F401",
+    "F841",
+    "ARG001",
+    "ARG002",
+    "PGH003",
+    "PGH004",
+    "B006",
+    "T201",
+    "UP006",
+    "UP031",
+    "UP032",
+    "PTH",
+    "N",
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "ANN001",
+    "ANN201",
+    "S608",
+    "TID251",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# A test's name is its documentation, and a type on every fixture argument buys nothing.
+"tests/**" = ["D", "ANN"]
+# The one folder allowed past the boundary below. This lifts every banned API here, so keep one banned module per folder.
+"app/db/**" = ["TID251"]
+
+# A narrow except that passes is still a swallowed error. Where ignoring one is the point, contextlib.suppress says so.
+[tool.ruff.lint.flake8-bandit]
+check-typed-exception = true
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"psycopg".msg = "Only app/db/ talks to the driver. Go through app.db."

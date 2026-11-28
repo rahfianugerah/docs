@@ -522,7 +522,6 @@ Before treating this document as complete:
 - Every error code listed is one the implementation actually returns.
 - The pagination, error, and date formats match [[api.rules.md]].
 
-
 ## Known Limitations
 
 [What this API does not do, and where a caller will be surprised. Each item is the claim in bold, then the mechanism, then the workaround where one exists.]

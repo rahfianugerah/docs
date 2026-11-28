@@ -84,8 +84,7 @@ A product is written the way the product writes itself, with any file-extension 
 
 The suffix comes off because it names the file format, not the product, and because it is written three different ways by the people who use it. `React` and `Vite` are unambiguous without it.
 
-> [!warning]
-> Three products keep a lowercase name, because that is their own branding rather than an oversight: `npm`, `pytest`, and `pandas`. Do not Title Case them. They are the only three, and a fourth lowercase name in a badge row is a mistake to fix, not a precedent to follow.
+**Three products keep a lowercase name, because that is their own branding rather than an oversight: `npm`, `pytest`, and `pandas`.** Do not Title Case them. They are the only three, and a fourth lowercase name in a badge row is a mistake to fix, not a precedent to follow.
 
 ## Writing a State
 

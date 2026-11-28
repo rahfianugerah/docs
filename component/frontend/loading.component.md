@@ -23,7 +23,6 @@ This standard does not redefine a token. A loading state that introduces its own
 
 **One indicator per wait.** A route gate does not sit above a section that is also loading.
 
-
 ## Workflow
 
 ```mermaid

@@ -398,8 +398,6 @@ Use this status when there are none:
 <code style="color: green">No Known Limitations</code>
 ```
 
-
-
 ## Related
 
 - [[docs.rules.md]]

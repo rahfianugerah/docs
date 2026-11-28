@@ -52,15 +52,13 @@ flowchart TD
 | One measure over a continuous or ordered dimension, usually time | How is it changing? | Line chart | Slope carries rate of change directly, which no other form does. Connect only genuinely continuous series: a line drawn between unrelated categories asserts a progression that does not exist. |
 | Dense timestamped data, enough points that a pattern can appear | Is there a trend, a season, or an anomaly? | Time series analysis | Trend, seasonality, and outliers are three different findings, and this is the only row that separates them. Moving averages and bands are drawn on top of the raw points, never in place of them. |
 
-> [!failure]
-> A chart that fits no row on this matrix is not shipped. Add a row, with its reasoning column filled in and the owner's agreement, or pick an existing row. A one-off chart with no row behind it is how a dashboard stops being comparable across apps.
+**A chart that fits no row on this matrix is not shipped.** Add a row, with its reasoning column filled in and the owner's agreement, or pick an existing row. A one-off chart with no row behind it is how a dashboard stops being comparable across apps.
 
 ### The Donut Chart
 
 The donut is the only part-to-whole form in this standard. The plain pie chart is not used.
 
-> [!failure]
-> Never ship a pie chart. Every part-to-whole question is answered by the donut, and a pie is that same chart with its centre thrown away. There is no case where a pie is the right answer and a donut is not, so there is nothing for it to be an option for.
+**Never ship a pie chart.** Every part-to-whole question is answered by the donut, and a pie is that same chart with its centre thrown away. There is no case where a pie is the right answer and a donut is not, so there is nothing for it to be an option for.
 
 The donut replaces a blanket ban on circular part-to-whole charts that stood in [[dashboard.component.md]], which held that angles are read poorly and that a horizontal stacked bar always says the same thing better.
 
@@ -68,11 +66,9 @@ The ban was right about the reading and wrong about the scope. Arc and angle gen
 
 **The centre is what earns the donut its place, and accuracy is not the argument.** A part-to-whole question has two halves, what share each part takes and what the whole amounts to. The hole is where the second half goes: the total is printed as a number instead of remaining a shape the reader has to infer. That is the same reasoning [[analytics.rules.md#Combine Before You Simplify]] applies everywhere else, and it is why a donut with an empty centre is not sanctioned either.
 
-> [!warning]
-> Do not defend the donut on readability. The research is contested and the argument against it is credible: removing the centre removes the angle cue and leaves only arc length and area, which is if anything slightly harder to read. Readability is not what makes this row safe. The four constraints do that, and they are unchanged.
+**Do not defend the donut on readability.** The research is contested and the argument against it is credible: removing the centre removes the angle cue and leaves only arc length and area, which is if anything slightly harder to read. Readability is not what makes this row safe. The four constraints do that, and they are unchanged.
 
-> [!warning]
-> Every constraint on that row is load bearing: six parts, summing to a real total, no time, no negatives. A donut that breaks one of them is worse than the bar chart it replaced, because it now also implies a completeness that is not there.
+**Every constraint on that row is load bearing: six parts, summing to a real total, no time, no negatives.** A donut that breaks one of them is worse than the bar chart it replaced, because it now also implies a completeness that is not there.
 
 ## Combine Before You Simplify
 
@@ -95,8 +91,7 @@ Ways to combine that stay within the matrix:
 - **Place a small multiple**, the same chart repeated once per group on a shared scale, when a single chart would need more than about seven series.
 - **Pair the chart with its table**, per [[pagination.component.md#Table Data Source]]. The chart carries the shape and the table carries the exact values, and neither has to compromise to do the other one's job.
 
-> [!warning]
-> Combining is not the same as crowding, and the guardrails below are the limit. If fitting a second series onto a chart would require folding categories, truncating an axis, thinning points, cropping, or hiding a series on load, the combination is not allowed. Split it into two charts on a shared scale instead. Informativeness never buys an exception to the guardrails; a denser chart that distorts is less informative than two honest ones.
+**Combining is not the same as crowding, and the guardrails below are the limit.** If fitting a second series onto a chart would require folding categories, truncating an axis, thinning points, cropping, or hiding a series on load, the combination is not allowed. Split it into two charts on a shared scale instead. Informativeness never buys an exception to the guardrails; a denser chart that distorts is less informative than two honest ones.
 
 The shared scale matters when splitting. Two charts of the same measure drawn on different axes invite exactly the comparison they make wrong, which is the same failure as a truncated baseline wearing a different shape.
 
@@ -143,8 +138,7 @@ No chart is drawn in three dimensions: not a 3D bar, not a 3D donut, not a surfa
 
 The reason is the one that bans axis truncation. The third dimension adds perspective, perspective changes apparent size by distance rather than by value, and the resulting comparison is wrong in a way the reader cannot correct for. Occlusion makes it worse, because the marks nearest the camera hide the ones behind them.
 
-> [!question]
-> If a requirement seems to call for a 3D chart, stop and ask the owner before building anything. This is a gate, not a default, and the answer is not automatically no: a genuine three-variable surface may be the real need. What is prohibited is reaching for 3D without asking, and the usual honest answer turns out to be a small multiple, a heatmap, or a second chart.
+**If a requirement seems to call for a 3D chart, stop and ask the owner before building anything.** This is a gate, not a default, and the answer is not automatically no: a genuine three-variable surface may be the real need. What is prohibited is reaching for 3D without asking, and the usual honest answer turns out to be a small multiple, a heatmap, or a second chart.
 
 ## Color and Legibility
 
@@ -161,8 +155,7 @@ This is the cheapest review mechanism available. A reviewer reads one line and c
 
 ## Reference Implementation
 
-> [!note]
-> This standard has no reference implementation yet. No frontend in this standard currently renders a chart with the sanctioned library, so the first app to build one becomes the source every later app copies from, per the rule in [[uix.component.md]].
+**This standard has no reference implementation yet.** No frontend in this standard currently renders a chart with the sanctioned library, so the first app to build one becomes the source every later app copies from, per the rule in [[uix.component.md]].
 
 Until that exists, this policy and [[dashboard.component.md]] are the only source, and the usual "the stylesheet is correct when the two disagree" clause has nothing to point at.
 

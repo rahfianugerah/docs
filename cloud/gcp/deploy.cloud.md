@@ -64,8 +64,7 @@ Every project copy opens with this table, filled in.
 
 A static frontend only serves pre-built files, so one instance absorbs a lot of traffic and the ceiling exists to cap cost, not to carry load. A backend does real work per request, so each instance takes fewer of them at a time and the ceiling is higher.
 
-> [!warning]
-> Raising `--concurrency` does not add capacity. One instance holds a fixed CPU share no matter how many requests it carries, so the extra ones only queue, and the delay surfaces as a timeout rather than as a clear signal.
+**Raising `--concurrency` does not add capacity.** One instance holds a fixed CPU share no matter how many requests it carries, so the extra ones only queue, and the delay surfaces as a timeout rather than as a clear signal.
 
 A backend that talks to a database has a second ceiling that is easy to miss:
 
@@ -327,8 +326,7 @@ gcloud sql users create [USER] --instance=[INSTANCE] --password=[PASSWORD]
 
 Put that password straight into Secret Manager in 6.7 and do not keep it anywhere else.
 
-> [!danger]
-> **Cloud SQL does not scale to zero.** It is the largest cost on an idle project, and it bills whether anything is using it or not. Stop it when the project goes quiet.
+**Cloud SQL does not scale to zero.** It is the largest cost on an idle project, and it bills whether anything is using it or not. Stop it when the project goes quiet.
 
 ```bash
 gcloud sql instances patch [INSTANCE] --activation-policy=NEVER    # stop
@@ -448,8 +446,7 @@ gcloud run deploy [SERVICE] --image "$IMAGE_TAG" --platform managed --region asi
 
 Every later config change repeats this command with the tag read back from `.last-tag`. Every later code change is just a push.
 
-> [!warning]
-> **The first Cloud Build on a new service always fails at the deploy step**, because the image does not exist until the build that is currently failing has pushed it. The build itself succeeded. Re-run it, or deploy by hand once as above, and the second attempt goes green.
+**The first Cloud Build on a new service always fails at the deploy step**, because the image does not exist until the build that is currently failing has pushed it. The build itself succeeded. Re-run it, or deploy by hand once as above, and the second attempt goes green.
 
 ### 6.11 Values Only Known After the First Deploy
 
