@@ -56,7 +56,7 @@ Use the first name in each row. The aliases exist in Obsidian and render identic
 
 A callout earns its place when a passage is a different kind of thing from the prose around it. Reach for one when the text is a hard prohibition, a trap that has already cost someone time, a worked example, or a result the reader should verify.
 
-Write it as a normal paragraph when it is simply the next thing to say. A page where most paragraphs are boxed has taught the reader nothing about which passage matters, because the boxes no longer distinguish anything, and the reader who skims past a decorative one will skim past the one that would have saved them.
+Write it as a normal paragraph when it is only the next thing to say. A page where most paragraphs are boxed has taught the reader nothing about which passage matters, because the boxes no longer distinguish anything, and the reader who skims past a decorative one will skim past the one that would have saved them.
 
 A useful check: if removing the box would lose nothing but the color, the passage was ordinary prose all along.
 

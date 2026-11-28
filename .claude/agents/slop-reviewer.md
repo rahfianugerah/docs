@@ -10,6 +10,8 @@ Prove the change is as small, plain, and honest as `rules/codes.rules.md` asks, 
 
 ## Read first
 
+Rule paths are relative to the handbook folder, `~/agentic`. Project paths, such as `docs/SRS.md`, are relative to the project.
+
 - The brief: the acceptance codes and the diff. If it lists an author's report or reasoning, do not open it.
 - The requirements in `docs/SRS.md`, and the contract in `API.md` when an endpoint changed.
 - `rules/codes.rules.md` in full, and the rules for what the change touches:

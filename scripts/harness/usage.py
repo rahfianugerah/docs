@@ -37,7 +37,8 @@ def summarize(events):
             for block in message.get("content", []):
                 if block.get("type") == "tool_use" and block.get("name") in SPAWN_TOOLS:
                     spawned[block["id"]] = block.get("input", {}).get("subagent_type", "general-purpose")
-            # One API call arrives as several events with the same id and the same usage: count it once.
+            # One API call arrives as several events with the same id: count it once. The streamed output count is
+            # taken before the call ends, so it is a lower bound; the per-model table from the result is exact.
             messages[message["id"]] = (event.get("parent_tool_use_id"), message.get("model", ""), message.get("usage", {}))
         elif event.get("type") == "result":
             result = event
@@ -67,9 +68,12 @@ def summarize(events):
 
 
 def table(summary):
-    lines = ["| Agent | Tier | Model | Calls | Input | Output | Cache read | Cache write |", "| :- | :- | :- | -: | -: | -: | -: | -: |"]
+    lines = ["| Agent | Tier | Model | Calls | Input | Output, streamed | Cache read | Cache write |", "| :- | :- | :- | -: | -: | -: | -: | -: |"]
     for name, row in sorted(summary["agents"].items()):
         lines.append(f"| `{name}` | {row['tier']} | `{row.get('model', '')}` | {row['calls']} | {row['input']} | {row['output']} | {row['cache_read']} | {row['cache_write']} |")
+    lines += ["", "| Model | Input | Output | Cache read | Cache write | Cost, USD |", "| :- | -: | -: | -: | -: | -: |"]
+    for model, use in sorted(summary["models"].items()):
+        lines.append(f"| `{model}` | {use['inputTokens']} | {use['outputTokens']} | {use['cacheReadInputTokens']} | {use['cacheCreationInputTokens']} | {use['costUSD']:.4f} |")
     return "\n".join(lines)
 
 

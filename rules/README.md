@@ -14,7 +14,7 @@ Every rule file in this folder owns one subject and is named `<subject>.rules.md
 | [[badge.rules.md]] | shields.io badges: the two kinds, the product name, and Title Case on every state |
 | [[branch.rules.md]] | The two branch shapes, trunk and promotion, and which one a project declares |
 | [[callout.rules.md]] | The callout types, where one is required, and where it is forbidden |
-| [[codes.rules.md]] | YAGNI, KISS, DRY, readability, Python 3.13, conda and `.venv`, and the ML practices that differ |
+| [[codes.rules.md]] | The rules a tool enforces with their settings, YAGNI, KISS, DRY, no quick fix, the comment policy, directory boundaries, and the Python environment |
 | [[commit.rules.md]] | Conventional Commits, an `exp` type for experiments, and what never enters a commit |
 | [[data.rules.md]] | Four data classes: the schema is readable, rows need explicit approval, and protected data is never read |
 | [[database.rules.md]] | PostgreSQL and SQLAlchemy, which cases take the ORM and which take raw SQL, and the restore nobody tested |
@@ -39,6 +39,8 @@ Every rule file in this folder owns one subject and is named `<subject>.rules.md
 | [[versioning.rules.md]] | Semantic Versioning: which commit raises MAJOR, MINOR, or PATCH, the reset, version 0, and the tag on `main` |
 
 ## Citations
+
+Four standards sit beside what they govern instead of in this folder, and are cited here with the rest: [[ai.rules.md]], [[ml.rules.md]], [[dl.rules.md]], and [[deploy.rules.md]].
 
 Each entry credits where the idea came from: the publisher of an outside standard when a rule is built on one, and the owner when the rule is the owner's own. An entry with a `note` field was adapted for this repository.
 
@@ -261,5 +263,33 @@ Each entry credits where the idea came from: the publisher of an outside standar
   year={2013},
   url={https://semver.org/spec/v2.0.0.html},
   note={Adapted for this repository by rahfianugerah}
+}
+
+@misc{rule_ai_rules,
+  title={ai/ai.rules.md},
+  author={rahfianugerah},
+  year={2026},
+  url={https://github.com/rahfianugerah/agentic}
+}
+
+@misc{rule_ml_rules,
+  title={ai/ml/ml.rules.md},
+  author={rahfianugerah},
+  year={2026},
+  url={https://github.com/rahfianugerah/agentic}
+}
+
+@misc{rule_dl_rules,
+  title={ai/dl/dl.rules.md},
+  author={rahfianugerah},
+  year={2026},
+  url={https://github.com/rahfianugerah/agentic}
+}
+
+@misc{rule_deploy_rules,
+  title={cloud/gcp/deploy.rules.md},
+  author={rahfianugerah},
+  year={2026},
+  url={https://github.com/rahfianugerah/agentic}
 }
 ```

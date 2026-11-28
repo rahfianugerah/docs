@@ -56,7 +56,8 @@ flowchart TD
 | A rule, component, runbook, or template has a `## Workflow` section holding a `mermaid` diagram | `workflow` |
 | Every `[[wikilink]]` names a file in the vault and carries its extension. Links into `memory/`, `graph/`, `pattern/`, and `report/` are skipped | `wikilink` |
 | A project document's Table of Contents links every `##` heading, and every entry names one | `toc` |
-| A count badge in the vault `README.md` equals the files it counts. `Rules`: every `.md` in `rules/`. `Components`: every `.md` under `component/`. `Templates`: every `*.template.*` under `template/` and `cloud/`. `Agents`: every `.md` in `.agents/agents/`. `README.md` is never counted | `badge-count` |
+| No filler outside a quotation: "basically", "simply", "in order to", "it should be noted that" | `filler` |
+| A count badge in the vault `README.md` equals the files it counts. `Rules`: every `.md` in `rules/`. `Components`: every `.md` under `component/`. `Templates`: every `*.template.*` under `template/` and `cloud/`. `Agents`: every `.md` in `.agents/agents/`. `Skills`: every `SKILL.md` in `.agents/skills/`. `README.md` is never counted | `badge-count` |
 
 Agent prompts under `.agents/`, `.claude/`, and `.codex/`, and the root `AGENTS.md` and `CLAUDE.md`, get `banned-char` only. `memory/`, `graph/`, `pattern/`, and `report/` are never checked. A new mechanical rule goes into the script and this table in one commit, and `--self-test` still passes.
 
@@ -86,6 +87,7 @@ Every output is in English: documents, headings, comments, commits, identifiers,
 ```bibtex
 @misc{conventionalcommits,
   title = {Conventional Commits 1.0.0},
+  author = {Conventional Commits},
   url = {https://www.conventionalcommits.org/en/v1.0.0/}
 }
 ```

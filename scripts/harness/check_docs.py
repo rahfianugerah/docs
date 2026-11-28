@@ -25,6 +25,7 @@ COUNT_BADGES = {
     "Components": ("component/**/*.md",),
     "Templates": ("template/*.template.*", "cloud/**/*.template.*"),
     "Agents": (".agents/agents/*.md",),
+    "Skills": (".agents/skills/*/SKILL.md",),
 }
 
 ARROWS = ((0x2190, 0x21FF), (0x27F0, 0x27FF), (0x2900, 0x297F), (0x2B00, 0x2BFF))
@@ -117,6 +118,17 @@ def check_trailing_whitespace(doc, vault):
     for n, line in enumerate(doc["lines"], 1):
         if line != line.rstrip():
             yield n, "trailing whitespace"
+
+
+FILLER = re.compile(r"\b(basically|simply|in order to|it should be noted that)\b", re.I)
+QUOTED = re.compile(r'"[^"]*"|`[^`]*`')
+
+
+def check_filler(doc, vault):
+    for n, line in prose(doc):
+        match = FILLER.search(QUOTED.sub("", line))
+        if match:
+            yield n, f"filler: delete `{match.group(0)}`"
 
 
 def line_kind(line):
@@ -271,6 +283,7 @@ def check_badge_counts(doc, vault):
 CHECKS = {
     "banned-char": check_banned_chars,
     "trailing-whitespace": check_trailing_whitespace,
+    "filler": check_filler,
     "hard-wrap": check_hard_wrap,
     "blank-lines": check_blank_lines,
     "fence-language": check_fence_language,
@@ -318,7 +331,7 @@ def target_files(args):
     if args.all:
         return git_files("ls-files", "--cached", "--others", "--exclude-standard")
     if args.changed:
-        return git_files("diff", "--name-only", "HEAD") + git_files("ls-files", "--others", "--exclude-standard")
+        return git_files("ls-files", "--modified", "--others", "--exclude-standard") + git_files("diff", "--cached", "--name-only", "--diff-filter=ACM")
     rels = []
     for p in args.paths:
         path = Path(p).resolve()
@@ -340,6 +353,7 @@ SELF_TEST = {
         'A > B - done, pages 10{}20, "q".\n'.format(chr(0x2013)),
     ),
     "trailing-whitespace": ("rules/x.md", "text  \n", "text\n"),
+    "filler": ("rules/x.md", "Run it in order to check.\n", 'Delete "simply" and `basically`.\n\n```text\nsimply\n```\n'),
     "hard-wrap": (
         "rules/x.md",
         "One sentence that\ncontinues here.\n\n- an item that\n  wraps\n",

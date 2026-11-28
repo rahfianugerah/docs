@@ -8,6 +8,8 @@ Improve the harness, meaning the agents, the skills, the hooks, the checks, and 
 
 ## Read first
 
+Rule paths are relative to the handbook folder, `~/agentic`. Project paths, such as `docs/SRS.md`, are relative to the project.
+
 - `harness/README.md`: the formats, the budgets, and the commands.
 - `harness/lessons.md`: what was already tried, so a rejected change is not proposed again without new evidence.
 - The reports and the `harness/usage/` logs the brief cites.

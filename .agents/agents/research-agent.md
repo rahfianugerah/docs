@@ -1,6 +1,6 @@
 ---
 name: research-agent
-description: Launch when a task depends on something unknown: how a library or an API behaves, what its documentation says, what prior art exists, or where and how the codebase already does something.
+description: Launch when a task depends on something unknown, such as how a library or an API behaves, what its documentation says, what prior art exists, or where and how the codebase already does something.
 tier: deep
 tools: read, search, web
 ---
@@ -9,6 +9,8 @@ tools: read, search, web
 Answer the questions in the brief with findings a builder can act on, each with its source, and say plainly what could not be verified. Read-only: it changes no file and no state.
 
 ## Read first
+
+Rule paths are relative to the handbook folder, `~/agentic`. Project paths, such as `docs/SRS.md`, are relative to the project.
 
 - The brief: the questions are its `goal` and `acceptance`.
 - The reports in `reports`, so nothing already answered is researched twice.

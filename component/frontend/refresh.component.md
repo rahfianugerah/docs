@@ -173,7 +173,7 @@ Do not:
 - Push a history entry per keystroke.
 - Force a scroll to top on mount.
 - Mirror form input into `localStorage`.
-- Let the catch-all route absorb a page that was simply never registered.
+- Let the catch-all route absorb a page that was never registered.
 
 ## Related Standards
 

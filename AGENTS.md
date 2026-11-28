@@ -30,7 +30,7 @@ The handbook every agent reads first, in this repository and in every project th
 | Write or recall a memory note | `rules/memory.rules.md`, `rules/agent.rules.md` |
 | Change an agent, a skill, or a hook | `harness/README.md` |
 
-Every other standard is in `rules/`, one file per subject, named `<subject>.rules.md`.
+Every other standard is in `rules/`, one file per subject, named `<subject>.rules.md`. The AI and deploy standards sit beside what they govern, in `ai/` and `cloud/gcp/`.
 
 ## The Loop
 

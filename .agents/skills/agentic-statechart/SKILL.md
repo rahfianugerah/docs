@@ -1,6 +1,6 @@
 ---
 name: agentic-statechart
-description: Draws a feature's statechart from the code as a Mermaid stateDiagram-v2 and lists the bugs it reveals: state and event pairs nothing handles, states with no way out, and states nothing reaches. Each comes with the shortest event path to it, replayed against the real code before it is reported. Optionally models the same machine in TLA+ and checks it with TLC when Java and TLC are installed. Use before building a flow with complex state (checkout, auth, uploads, multi-step forms, retries, background jobs), or when a bug looks like "it only breaks if you do X while Y".
+description: Draws a feature's statechart from the code as a Mermaid stateDiagram-v2 and lists the bugs it reveals, namely state and event pairs nothing handles, states with no way out, and states nothing reaches. Each comes with the shortest event path to it, replayed against the real code before it is reported. Optionally models the same machine in TLA+ and checks it with TLC when Java and TLC are installed. Use before building a flow with complex state (checkout, auth, uploads, multi-step forms, retries, background jobs), or when a bug looks like "it only breaks if you do X while Y".
 ---
 
 # Statechart

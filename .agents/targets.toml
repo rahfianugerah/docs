@@ -2,6 +2,8 @@
 agents_md_max_lines = 150
 agent_max_lines = 120
 skill_max_lines = 150
+agent_description_max_chars = 400
+skill_description_max_chars = 650
 
 [targets.claude]
 adapter = "claude"

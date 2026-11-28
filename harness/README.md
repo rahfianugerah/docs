@@ -131,7 +131,7 @@ The orchestrator passes each agent a brief, and nothing else:
 {"task": "login-otp/T-03", "goal": "Reject an expired OTP", "acceptance": ["FR-AUTH-03"], "paths_allowed": ["app/auth/"], "paths_forbidden": ["app/billing/"], "verify": "pytest test/auth -q", "reports": []}
 ```
 
-`task` is the request slug and the task's ID. For an agent with no `run` tool, such as `system-analyst`, `planner`, or `architect`, the brief adds an eighth key, `report`: the path to write its report to, because that agent cannot take the timestamp from the clock itself. An agent with no `edit` tool returns its report in the reply, with `"report": "inline"`.
+`task` is the request slug and the task's ID. For an agent with no `run` tool, such as `system-analyst`, `planner`, or `architect`, the brief adds an eighth key, `report`: the path to write its report to, because that agent cannot take the timestamp from the clock itself. An agent with neither an `edit` nor a `run` tool returns its report in the reply, with `"report": "inline"`.
 
 Never the conversation, never the whole repository. **A verifier or a reviewer gets the requirements and the diff, and never the author's report or reasoning.**
 
@@ -142,6 +142,9 @@ Never the conversation, never the whole repository. **A verifier or a reviewer g
 | `AGENTS.md` | 150 lines |
 | An agent file | 120 lines |
 | A `SKILL.md` | 150 lines |
+| `CLAUDE.md` | 150 lines |
+| An agent's description | 400 characters |
+| A skill's description | 650 characters |
 
 `sync_agents.py --check` fails past a limit. Text that is loaded on every run is paid for on every run.
 
@@ -159,7 +162,7 @@ python scripts/harness/test_harness.py                # the fast test suite
 python scripts/harness/usage.py run.jsonl --label routed   # tokens per agent and per tier from one headless run
 ```
 
-The git hooks run the same checks whichever tool wrote the change. Turn them on once per clone:
+The `pre-commit` and `commit-msg` git hooks run the sync check, the attribution check, the document check, and the test suite whichever tool wrote the change. Turn them on once per clone:
 
 ```bash
 git config core.hooksPath scripts/harness/githooks
@@ -181,8 +184,8 @@ git config core.hooksPath scripts/harness/githooks
 
 ## Adding a Tool
 
-1. Add `scripts/harness/adapters/<tool>.py` with one function, `render(agents, skills, hooks, target)`, that returns a mapping of path to file content.
-2. Add a `[targets.<tool>]` table to `.agents/targets.toml` with its folders and its tier to model map.
+1. Add `scripts/harness/adapters/<tool>.py` with three functions: `render(agents, skills, target)` returns a mapping of `("agents" or "skills", relative path)` to file content, `render_hooks(hooks, existing)` returns the tool's hook configuration as a JSON object, and `warnings(agents, hooks)` returns one line for each feature the tool lacks.
+2. Add a `[targets.<tool>]` table to `.agents/targets.toml` with `agents_dir`, `skills_dir`, and `hooks_file` for the repository, `user_agents_dir` and `user_skills_dir` for the user scope, and a `[targets.<tool>.models]` table that maps `deep`, `build`, and `fast` to model IDs. The table's name is the adapter's file name unless an `adapter` key says otherwise. An empty folder value skips that kind of file.
 3. Run `sync_agents.py`. No agent and no skill changes.
 
 Where a tool lacks a feature, the adapter turns it into the closest thing the tool has and prints a warning. It never drops it silently.
@@ -197,7 +200,7 @@ Where a tool lacks a feature, the adapter turns it into the closest thing the to
 
 - **A skill:** copy its folder into the other repository's `.agents/skills/`, and into `.claude/skills/` for Claude Code.
 - **An agent:** copy its file into the other repository's `.agents/agents/` and run that repository's sync, or translate the four frontmatter keys by hand: `tier` becomes the tool's `model`, and `tools` becomes the tool's tool list.
-- **The whole harness:** copy `.agents/`, `scripts/harness/`, `harness/README.md`, and `AGENTS.md`, then run the sync and turn the git hooks on.
+- **The whole harness:** copy `.agents/`, `scripts/harness/`, `harness/README.md`, and `AGENTS.md`, then run the sync and turn the git hooks on. The document check runs only where `rules/docs.rules.md` is present, because that file is what it enforces.
 
 ## Improving the Harness
 

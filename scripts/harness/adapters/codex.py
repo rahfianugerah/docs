@@ -9,7 +9,7 @@ EVENTS = {
     "after-agent": ("SubagentStop", {}),
 }
 ROOT = '"$(git rev-parse --show-toplevel)"'
-READ_ONLY = "You do not create or change files in this role.\n\n"
+READ_ONLY = "You change no source file in this role. A report is the only file you write.\n\n"
 
 
 def multiline(text):

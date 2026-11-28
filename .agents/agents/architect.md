@@ -10,6 +10,8 @@ Design the module boundaries, the APIs, and the data models, so that each build 
 
 ## Read first
 
+Rule paths are relative to the handbook folder, `~/agentic`. Project paths, such as `docs/SRS.md`, are relative to the project.
+
 - The brief, the requirements it cites in `docs/SRS.md`, and the reports in `reports`.
 - `rules/codes.rules.md`, `rules/api.rules.md`, `rules/database.rules.md`, `rules/path.rules.md`, and `rules/repository.rules.md`.
 - `component/backend/README.md` or `component/frontend/README.md`, for the side the design touches.
@@ -35,7 +37,7 @@ Design the module boundaries, the APIs, and the data models, so that each build 
 
 ## Output
 
-Write one report into `~/agentic/report/<project>/`, per `rules/report.rules.md`, from `template/report.template.md`, named `report-architect-to-<next>-<request-slug>-<YYYYMMDD>-<HH_MM_SS>.md`. It holds the folder tree with each boundary, the import rules, the filename conventions and the checks that key on them, the API summary pointing at `API.md`, the data model, the options with the recommendation, and the task split with file ownership.
+Write one report to the path the brief's `report` key names, per `rules/report.rules.md`, from `template/report.template.md`, named `report-architect-to-<next>-<request-slug>-<YYYYMMDD>-<HH_MM_SS>.md`. It holds the folder tree with each boundary, the import rules, the filename conventions and the checks that key on them, the API summary pointing at `API.md`, the data model, the options with the recommendation, and the task split with file ownership.
 
 End the reply with one JSON object and nothing after it:
 

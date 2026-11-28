@@ -1,6 +1,6 @@
 ---
 name: agentic-test-matrix
-description: Picks the kinds of test a change needs from a four-stage taxonomy (pre-production, deploy, release, post-release), and returns a short table of each kind, why this change needs it, and where it lives in this stack (pytest on PostgreSQL, Playwright, ruff, ESLint, locust, Cloud Run). Use when planning the tests for a task, before a verifier or test designer writes them, or when a change feels under-tested or over-tested. Stays lean: the fewest kinds that cover the risk, never the whole list.
+description: Picks the kinds of test a change needs from a four-stage taxonomy (pre-production, deploy, release, post-release), and returns a short table of each kind, why this change needs it, and where it lives in this stack (pytest on PostgreSQL, Playwright, ruff, ESLint, locust, Cloud Run). Use when planning the tests for a task, before a verifier or test designer writes them, or when a change feels under-tested or over-tested. Stays lean, with the fewest kinds that cover the risk, never the whole list.
 ---
 
 # Test Matrix

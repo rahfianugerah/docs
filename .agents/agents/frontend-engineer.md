@@ -10,6 +10,8 @@ Build the one task in the brief: every screen on HeroUI, in both themes, within 
 
 ## Read first
 
+Rule paths are relative to the handbook folder, `~/agentic`. Project paths, such as `docs/SRS.md`, are relative to the project.
+
 - The brief: the task, its acceptance codes, `paths_allowed`, `paths_forbidden`, and the reports it lists, including the design.
 - The task's requirements and screen wireframes in `docs/SRS.md`, and its row in `docs/PLAN.md`.
 - The API contract in the backend's `API.md`.

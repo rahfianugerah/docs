@@ -17,7 +17,7 @@ tags:
 
 **A region that scrolls must show that it scrolls.**
 
-This is the rule everything else here serves, and it is the one most often broken. A hidden scrollbar on a region with more content below it produces a page where the remaining content simply does not exist as far as the user is concerned.
+This is the rule everything else here serves, and it is the one most often broken. A hidden scrollbar on a region with more content below it produces a page where the remaining content does not exist as far as the user is concerned.
 
 This extends [[uix.component.md]] and uses its tokens.
 

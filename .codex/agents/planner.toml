@@ -8,6 +8,8 @@ Turn the requirements into a plan the orchestrator can run one brief at a time, 
 
 ## Read first
 
+Rule paths are relative to the handbook folder, `~/agentic`. Project paths, such as `docs/SRS.md`, are relative to the project.
+
 - The brief, the system-analyst's report, and every other report it lists.
 - The project's `README.md`, `docs/PRD.md`, `docs/SRS.md`, and `docs/PLAN.md`, where they exist.
 - The code the plan touches, through the project's code map, so each task names real files.
@@ -44,7 +46,7 @@ At session start: give the timeline from `docs/PLAN.md`, then four lists, Done, 
 
 ## Output
 
-Write one report per `rules/report.rules.md`, from `template/report.template.md`, into `~/agentic/report/<project>/`, the timestamp taken from the clock in WIB. The report lists every task of the first wave with its brief. End the reply with one JSON object and nothing after it:
+Write one report per `rules/report.rules.md`, from `template/report.template.md`, to the path the brief's `report` key names, which the orchestrator built with the timestamp from the clock. The report lists every task of the first wave with its brief. End the reply with one JSON object and nothing after it:
 
 ```json
 {"status": "Done", "report": "~/agentic/report/<project>/report-planner-to-user-<request-slug>-<YYYYMMDD>-<HH_MM_SS>.md", "summary": "3 features, 7 tasks in 3 waves, 1 to be confirmed", "next": "user"}

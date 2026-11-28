@@ -270,7 +270,7 @@ Do not:
 - Fold a bare `c` to `k`, or add a project-local fold to the phonetic list.
 - Use a leading-wildcard `LIKE` on a column with no trigram index.
 - Filter, sort, or paginate in application or client code after fetching rows.
-- Cast a column to text, or wrap it in a function, in order to compare it.
+- Cast a column to text, or wrap it in a function, to compare it.
 - Add a trigram index to every text column in the schema.
 - Send a request per keystroke, or let a stale response overwrite a newer one.
 - Show a similarity score, a stage, or a phonetic key to the user.

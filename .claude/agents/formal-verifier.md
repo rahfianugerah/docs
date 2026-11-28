@@ -10,6 +10,8 @@ Check one property of one critical piece of code in every case inside a stated s
 
 ## Read first
 
+Rule paths are relative to the handbook folder, `~/agentic`. Project paths, such as `docs/SRS.md`, are relative to the project.
+
 - The brief: the property is its `goal`, and the code is inside `paths_allowed`.
 - The code itself, and the requirement the property comes from.
 - The reports in `reports`, including a statechart of the same flow where one exists.

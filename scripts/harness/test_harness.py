@@ -96,6 +96,46 @@ class SyncTest(Sandbox):
             model = next(line for line in path.read_text(encoding="utf-8").splitlines() if line.startswith("model: "))
             self.assertIn(model.removeprefix("model: "), models["claude"]["models"].values())
 
+    def test_a_reviewer_with_the_edit_tool_is_rejected(self):
+        path = self.agent("slop-reviewer")
+        path.write_text(path.read_text(encoding="utf-8").replace("tools: read, search, run", "tools: read, search, edit, run", 1), encoding="utf-8")
+        self.assert_rejected("never has the `edit` tool")
+
+    def test_a_description_that_is_not_plain_yaml_is_rejected(self):
+        path = self.agent()
+        text = path.read_text(encoding="utf-8")
+        line = next(line for line in text.splitlines() if line.startswith("description: "))
+        path.write_text(text.replace(line, "description: Checks a change: runs everything.", 1), encoding="utf-8")
+        self.assert_rejected("must be one plain line")
+
+    def test_a_build_agent_without_its_advisor_section_is_rejected(self):
+        path = self.agent("backend-engineer")
+        path.write_text(path.read_text(encoding="utf-8").replace("## Ask the advisor when", "## Notes", 1), encoding="utf-8")
+        self.assert_rejected("body headings must be")
+
+    def test_a_hand_written_file_in_a_generated_folder_is_rejected(self):
+        (self.root / ".claude/agents/rogue.md").write_text("---\nname: rogue\n---\n", encoding="utf-8")
+        self.assert_rejected("written by hand in a generated folder")
+
+    def test_an_agent_the_handbook_never_names_is_rejected(self):
+        path = self.root / "AGENTS.md"
+        path.write_text(path.read_text(encoding="utf-8").replace("`chore-agent`", "the chore agent"), encoding="utf-8")
+        self.assert_rejected("never names `chore-agent`")
+
+    def test_an_agent_with_no_row_or_no_citation_is_rejected(self):
+        path = self.root / ".agents/agents/README.md"
+        text = path.read_text(encoding="utf-8")
+        row = next(line for line in text.splitlines() if line.startswith("| `verifier`"))
+        path.write_text(text.replace(row + "\n", "", 1), encoding="utf-8")
+        self.assert_rejected("has no row for `verifier`")
+        path.write_text(text.replace("@misc{agent_verifier,", "@misc{agent_someone_else,", 1), encoding="utf-8")
+        self.assert_rejected("has no citation keyed `agent_verifier`")
+
+    def test_an_unknown_hook_event_is_rejected(self):
+        path = self.root / ".agents/hooks.toml"
+        path.write_text(path.read_text(encoding="utf-8").replace('event = "on-stop"', 'event = "on-nap"'), encoding="utf-8")
+        self.assert_rejected("unknown events")
+
     def test_a_taken_or_invalid_name_cannot_be_created(self):
         self.assertEqual(sync(self.root, "--can-create", "verifier").returncode, 1)
         self.assertEqual(sync(self.root, "--can-create", "Not_Kebab").returncode, 1)
@@ -109,6 +149,35 @@ class AttributionTest(unittest.TestCase):
 
     def test_a_commit_message_names_no_tool(self):
         self.assertTrue(check_attribution.problems(f"docs: describe the {BOT} adapter", message=True))
+
+    def test_the_ways_a_credit_once_slipped_through_are_rejected(self):
+        for text in (
+            "fix: x\n\nCo-authored-" + "by: Fab" + "le <fable@example.com>",
+            "fix: x\n\nAssisted-" + "by: Op" + "us 5.5",
+            f"fix: apply the cleanup suggested by {BOT}.",
+            "fix: written with G" + "PT-6",
+            "refactor: A" + "I-assisted cleanup",
+            "fix: pair-programmed with an L" + "LM",
+            f"fix: as suggested by {BOT.lower()}/op" + "us",
+            "fix: written with G" + "PT",
+            "fix: x\n\nAssisted-" + "by: o3",
+            "fix: written with the help of an A" + "I",
+            "fix: x\n\nCo-authored-" + "by: someone <someone@example.com>",
+            "fix: tuned with Qw" + "en3",
+            "refactor: A" + "I" + chr(0x2013) + "assisted cleanup",
+            "fix: suggested by Cl" + chr(0x0430) + "ude",
+        ):
+            self.assertTrue(check_attribution.problems(text, message=True), text)
+
+    def test_ordinary_words_and_subjects_pass(self):
+        for text in (
+            "docs: add a haiku and a fable to the examples",
+            "fix(table): keep the cursor on the selected row",
+            "feat(api): paginate by cursor",
+            "docs(ai): tighten the rules for AI projects",
+            "docs: update CLAUDE.md and .codex/hooks.json",
+        ):
+            self.assertEqual(check_attribution.problems(text, message=True), [], text)
 
     def test_a_path_or_a_plain_message_passes(self):
         for text in ("docs(harness): add the sync script\n\n- Generate .claude/agents from .agents/", "docs: update CLAUDE.md"):

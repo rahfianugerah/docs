@@ -20,8 +20,13 @@ def run(script, *args):
 
 def after_edit(payload):
     path = payload.get("tool_input", {}).get("file_path", "")
+    # The document check enforces rules/docs.rules.md, so it runs only where that file is.
+    docs = (ROOT / "rules/docs.rules.md").exists()
+    if not path:
+        # A tool that edits by patch names no single file: check everything git sees as changed.
+        return (run("check_docs.py", "--changed") if docs else 0) | run("sync_agents.py", "--check")
     failed = 0
-    if path.endswith(".md") and (HERE / "check_docs.py").exists():
+    if docs and path.endswith(".md"):
         failed |= run("check_docs.py", path)
     if "/.agents/" in Path(path).as_posix() + "/":
         failed |= run("sync_agents.py", "--check")
@@ -60,6 +65,9 @@ EVENTS = {"after-edit": after_edit, "on-stop": on_stop, "before-commit": before_
 def main():
     raw = "" if sys.stdin.isatty() else sys.stdin.read()
     payload = json.loads(raw) if raw.strip() else {}
+    if len(sys.argv) != 2 or sys.argv[1] not in EVENTS:
+        print(f"usage: hook.py {' | '.join(EVENTS)}", file=sys.stderr)
+        return 1
     return BLOCK if EVENTS[sys.argv[1]](payload) else 0
 
 

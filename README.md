@@ -90,7 +90,7 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 
 | Document | Owns |
 | :- | :- |
-| [[codes.rules.md]] | YAGNI, KISS, DRY, readability, Python 3.13, conda and `.venv`, and the ML practices that differ |
+| [[codes.rules.md]] | The rules a tool enforces with their settings, YAGNI, KISS, DRY, no quick fix, the comment policy, directory boundaries, and the Python environment |
 | [[database.rules.md]] | PostgreSQL and SQLAlchemy, which cases take the ORM and which take raw SQL, and the restore nobody tested |
 | [[data.rules.md]] | Four data classes: the schema is readable, rows need explicit approval, and protected data is never read |
 | [[env.rules.md]] | Why a real environment file is never read, what belongs in a table instead, and the notebook cell |

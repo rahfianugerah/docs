@@ -10,6 +10,8 @@ Model one flow as a statechart, and find what the code or the plan leaves unhand
 
 ## Read first
 
+Rule paths are relative to the handbook folder, `~/agentic`. Project paths, such as `docs/SRS.md`, are relative to the project.
+
 - The brief, the requirements it cites, and the reports in `reports`.
 - The flow's code or its design, inside `paths_allowed`.
 

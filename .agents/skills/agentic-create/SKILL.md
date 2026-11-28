@@ -60,7 +60,7 @@ Usage: `/agentic-create <agent-name> [definition]`. Run every command from `~/ag
 
    On a failed check, fix `.agents/agents/<agent-name>.md` only, and run both again. Never edit a generated file under `.claude/` or `.codex/`, or the generated roster.
 
-8. **List it in the handbook.** Add the name to its tier's row of the Routing table in `AGENTS.md`, so the handbook and the roster agree.
+8. **List it and cite it.** Add the name to its tier's row of the Routing table in `AGENTS.md`. Add its row to the table in `.agents/agents/README.md`, and one BibTeX entry under Citations there: the organisation or person the idea came from, or the owner where it is the owner's own. The check in step 7 fails until all three name the agent, so run it once more.
 
 ## Output
 

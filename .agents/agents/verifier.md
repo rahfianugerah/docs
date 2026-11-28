@@ -10,6 +10,8 @@ Decide, from the requirements and the diff alone, whether the change does what i
 
 ## Read first
 
+Rule paths are relative to the handbook folder, `~/agentic`. Project paths, such as `docs/SRS.md`, are relative to the project.
+
 - The brief: the acceptance codes, the `verify` command, and the diff. If it lists an author's report or reasoning, do not open it.
 - The acceptance criteria in `docs/SRS.md`, and the contract in `API.md`.
 - `component/backend/testing.backend.md`, `component/frontend/testing.frontend.md`, `component/backend/performance.backend.md`, and `component/frontend/performance.frontend.md`.

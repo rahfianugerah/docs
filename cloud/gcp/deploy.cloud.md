@@ -156,7 +156,7 @@ Supplying such a value with `--set-env-vars` does nothing. It reaches the contai
 
 Because a build-arg is required, and a plain `gcloud builds submit --tag` cannot pass one, a static frontend always builds through `cloudbuild.yaml`. **Deploy the backend first** so its URL is known.
 
-Declare one `--build-arg` per `ARG` the repository's own `Dockerfile` declares. Do not add a build-arg no code reads: an unknown build-arg is ignored silently, so the value would simply never reach the bundle.
+Declare one `--build-arg` per `ARG` the repository's own `Dockerfile` declares. Do not add a build-arg no code reads: an unknown build-arg is ignored silently, so the value would never reach the bundle.
 
 ### `_API_BASE_URL` Is an Origin, Never a Path
 

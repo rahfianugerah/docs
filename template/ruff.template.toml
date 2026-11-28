@@ -35,7 +35,7 @@ select = [
 
 [tool.ruff.lint.per-file-ignores]
 # A test's name is its documentation, and a type on every fixture argument buys nothing.
-"tests/**" = ["D", "ANN"]
+"test/**" = ["D", "ANN"]
 # The one folder allowed past the boundary below. This lifts every banned API here, so keep one banned module per folder.
 "app/db/**" = ["TID251"]
 

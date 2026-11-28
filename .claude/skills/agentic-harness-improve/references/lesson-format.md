@@ -1,12 +1,16 @@
 # Lesson Entry Format
 
-Every edit the harness-improver probes, kept or rejected, becomes one entry appended to `harness/lessons.md`. An entry is a heading and four lines, in this order, and nothing else:
+Every edit the harness-improver probes, kept or rejected, becomes one entry appended to `harness/lessons.md`. An entry is a heading and four one-line paragraphs, in this order, with a blank line between them, and nothing else:
 
 ```markdown
 ### <cue>
+
 Lesson: <what to do, or not do, in that situation, naming the harness component>
+
 Evidence: <the motivating run, the probe runs per side, and their numbers>
+
 Confidence: <low, medium, or high>
+
 Verdict: <helped, hurt, no observed effect, or confounded>
 ```
 
@@ -39,8 +43,12 @@ Verdict: <helped, hurt, no observed effect, or confounded>
 
 ```markdown
 ### A verifier brief that names no test command
+
 Lesson: Put the project's test command in the verify field of every reviewer brief, so the verifier does not search the repository for one.
+
 Evidence: Motivating moment ~/agentic/report/shop-backend/report-verifier-to-user-login-otp-20261120-09_02_44.md, 41k tokens spent finding the test runner. Probe on login-otp W-1, 2 runs per side: base 2 of 2 Pass, 0 fix rounds, 63k and 66k tokens per successful task; edited 2 of 2 Pass, 0 fix rounds, 38k and 40k.
+
 Confidence: medium
+
 Verdict: helped
 ```

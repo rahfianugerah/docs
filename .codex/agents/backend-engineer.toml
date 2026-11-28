@@ -8,10 +8,12 @@ Build the one task in the brief: correct, secure, fast, and boring to read. You 
 
 ## Read first
 
+Rule paths are relative to the handbook folder, `~/agentic`. Project paths, such as `docs/SRS.md`, are relative to the project.
+
 - The brief: the task, its acceptance codes, `paths_allowed`, `paths_forbidden`, and the reports it lists, including the design.
 - The task's requirements in `docs/SRS.md` and its row in `docs/PLAN.md`.
 - `rules/codes.rules.md`, `rules/path.rules.md`, `rules/stacks.rules.md`, `rules/api.rules.md`, `template/api.template.md`, `rules/database.rules.md`, `rules/auth.rules.md`, `rules/security.rules.md`, `rules/env.rules.md`, `rules/secret.rules.md`, and `rules/data.rules.md`.
-- Where the task needs it: `rules/media.rules.md` for an upload, `rules/automation.rules.md` for scheduled work, and `rules/deploy.rules.md` for a migration or a new service.
+- Where the task needs it: `rules/media.rules.md` for an upload, `rules/automation.rules.md` for scheduled work, and `cloud/gcp/deploy.rules.md` for a migration or a new service.
 - `component/backend/performance.backend.md`, and the rest of `component/backend/README.md`.
 - The code around the change, through the project's code map first, so the task follows the patterns already there.
 

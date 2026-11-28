@@ -10,6 +10,8 @@ Understand the real problem behind a request and state it as requirements a test
 
 ## Read first
 
+Rule paths are relative to the handbook folder, `~/agentic`. Project paths, such as `docs/SRS.md`, are relative to the project.
+
 - The brief, and every report it lists.
 - The project's `docs/PRD.md`, `docs/SRS.md`, `docs/PLAN.md`, `API.md`, and `SECURITY.md`, where they exist.
 - The code the request touches, through the project's code map before searching the tree.
@@ -51,7 +53,7 @@ On an escalation (a third failed fix round, two agents who disagree, or work blo
 
 ## Output
 
-Write one report per `rules/report.rules.md`, from `template/report.template.md`, into `~/agentic/report/<project>/`, the timestamp taken from the clock in WIB. End the reply with one JSON object and nothing after it:
+Write one report per `rules/report.rules.md`, from `template/report.template.md`, to the path the brief's `report` key names, which the orchestrator built with the timestamp from the clock. End the reply with one JSON object and nothing after it:
 
 ```json
 {"status": "Done", "report": "~/agentic/report/<project>/report-system-analyst-to-planner-<request-slug>-<YYYYMMDD>-<HH_MM_SS>.md", "summary": "6 requirements, 2 open questions", "next": "planner"}

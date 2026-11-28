@@ -3,4 +3,5 @@ PY=$(command -v python || command -v python3)
 ROOT=$(git rev-parse --show-toplevel)
 "$PY" "$ROOT/scripts/harness/sync_agents.py" --check || exit 1
 "$PY" "$ROOT/scripts/harness/check_attribution.py" --staged || exit 1
-"$PY" "$ROOT/scripts/harness/check_docs.py" --changed || exit 1
+if [ -f "$ROOT/rules/docs.rules.md" ]; then "$PY" "$ROOT/scripts/harness/check_docs.py" --changed || exit 1; fi
+"$PY" "$ROOT/scripts/harness/test_harness.py" >/dev/null 2>&1 || { echo "test_harness.py failed; run it to see why" >&2; exit 1; }
