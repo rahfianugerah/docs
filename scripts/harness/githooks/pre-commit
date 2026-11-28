@@ -1,0 +1,6 @@
+#!/bin/sh
+PY=$(command -v python || command -v python3)
+ROOT=$(git rev-parse --show-toplevel)
+"$PY" "$ROOT/scripts/harness/sync_agents.py" --check || exit 1
+"$PY" "$ROOT/scripts/harness/check_attribution.py" --staged || exit 1
+"$PY" "$ROOT/scripts/harness/check_docs.py" --changed || exit 1

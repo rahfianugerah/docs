@@ -1,0 +1,46 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "apply_patch|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)\"/scripts/harness/hook.py after-edit"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)\"/scripts/harness/hook.py on-stop"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)\"/scripts/harness/hook.py before-commit"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)\"/scripts/harness/hook.py after-agent"
+          }
+        ]
+      }
+    ]
+  }
+}

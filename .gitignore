@@ -22,3 +22,6 @@ report/
 
 # PlugMyBrain, rebuilt by every digest
 graph/code/
+
+# Harness usage logs, per run
+harness/usage/

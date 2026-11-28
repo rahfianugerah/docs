@@ -1,0 +1,15 @@
+[[hook]]
+event = "after-edit"
+command = "python {root}/scripts/harness/hook.py after-edit"
+
+[[hook]]
+event = "on-stop"
+command = "python {root}/scripts/harness/hook.py on-stop"
+
+[[hook]]
+event = "before-commit"
+command = "python {root}/scripts/harness/hook.py before-commit"
+
+[[hook]]
+event = "after-agent"
+command = "python {root}/scripts/harness/hook.py after-agent"

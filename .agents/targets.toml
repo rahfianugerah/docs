@@ -1,0 +1,30 @@
+[budget]
+agents_md_max_lines = 150
+agent_max_lines = 120
+skill_max_lines = 150
+
+[targets.claude]
+adapter = "claude"
+agents_dir = ".claude/agents"
+skills_dir = ".claude/skills"
+hooks_file = ".claude/settings.json"
+user_agents_dir = "~/.claude/agents"
+user_skills_dir = "~/.claude/skills"
+
+[targets.claude.models]
+deep = "claude-opus-5-5"
+build = "claude-sonnet-5-5"
+fast = "claude-haiku-5-5"
+
+[targets.codex]
+adapter = "codex"
+agents_dir = ".codex/agents"
+skills_dir = ""
+hooks_file = ".codex/hooks.json"
+user_agents_dir = "~/.codex/agents"
+user_skills_dir = "~/.agents/skills"
+
+[targets.codex.models]
+deep = "gpt-6.2-astra"
+build = "gpt-6.2-sol"
+fast = "gpt-6-luna"
