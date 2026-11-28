@@ -1,13 +1,14 @@
-# Project Standards
+# Agentic Standardization
 
 ![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
 ![Conda](https://img.shields.io/badge/Conda-Miniconda-44A833?logo=anaconda&logoColor=white)
 ![Cloud Run](https://img.shields.io/badge/Cloud_Run-Deploy-4285F4?logo=googlecloud&logoColor=white)
 ![Obsidian](https://img.shields.io/badge/Obsidian-Vault-7C3AED?logo=obsidian&logoColor=white)
-![Rules](https://img.shields.io/badge/Rules-30-4C1D95)
+![Rules](https://img.shields.io/badge/Rules-31-4C1D95)
 ![Components](https://img.shields.io/badge/Components-27-4C1D95)
-![Templates](https://img.shields.io/badge/Templates-17-4C1D95)
-![Agents](https://img.shields.io/badge/Agents-7-4C1D95)
+![Templates](https://img.shields.io/badge/Templates-21-4C1D95)
+![Agents](https://img.shields.io/badge/Agents-17-4C1D95)
+![Skills](https://img.shields.io/badge/Skills-11-4C1D95)
 ![Status](https://img.shields.io/badge/Status-Active-2EA043)
 
 > [!important]
@@ -31,7 +32,7 @@ The whole repository is an Obsidian vault. Open the folder and the graph is alre
 flowchart TD
   S["A new personal project"] --> R["Apply the rules and the stack"]
   R --> T["Documents start from the templates"]
-  T --> B["Agents build it on the component standards, reporting into report/"]
+  T --> B["Agents build it on the component standards, a separate agent verifies it, reporting into report/"]
   B --> D["Shipped with the gcp runbook"]
   D --> J["Work journaled when it ends"]
   J --> M["Lasting findings written as memory notes"]
@@ -49,9 +50,10 @@ flowchart TD
 | [cloud/gcp/](cloud/gcp/) | The Cloud Run deploy standard, the runbook, and the build templates |
 | [template/](template/) | Documentation templates: the READMEs, API, model card, PRD, plan, the community files, and the agent entry point |
 | [journal/](journal/) | One record per project per day: what was wrong, what was found, and what changed as a number |
-| [agents/](agents/README.md) | The seven agent skills, their shared persona, and the report protocol |
-| [commands/](commands/) | The `/custom-agents` slash commands that run one agent or the whole team, copied to `~/.claude/commands/` |
-| [.claude/agents/](.claude/agents/) | Thin wrappers that let Claude Code launch each agent. Hidden in Obsidian, which skips every folder whose name starts with a dot |
+| [harness/](harness/README.md) | How the agent harness works: the formats, the tiers, the budgets, and how to add a tool or copy a piece into another repository |
+| [scripts/harness/](scripts/harness/) | The generator, the adapters, and the checks: sync, attribution, documents, and the fast test suite |
+| `.agents/` | The source of truth for the 17 agents, the 11 skills, the hooks, and the tier to model map. Hidden in Obsidian, which skips every folder whose name starts with a dot |
+| `.claude/`, `.codex/` | Generated from `.agents/` by `scripts/harness/sync_agents.py`. Never edited by hand |
 
 ### What Stays on This Machine
 
@@ -116,11 +118,11 @@ Grouped by when you reach for them, not by importance. A rule is not optional be
 
 | Document | Owns |
 | :- | :- |
-| [[agents/README.md]] | The seven agents, the session-start status, the pipeline from request to release, and the orchestrator's rules |
-| [[persona.md]] | The one persona every agent shares, and where the CTO's word stops at a security requirement |
-| [[report-protocol.md]] | `report/<project>/` in the vault, the file name, the WIB timestamp, the levels, and the statuses |
-| [[report-template.md]] | The notes shape every report is written in |
-| [[custom-agents-all.md]] | `/custom-agents-all` runs the whole team, `/custom-agents-<slug>` runs one agent, and `/custom-agents` lists them |
+| [[AGENTS.md]] | The handbook every agent reads first: the rules no tool can check, the loop, the three gates, the routing, and the skills |
+| [[harness/README.md]] | The agent and skill formats, the tiers, the budgets, the hooks, and how a tool is added |
+| [[report.rules.md]] | `report/<project>/` in the vault, the file name, the WIB timestamp, the two result formats, the levels, and the statuses |
+| [[report.template.md]] | The notes shape every report is written in |
+| [[lessons.md]] | The evidence-backed lessons the harness-improver keeps |
 
 **What you build with AI:**
 
@@ -153,6 +155,7 @@ Every documentation file starts from one of these, per [[docs.rules.md]]. Keep t
 | [[prd.template.md]] | The `docs/PRD.md` every project carries, written before the code |
 | [[plan.template.md]] | The `docs/PLAN.md`: the timeline, the features with owner and status, and the done log |
 | [[license.template.md]] | The `LICENSE` file: `Proprietary`, or the full MIT text |
+| [[report.template.md]] | An agent report, written into `report/<project>/` in the vault |
 | [[code-of-conduct.template.md]] | The `CODE_OF_CONDUCT.md` every repository carries |
 | [[security.template.md]] | The `SECURITY.md`: the private channel for a vulnerability, and the response times |
 | [[contributing.template.md]] | The `CONTRIBUTING.md`: setup, branches, commits, and pull requests |
@@ -160,6 +163,8 @@ Every documentation file starts from one of these, per [[docs.rules.md]]. Keep t
 | [[cloudbuild.frontend.template.yaml]] | The build pipeline for a static frontend |
 | [[cloudbuild.job.template.yaml]] | The build pipeline for a scheduled job |
 | [[cleanup-policy.template.json]] | The registry retention policy, identical for every project |
+| `eslint.config.template.js` | The ESLint flat config that enforces the code rules a linter can check, per [[codes.rules.md]] |
+| `ruff.template.toml` | The ruff section of `pyproject.toml` that enforces the Python code rules |
 
 ## Memory
 
@@ -196,7 +201,7 @@ Both are built by `plugmybrain`, whose command is `pmb`.
 
 ## Using It With a Model
 
-Point the assistant at this repository and give it [[CLAUDE.md]] or [[AGENTS.md]] as its entry point. Both import this file, the memory protocol, and the [[agents/README.md|agent team]], so the rules, the memory, and the agents load together.
+Point the assistant at this repository and give it [[CLAUDE.md]] or [[AGENTS.md]] as its entry point. `CLAUDE.md` imports `AGENTS.md`, the short handbook that points at each rule to read when it is needed, so nothing is loaded that the task does not use. The agents and skills are generated for each tool from `.agents/`, per [[harness/README.md]].
 
 Nothing here is model-specific. A different assistant reads the same markdown and arrives at the same context, which is the entire reason the memory is files.
 
@@ -226,6 +231,7 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[prd.rules.md]]
 - [[pwa.rules.md]]
 - [[report.automation.md]]
+- [[report.rules.md]]
 - [[srs.rules.md]]
 - [[repository.rules.md]]
 - [[secret.rules.md]]
@@ -293,6 +299,7 @@ Nothing here is model-specific. A different assistant reads the same markdown an
 - [[prd.template.md]]
 - [[plan.template.md]]
 - [[license.template.md]]
+- [[report.template.md]]
 - [[code-of-conduct.template.md]]
 - [[security.template.md]]
 - [[contributing.template.md]]
@@ -309,17 +316,14 @@ Every note and every kept script is indexed in `memory/README.md`, grouped by ty
 
 ### Agents
 
-- [[agents/README.md]]
-- [[persona.md]]
-- [[report-protocol.md]]
-- [[report-template.md]]
-- [[agents/project-manager/SKILL.md]]
-- [[agents/system-analyst/SKILL.md]]
-- [[agents/security-engineer/SKILL.md]]
-- [[agents/backend-engineer/SKILL.md]]
-- [[agents/frontend-engineer/SKILL.md]]
-- [[agents/code-reviewer/SKILL.md]]
-- [[agents/qa-engineer/SKILL.md]]
+- [[AGENTS.md]]
+- [[harness/README.md]]
+- [[lessons.md]]
+- [[report.rules.md]]
+- [[report.template.md]]
+- [[rules/README.md]]
+
+The agents and the skills live in `.agents/`, which Obsidian does not index. Each folder's own `README.md` lists them, with a citation for each.
 
 ### Configuration
 
@@ -334,3 +338,7 @@ A standard nobody follows is worse than no standard, because it makes a codebase
 - **A rule broken three times is a rule that is wrong.** Change the rule, do not keep losing the argument with yourself.
 - **A rule reasoned about one component breaks where a page stacks two.** Draw the stacked page before adding one.
 - These documents follow their own rules, including [[docs.rules.md]] and [[badge.rules.md]]. A badge here is as current as one in a project README, or this file is not credible.
+
+## Author
+
+[rahfianugerah](https://github.com/rahfianugerah)

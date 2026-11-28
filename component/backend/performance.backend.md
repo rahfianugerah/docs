@@ -109,11 +109,11 @@ http = httpx.Client(timeout=httpx.Timeout(10.0, connect=3.0))
 - **Load-test a critical endpoint before a release** and after any change to a hot path, against staging, and compare its p95 with the SRS target:
 
 ```bash
-locust -f test/load/locustfile.py --headless -u 50 -r 5 -t 2m --host https://[staging-host] --csv "$RUN-locust"
+locust -f test/load/locustfile.py --headless -u 50 -r 5 -t 2m --host https://[staging-host] --json > "$RUN-locust.json"
 ```
 
 - Keep the load script in `test/load/`, and record the numbers in the QA report.
-- `$RUN` is the name of that QA report, so the CSV files share its date, time, and title, per the [[report-protocol.md|report protocol]].
+- `$RUN` is the name of that QA report, so the JSON result shares its date, time, and title, per the [[report.rules.md|report protocol]].
 
 ## Definition of Done
 

@@ -36,7 +36,7 @@ flowchart LR
 ## Where It Lives
 
 - One `docs/PRD.md` in the repository, beside `docs/SRS.md` from [[srs.rules.md]] and any technical plan in `docs/PLAN.md`. The PRD and SRS describe the whole project; a plan describes the work being built now, links to both, and never repeats them.
-- Written in the language its readers use, because its readers are whoever asked for the project. The eight sections and their order do not change with the language; only the headings are translated.
+- Written in English, like every other output, per [[agent.rules.md]]. A project already written in another language keeps it, per [[docs.rules.md]]; the eight sections and their order do not change either way.
 - Committed and versioned like any other document. It is not a chat message, not a spreadsheet, not a screenshot of a chat thread.
 - A frontend and a backend that serve one app share the app's PRD. Put it in the backend repository and link to it from the frontend README, so the product intent is not split in half by a repository boundary, per [[repository.rules.md]].
 
@@ -134,7 +134,7 @@ An agentic coding tool reads the PRD before it writes code, and this is where it
 
 ## Definition of Done
 
-- The repository has a `docs/PRD.md`, in the readers' language, with a named owner, a status, and a one-sentence goal.
+- The repository has a `docs/PRD.md`, in English, with a named owner, a status, and a one-sentence goal.
 - All eight sections are present, and What Is Not Built is not empty.
 - Problem describes a problem rather than a solution.
 - Success Measure is something a person can actually check afterwards.

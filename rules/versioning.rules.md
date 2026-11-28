@@ -194,7 +194,7 @@ git tag -a "v$V" -m "v$V"
 
 **A forgotten bump fails at step 3, by design.** If the manifest was never raised, the command reads the previous version, and git refuses with `fatal: tag 'v1.2.0' already exists`. Go back and bump the manifest. Never delete the old tag to make room.
 
-4. **Pushing a tag is a push.** The owner pushes it, or an agent does only on an explicit instruction for that release, per [[pr.rules.md]]. In the agent pipeline the code-reviewer makes the bump commit at a release, and the tag waits for the owner, per [[agents/README.md]].
+4. **Pushing a tag is a push.** The owner pushes it, or an agent does only on an explicit instruction for that release, per [[pr.rules.md]]. In the agent loop the orchestrator makes the bump commit at a release, and the tag waits for the owner, per [[AGENTS.md]].
 
 > [!danger]
 > A pushed tag is never moved, deleted, or reused. Someone has already built, deployed, or pinned against it, and a tag that silently points somewhere new hands them different code under the same number. A wrong release is fixed by the next PATCH, never by rewriting the tag.

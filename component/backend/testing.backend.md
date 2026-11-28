@@ -16,7 +16,7 @@ tags:
 
 A backend test proves behaviour through the API a client actually calls, against the database the code actually runs on. A mock of PostgreSQL passes while the real migration, constraint, or query plan fails, so a test that touches data runs against a real PostgreSQL in a container.
 
-The qa-engineer writes every test, unit, integration, and end to end, and owns the automation; the engineers only build, per the [[agents/README.md|agent team]]. The general testing rules are in [[codes.rules.md]].
+The test-designer writes every test, unit, integration, and end to end, and the verifier runs them and judges the result; the engineers only build, per [[AGENTS.md]]. The general testing rules are in [[codes.rules.md]].
 
 ## Workflow
 
@@ -38,6 +38,7 @@ flowchart LR
 | FastAPI's `TestClient` | A request through the real routes, validation, and auth |
 | `pytest-asyncio` | A test of an `async` function |
 | `pytest-cov` | Coverage, read for the gaps rather than chased as a number |
+| `pytest-json-report` | The JSON result a QA report cites, per the [[report.rules.md|report protocol]] |
 | `testcontainers[postgresql]` | A real PostgreSQL 18 per run |
 | `locust` | The load test in [[performance.backend.md]] |
 
